@@ -1,0 +1,174 @@
+<resources>
+
+    <style name="AppTheme" parent="android:style/Theme.Light"></style>
+    
+    <style name="DashboardButton">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:drawablePadding">2dp</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ff29549f</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="TeamButton">       
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ff29549f</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- Display layout styles -->
+    
+    <style name="DisplayHeader" >
+        <item name="android:background">@android:drawable/list_selector_background</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="DisplayRow">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+    
+    <!-- ViewPagerIndicator custom styles -->
+    
+    <style name="StyledIndicators" parent="@android:style/Theme.Light">
+        <item name="vpiCirclePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
+        <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
+        <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
+        <item name="vpiTabTextStyle">@style/CustomTabPageIndicator.Text</item>
+    </style>
+
+    <style name="CustomTitlePageIndicator">
+        <item name="android:background">#18FF0000</item>
+        <item name="footerColor">#FFAA2222</item>
+        <item name="footerLineHeight">1dp</item>
+        <item name="footerIndicatorHeight">3dp</item>
+        <item name="footerIndicatorStyle">underline</item>
+        <item name="textColor">#AA000000</item>
+        <item name="selectedColor">#FF000000</item>
+        <item name="selectedBold">true</item>
+    </style>
+
+    <style name="CustomCirclePageIndicator">
+        <item name="android:background">#FFCCCCCC</item>
+        <item name="fillColor">#FF888888</item>
+        <item name="strokeColor">#FF000000</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="radius">10dp</item>
+        <item name="centered">true</item>
+    </style>
+    
+    <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
+        <item name="android:background">@drawable/custom_tab_indicator</item>
+    </style>
+    <style name="CustomTabPageIndicator.Text" parent="Widget.TabPageIndicator.Text">
+        <item name="android:textColor">#FF555555</item>
+    </style>
+    
+    <!-- Match Layout Styles -->
+
+    <style name="match_basket_header">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">7dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="match_button_hit">
+        <item name="android:layout_width">125dp</item>
+        <item name="android:layout_height">65dp</item>
+        <item name="android:onClick">onClickHandler</item>
+        <item name="android:text">@string/hit</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="match_button_miss">
+        <item name="android:layout_width">125sp</item>
+        <item name="android:layout_height">65dp</item>
+        <item name="android:onClick">onClickHandler</item>
+        <item name="android:text">@string/miss</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="match_slash">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/slash</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="match_basket_counter">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">number</item>
+        <item name="android:hint">@string/zero</item>
+        <item name="android:maxLength">3</item>
+        <item name="android:text">@string/zero</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:selectAllOnFocus">true</item>
+    </style>
+    
+    <style name="match_general_row">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">13dp</item>
+        <item name="android:paddingBottom">13dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="match_radio_group">
+        <item name="android:layout_height">55dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    
+    <style name="match_radio_button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        
+    </style>
+    
+    <!-- Team Scouting -->
+    <style name="team_scouting_row">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    
+    <style name="team_scouting_spinner">
+        <item name="android:layout_width">250dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="team_scouting_checkbox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+    </style> 
+   
+    <style name="team_scouting_togglebutton">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textOff">@string/no</item>
+        <item name="android:textOn">@string/yes</item>
+    </style>
+</resources>

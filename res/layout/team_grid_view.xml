@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/team_grid_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnWidth="100dp"
+    android:drawSelectorOnTop="true"
+    android:gravity="center"
+    android:horizontalSpacing="20dp"
+    android:numColumns="auto_fit"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="20dp" />

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/display_team_matches_general_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="5dp"
+    android:paddingTop="15dp" >
+
+    <TextView
+        android:id="@+id/display_header_general_match"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/match" >
+    </TextView>
+    
+    <TextView
+        android:id="@+id/display_header_general_result"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/result" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_general_cross"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/how_cross" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_general_pick_balls"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/pick_up_balls" >
+    </TextView>
+    
+    <TextView
+        android:id="@+id/display_header_general_balanced"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/balanced" >
+    </TextView>
+    
+</LinearLayout>

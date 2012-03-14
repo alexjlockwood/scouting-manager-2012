@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item android:id="@+id/menu_delete_team_match"
+        android:title="@string/menu_delete_match" />
+        
+</menu>

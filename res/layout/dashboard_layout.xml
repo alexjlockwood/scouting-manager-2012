@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.cmu.scout.ui.DashboardLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/DashboardContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Button -->
+
+    <Button
+        android:id="@+id/dashboard_teams"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/dashboard_team"
+        android:onClick="onClickHandler"
+        android:text="@string/dashboard_team_scout" />
+
+    <!-- Button -->
+
+    <Button
+        android:id="@+id/dashboard_match"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/dashboard_match"
+        android:onClick="onClickHandler"
+        android:text="@string/dashboard_match_scout" />
+
+    <!-- Button -->
+
+    <Button
+        android:id="@+id/dashboard_display"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/dashboard_display"
+        android:onClick="onClickHandler"
+        android:text="@string/dashboard_display" />
+
+    <!-- Button -->
+
+    <Button
+        android:id="@+id/dashboard_transfer"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/dashboard_transfer"
+        android:onClick="onClickHandler"
+        android:text="@string/dashboard_transfer" />
+
+    <!-- Button -->
+
+    <Button
+        android:id="@+id/dashboard_manage"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/dashboard_manage"
+        android:onClick="onClickHandler"
+        android:text="@string/dashboard_manage" />
+
+    <!-- Button -->
+
+    <Button
+        android:id="@+id/btn_sample6"
+        style="@style/DashboardButton"
+        android:clickable="false"
+        android:onClick="onClickHandler" />
+
+</com.cmu.scout.ui.DashboardLayout>

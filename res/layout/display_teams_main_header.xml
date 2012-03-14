@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/display_teams_general_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="5dp"
+    android:paddingTop="15dp" >
+
+    <TextView
+        android:id="@+id/display_header_main_team"
+        style="@style/DisplayHeader"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:text="@string/team" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_main_nickname"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:text="@string/team_nickname" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_main_wins"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:text="@string/wins" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_main_losses"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:text="@string/losses" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_main_total_score"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:text="@string/total_score" >
+    </TextView>
+
+</LinearLayout>

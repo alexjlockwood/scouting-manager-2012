@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- General application -->
+    <string name="app_name">Scouting Manager (Beta)</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="set">Set</string>
+    <string name="yes">Yes</string>
+ 	<string name="no">No</string>
+ 	<string name="save">Save</string>
+ 	<string name="comment">Comment</string>
+ 	<string name="score">Score</string>
+ 	<string name="slash">/</string>
+ 	<string name="zero">0</string>
+ 	<string name="one">1</string>
+ 	<string name="two">2</string>
+    <string name="three">3</string>
+    <string name="both">Both</string>
+    <string name="percent">%</string>
+ 	
+    <!-- Camera -->
+    <string name="album_name">ScoutingManager</string>
+   	<string name="menu_take_picture">Take Picture</string>
+    
+    <!-- ActionBar Titles -->
+    <string name="team_scouting_title">Team-scout</string>
+    <string name="match_scouting_title">Match-scout</string>
+    <string name="display_title">Display Team Stats</string>
+    <string name="display_team_matches_title">Display Team Matches</string>
+   	
+    <!-- Dialog messages -->
+	<string name="confirm_exit">Confirm exit?</string>
+    <string name="confirm_exit_message">Are you sure you want to exit? Any unsaved changes will be lost.</string>
+    <string name="confirm_delete_team">Delete team?</string>
+    <string name="confirm_delete_team_message">Delete all data for this team? This cannot be undone.</string>
+    <string name="confirm_delete_picture">Delete team picture?</string>
+    <string name="confirm_delete_picture_message">Delete this team\'s picture? This cannot be undone.</string>
+    
+ 	<!-- Main Dashboard -->
+ 	<string name="dashboard_team_scout">Team-scout</string>
+ 	<string name="dashboard_match_scout">Match-scout</string>
+ 	<string name="dashboard_display">Display</string>
+ 	<string name="dashboard_transfer">Send to device</string>
+ 	<string name="dashboard_manage">Manage data</string>
+    
+    <!-- Team Grid Activity -->
+    <string name="menu_add_team">Add Team</string>
+    <string name="menu_delete_team">Delete Team</string>
+    <string name="menu_delete_match">Delete Match</string>
+    <string name="duplicate_team_number">The team you entered already exists.</string>
+    
+    <!-- Match Input Activity -->
+    <string name="menu_change_match">Change match </string>
+    <string name="menu_clear_data">Clear screen</string>
+    
+    <string name="autonomous">Autonomous</string>
+    <string name="teleop">Tele-Op</string>
+    <string name="general">General</string>
+    
+    <string name="STR_Shots_High">High Basket</string>
+    <string name="STR_Shots_Med">Medium Basket</string>
+    <string name="STR_Shots_Low">Low Basket</string>
+    
+   	<string name="hit">Hit</string>
+    <string name="miss">Miss</string>
+    
+    <string name="invalid_team_number">Invalid team number.</string>
+    <string name="invalid_match_number">Invalid match number.</string>
+    <string name="invalid_user_input">Invalid user input.</string>
+    <string name="invalid_user_input_wins">Win or loss?</string>
+    
+	<string name="save_insert_successful">Data saved.</string>
+	<string name="save_update_successful">Data updated.</string>
+    <string name="screen_reset">Screen cleared.</string>
+    
+    <!-- Data -->
+    <string name="which_alliance">Alliance</string>
+    <string name="can_balance">Can balance?</string>
+    <string name="can_balance_num">How many?</string>
+    <string name="can_cross">Can cross?</string>
+    <string name="bridge">Bridge</string>
+    <string name="barrier">Barrier</string>
+    <string name="pick_up_balls">Pick up balls?</string>
+    <string name="agility">Agility</string>
+    <string name="speed">Speed</string>
+    <string name="strategy">Strategy</string>
+	<string name="penalty_risk">Penalty risk</string>
+	<string name="win_match">Win/loss?</string>
+	<string name="win">Win</string>
+	<string name="loss">Loss</string>
+	<string name="final_score">Final score</string>
+	
+	<string name="blue">Blue</string>
+	<string name="red">Red</string>
+	
+	<string name="STR_Low">Low</string>
+	<string name="STR_Med">Med</string>
+	<string name="STR_High">High</string>
+	
+	<string name="STR_Kinect">Uses Kinect?</string>
+
+    <string name="from_feeder">Feeder</string>
+    <string name="from_floor">Floor</string>
+    
+    <string name="STR_Ex">Great</string>
+    <string name="STR_Gd">Good</string>
+    <string name="STR_Fr">Fair</string>
+    <string name="STR_Pr">Poor</string>
+    
+    <string name="STR_Offensive">Offense</string>
+    <string name="STR_Defensive">Defense</string>
+    <string name="neutral">Neutral</string>
+   
+    <!-- Display strings -->
+    
+    <string name="menu_display_team_matches">Display matches</string>
+
+	<!-- Display Headers -->
+    <string name="team">Team</string>
+    <string name="team_nickname">Name</string>
+    <string name="wins">Wins</string>
+    <string name="losses">Losses</string>
+    <string name="total_score">Total Points</string>
+    <string name="total_shots">Made / Atmp</string>
+    <string name="shots_made">Shots Made</string>
+    <string name="shots_attempted">Shots Attempted</string>
+    <string name="shots_percent">Shot %</string>
+    <string name="team_drive">Drive system</string>
+    <string name="team_wheels">Wheels</string>
+    <string name="team_kinect">Uses Kinect?</string>
+    
+    <string name="match">Match</string>
+    <string name="low_shots_made_attempt">Low shots</string>
+    <string name="med_shots_made_attempt">Med shots</string>
+    <string name="high_shots_made_attempt">High shots</string>
+    <string name="result">Result</string>
+    <string name="how_cross">How Cross?</string>
+    <string name="balanced"># Balanced</string>
+    
+        <!--  Bluetooth -->
+    <string name="send">Send</string>
+    <string name="not_connected">You are not connected to a device</string>
+    <string name="bt_not_available">Bluetooth is not available.</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled.</string>
+    <string name="title_connecting">connecting…</string>
+    <string name="title_connected_to">connected to <xliff:g id="device_name">%1$s</xliff:g></string>
+    <string name="title_not_connected">not connected</string>
+    <string name="secure_connect">Scan</string>
+    <string name="discoverable">Make discoverable</string>
+    
+    <!-- Search -->
+    <string name="app_label">Scouting Manager</string>
+    <string name="search_hint">Search for team</string>
+    <string name="menu_search">Search</string>
+    <string name="search_instructions">Use the search box in the Action Bar to look up a word.</string>
+    <string name="no_results">No results found for \"%s\"</string>
+    <plurals name="search_results">
+      <item quantity="one">%1$d result for \"%2$s\": </item>
+      <item quantity="other">%1$d results for \"%2$s\": </item>
+    </plurals>
+    
+    <!-- ListView empty strings -->
+    <string name="team_list_empty">No teams to display</string>
+    <string name="team_matches_list_empty">No matches to display</string>
+    
+    <!-- Team Scouting -->
+    <string name="team_name">Team name</string>
+    <string name="drive">Drive system?</string>   
+    <string-array name="drive_option">
+        <item>None</item>
+        <item>6-Wheel Drop</item>
+        <item>Mecanum</item>
+        <item>Omni</item>
+        <item>Swerve</item>
+        <item>4-Wheel Drive</item>
+        <item>8-Wheel</item>
+        <item>Slide</item>
+        <item>Other</item>
+    </string-array>    
+    <string name="wheel">Wheel type?</string>
+    <string-array name="wheel_option">
+        <item>None</item>
+        <item>Plaction</item>
+        <item>Metal with traction</item>
+        <item>Omni-wheels</item>
+        <item>Mecanum</item>
+        <item>Kit of parts (KoP)</item>
+        <item>Pneumatic</item>
+        <item>Tank tread</item>
+        <item>Other</item>
+    </string-array>    
+    <string name="play_auto">Plays autonomous?</string>
+    <string name="prefer_position">Preferred start?</string>
+    <string name="left">Left</string>
+    <string name="middle">Middle</string> 
+    <string name="right">Right</string>    
+    <string name="team_barrier">Crosses barrier?</string>
+    <string name="team_bridge">Pushes down bridge?</string>
+    <string-array name="strategy_option">
+        <item>None</item>
+        <item>Offense</item>
+        <item>Defense</item>
+    </string-array>
+        <string name="take_photo">Take picture</string>
+        <string name="choose_gallary">Select from gallary</string> 
+        <string name="delete_team_picture">Delete picture</string>
+    
+</resources>

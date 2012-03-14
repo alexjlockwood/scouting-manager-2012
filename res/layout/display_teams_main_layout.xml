@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
+
+    <include layout="@layout/display_teams_main_header"/>
+    
+    <ListView
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" 
+        android:layout_weight="1" 
+        android:cacheColorHint="#00000000"
+        android:drawSelectorOnTop="true" />
+    
+    <TextView
+        android:id="@id/android:empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="6dp"
+        android:text="@string/team_list_empty"
+        android:textSize="22dp"
+        android:textStyle="bold" 
+        android:gravity="center" />
+    
+</LinearLayout>

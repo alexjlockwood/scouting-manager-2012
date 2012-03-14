@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/display_teams_scout_two_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="5dp"
+    android:paddingTop="15dp" >
+
+    <TextView
+        android:id="@+id/display_header_scout_two_team"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:text="@string/team" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_scout_two_plays_auto"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:clickable="true"
+        android:text="@string/play_auto" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_scout_two_push_down_bridge"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:clickable="true"
+        android:text="@string/team_bridge" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_header_scout_two_strategy"
+        style="@style/DisplayHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:clickable="true"
+        android:text="@string/strategy" >
+    </TextView>
+
+</LinearLayout>

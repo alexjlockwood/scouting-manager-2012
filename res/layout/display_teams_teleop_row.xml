@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/display_teams_general_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp" >
+
+    <TextView
+        android:id="@+id/display_row_teleop_team"
+        style="@style/DisplayRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" 
+        android:layout_weight="1">
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_row_teleop_shots_made_attempt"
+        style="@style/DisplayRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_row_teleop_shots_percent"
+        style="@style/DisplayRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/display_row_teleop_total_score"
+        style="@style/DisplayRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2" >
+    </TextView>
+
+</LinearLayout>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cmu.scout"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="13" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:debuggable="true"
+        android:icon="@drawable/ic_launcher_girlsofsteel"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+
+        <!-- Dashboard Activity -->
+        <activity
+            android:name=".ui.DashboardActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Team Scout Activity -->
+        <activity
+            android:name=".ui.TeamInputActivity"
+            android:configChanges="orientation"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+
+        <!-- Match Activities -->
+        <activity
+            android:name="com.cmu.scout.ui.TeamGridActivity" >
+        </activity>
+        <activity
+            android:name=".ui.MatchPagerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/StyledIndicators"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity android:name=".test.MatchInputActivity" >
+        </activity>
+
+        <!-- Display Activities -->
+        <activity android:name=".test.DisplayTeamsActivity" >
+        </activity>
+        <activity
+            android:name=".ui.DisplayPagerActivity"
+            android:theme="@style/StyledIndicators" >
+        </activity>
+        
+        <activity
+            android:name=".ui.DisplayPagerMatchesActivity"
+            android:theme="@style/StyledIndicators" >
+        </activity>
+        
+        <!-- Base Camera Activity -->
+        <activity android:name=".camera.BaseCameraActivity">
+            
+        </activity>
+
+        <!-- Bluetooth Activities -->
+        <activity android:name=".bluetooth.Test2BluetoothActivity" >
+        </activity>
+        <activity android:name=".bluetooth.TestBluetoothActivity" >
+        </activity>
+        <activity android:name=".test.SendToDeviceActivity" >
+        </activity>
+        <!-- Activities created for testing purposes -->
+        <activity android:name="com.cmu.scout.test.TeamListActivity" >
+        </activity>
+        <activity android:name="com.cmu.scout.test.TeamDetailsActivity" >
+        </activity>
+
+        <provider
+            android:name="com.cmu.scout.provider.ScoutProvider"
+            android:authorities="com.cmu.scout.provider.Scout" >
+        </provider>
+    </application>
+
+</manifest>

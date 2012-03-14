@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="actionbar_background_light">#ccffffff</color>
+    <color name="actionbar_background_dark">#cc000000</color>
+    <color name="default_text_color">#ff29549f</color>
+    <color name="listview_gray">#fff3f3f3</color>
+    <color name="listview_white">#ffffffff</color>
+</resources>

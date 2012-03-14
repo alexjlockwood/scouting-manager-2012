@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/grid_image_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/team_grid_button"
+        style="@style/TeamButton"
+        android:adjustViewBounds="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_team" 
+        android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#ff29549f"
+      	android:background="@null" 
+      	android:layout_gravity="center" />
+
+</LinearLayout>
