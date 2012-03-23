@@ -45,6 +45,7 @@ public class ScoutProvider extends ContentProvider {
 	// TeamMatch table.
 	private static final int MATCHES_TEAMS_ID = 300;
 	private static final int MATCHES_ID_TEAMS_ID = 301;
+	private static final int TEAM_MATCHES = 302;
 	
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -57,6 +58,8 @@ public class ScoutProvider extends ContentProvider {
 		
 		sUriMatcher.addURI(ScoutContract.AUTHORITY, "matches/teams/#", MATCHES_TEAMS_ID);
 		sUriMatcher.addURI(ScoutContract.AUTHORITY, "matches/#/teams/#", MATCHES_ID_TEAMS_ID);
+		
+		sUriMatcher.addURI(ScoutContract.AUTHORITY, "team_matches", TEAM_MATCHES);
 	}
 	
 	@Override
@@ -232,6 +235,12 @@ public class ScoutProvider extends ContentProvider {
         	qb.appendWhere(TeamMatches.MATCH_ID + " = " + uri.getPathSegments().get(1) + " AND " + 
         				   TeamMatches.TEAM_ID +  " = " + uri.getLastPathSegment());
         	break;
+        	
+        // quick addition... need to re-organize these URIs	
+        case TEAM_MATCHES:
+        	qb.setTables(Tables.TEAM_MATCHES);
+        	break;
+        	
         default:
         	throw new UnsupportedOperationException("Unknown URI: " + uri);
         }

@@ -42,7 +42,7 @@
  	<string name="dashboard_match_scout">Match-scout</string>
  	<string name="dashboard_display">Display</string>
  	<string name="dashboard_transfer">Send to device</string>
- 	<string name="dashboard_manage">Manage data</string>
+ 	<string name="dashboard_manage">Export data</string>
     
     <!-- Team Grid Activity -->
     <string name="menu_add_team">Add Team</string>

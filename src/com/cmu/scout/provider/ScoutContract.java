@@ -484,6 +484,7 @@ public final class ScoutContract {
 	private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);	
 	private static final String PATH_TEAMS = "teams";
 	private static final String PATH_MATCHES = "matches";
+	private static final String PATH_TEAM_MATCHES = "team_matches";
 	
 	/**
 	 * Teams table contract. This table stores a list of teams and information
@@ -601,6 +602,29 @@ public final class ScoutContract {
 		
 		// This class cannot be instantiated.
 		private TeamMatches() { }
+        
+		/* MIME type definitions */
+        
+        /** 
+         * The MIME type of {@link #CONTENT_URI} providing a directory of team-match items. 
+         */
+        public static final String CONTENT_TYPE = 
+        		"vnd.android.cursor.dir/vnd.scout.team_match";
+
+        /** 
+         * The MIME type of a {@link #CONTENT_URI} sub-directory of a single team-match item.
+         */
+        public static final String CONTENT_ITEM_TYPE = 
+        		"vnd.android.cursor.item/vnd.scout.team_match";
+        
+        /* URI definitions */
+   
+        /** 
+         * The base URI for this table. 
+         */
+        public static final Uri CONTENT_URI = 
+        		BASE_CONTENT_URI.buildUpon().appendPath(PATH_TEAM_MATCHES).build();
+		
 	}
 
 }
