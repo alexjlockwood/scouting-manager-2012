@@ -40,9 +40,11 @@ public class DashboardActivity extends Activity {
 			startActivity(teamData);
 			break;
 		case R.id.dashboard_match:
-			Intent matchData = new Intent(getApplicationContext(), TeamGridActivity.class);
-			matchData.putExtra(INTENT_CALL_FROM_TEAM, false);
-			startActivity(matchData);
+			//Intent matchData = new Intent(getApplicationContext(), TeamGridActivity.class);
+			//matchData.putExtra(INTENT_CALL_FROM_TEAM, false);
+			//startActivity(matchData);
+			Intent i = new Intent(getApplicationContext(), MatchPagerActivity.class);
+			startActivity(i);
 			break;
 		case R.id.dashboard_display:
 			startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
