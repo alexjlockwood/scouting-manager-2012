@@ -209,7 +209,9 @@
         <string name="choose_gallary">Select from gallary</string> 
         <string name="delete_team_picture">Delete picture</string>
     
-    <string name="match_number">Enter match #</string>
-    <string name="team_number">Enter team #</string>
+    <string name="match_number">Enter match:</string>
+    <string name="team_number">Enter team:</string>
+    <string name="match_number_hint">match #</string>
+    <string name="team_number_hint">team #</string>
         
 </resources>
