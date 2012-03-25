@@ -49,7 +49,7 @@
             android:name=".ui.MatchPagerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/StyledIndicators"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity android:name=".test.MatchInputActivity" >
         </activity>
