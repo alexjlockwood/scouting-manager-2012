@@ -114,7 +114,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 		super.onActivityCreated(savedInstanceState);
 		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
 				
-		loadData();
+		//loadData();
 		
 		// store initial data so we don't add to cumulative data when we shouldn't be
 		String highShotsMade = mAutoHighCounter.getText().toString();

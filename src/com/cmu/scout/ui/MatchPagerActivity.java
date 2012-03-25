@@ -4,35 +4,31 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.cmu.scout.R;
 import com.cmu.scout.fragment.MatchFragment;
 import com.cmu.scout.fragment.MatchInputAutoFragment;
 import com.cmu.scout.fragment.MatchInputGeneralFragment;
+import com.cmu.scout.fragment.MatchInputStartFragment;
 import com.cmu.scout.fragment.MatchInputTeleOpFragment;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.TeamMatches;
@@ -47,6 +43,7 @@ public class MatchPagerActivity extends FragmentActivity {
 	private static final boolean DEBUG = true;
 		
 	private int mTeamId = -1;	
+	private int mMatchId = -1;
 	private int mTeamNum = -1;
 	private int mMatchNum = -1;
 
@@ -80,8 +77,10 @@ public class MatchPagerActivity extends FragmentActivity {
 		// set result to cancelled in case user backs out, finishes activity, etc.
 		setResult(Activity.RESULT_CANCELED, getIntent());
 		
+		/*
 		final Intent intent = getIntent();
 		if (intent != null) {
+			
 			mTeamId = intent.getIntExtra(TeamGridActivity.INTENT_TEAM_ID, -1);
 			mMatchNum = intent.getIntExtra(TeamGridActivity.INTENT_MATCH_ID, -1);
 			
@@ -94,7 +93,8 @@ public class MatchPagerActivity extends FragmentActivity {
 			
 			setActionBarTitle(getResources().getString(R.string.match_scouting_title));
 			setActionBarSubtitle("Team " + mTeamNum + ", Match " + mMatchNum);
-		}
+			
+		}*/
 		
 		mAdapter = new MatchFragmentAdapter(getSupportFragmentManager());
 
@@ -105,7 +105,7 @@ public class MatchPagerActivity extends FragmentActivity {
 		mIndicator = (TabPageIndicator) findViewById(R.id.match_indicator);
 		mIndicator.setViewPager(mPager);
 	}
-	
+	/*
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putInt("mTeamId", mTeamId);
@@ -120,16 +120,37 @@ public class MatchPagerActivity extends FragmentActivity {
 		mTeamId = savedInstanceState.getInt("mTeamId");
 		mTeamNum = savedInstanceState.getInt("mTeamNum");
 		mMatchNum = savedInstanceState.getInt("mMatchNum");
+	}*/
+	
+	public boolean setCurrentIds() {
+		ContentValues startData = ((MatchInputStartFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_START)).getData();
+		if (startData != null) {
+			mTeamNum = startData.getAsInteger(Teams.TEAM_NUM);
+			mMatchNum = startData.getAsInteger(Matches.MATCH_NUM);
+			return true;
+		} else {
+			mTeamNum = -1;
+			mMatchNum = -1;
+			return false;
+		}
 	}
 	
 	public int getCurrentTeamId() {
-		return mTeamId;
+		ContentValues startData = ((MatchInputStartFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_START)).getData();
+		if (startData != null) {
+			return startData.getAsInteger(TeamMatches.TEAM_ID);
+		}
+		return -1;
 	}
 	
 	public int getCurrentMatchNum() {
-		return mMatchNum;
+		ContentValues startData = ((MatchInputStartFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_START)).getData();
+		if (startData != null) {
+			return startData.getAsInteger(Matches.MATCH_NUM);
+		} 
+		return -1;
 	}
-	
+	/*
 	public static class MatchPickerDialog extends DialogFragment {
 		private static final String TAG = "EnterMatchDialog";
 		private static final boolean DEBUG = true;
@@ -196,7 +217,7 @@ public class MatchPagerActivity extends FragmentActivity {
 		mMatchNum = matchNumber;
 		setActionBarSubtitle("Match " + mMatchNum);
 	}
-	
+	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.match_input_options_menu, menu);
@@ -208,7 +229,7 @@ public class MatchPagerActivity extends FragmentActivity {
 		if (DEBUG) Log.v(TAG, "onOptionsItemSelected");
 		switch (item.getItemId()) {
 		case R.id.edit_match_number:
-			showDialog();
+			//showDialog();
 			return true;
 		case R.id.clear_data:
 			clearScreen();
@@ -226,12 +247,10 @@ public class MatchPagerActivity extends FragmentActivity {
 	public void saveData() {
 		if (DEBUG) Log.v(TAG, "saveData()");
 		
-		if (mMatchNum < 1) {
-			// this should never happen!
-			Toast.makeText(this, R.string.invalid_match_number, Toast.LENGTH_SHORT).show();
-			return;
-		}
+		// just a pre-caution
+		mTeamId = -1; mMatchId = -1;
 		
+		MatchFragment fragStart = ((MatchInputStartFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_START));
 		MatchFragment fragAuto = ((MatchInputAutoFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_AUTO));
 		MatchFragment fragTeleOp = ((MatchInputTeleOpFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_TELEOP));
 		MatchFragment fragGeneral = ((MatchInputGeneralFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_GENERAL));
@@ -243,9 +262,24 @@ public class MatchPagerActivity extends FragmentActivity {
 		// TODO: figure out if the life-cycle will ever cause this to be null!
 		// TODO: CHECK AGAINST THIS!!!!!
 		
+		ContentValues startData = null;
 		ContentValues autoData = null;
 		ContentValues teleOpData = null;
 		ContentValues generalData = null;
+		
+		if (fragStart != null) {
+			startData = fragStart.getData();
+			if (startData == null) {
+				Toast.makeText(this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
+				mPager.setCurrentItem(MatchFragmentAdapter.POSITION_START);
+				
+				int box = ((MatchInputStartFragment) fragStart).getFaultyEditTextBox();
+				((MatchInputStartFragment) fragStart).selectFaultyEditTextBox(box);
+				((MatchInputStartFragment) fragStart).resetFaultyEditTextBox();
+				
+				return;
+			}
+		}
 		
 		if (fragAuto != null) {
 			autoData = fragAuto.getData();
@@ -281,34 +315,60 @@ public class MatchPagerActivity extends FragmentActivity {
 				mPager.setCurrentItem(MatchFragmentAdapter.POSITION_GENERAL);
 				return;
 			}
-		}	
+		}
 		
+		// just a pre-caution. this should always work though.
+		if (!setCurrentIds()) { 
+			Toast.makeText(this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
+		// insert new team into teams tables if it doesn't already exist
+		final Cursor teamCur = getContentResolver().query(Teams.CONTENT_URI, null, Teams.TEAM_NUM + " = ?", new String[] { "" + mTeamNum }, null);
+		// get the referenced teamId
+		Uri teamUri;
+		if (teamCur == null || !teamCur.moveToFirst()) {			
+			ContentValues teamData = new ContentValues();
+			teamData.put(Teams.TEAM_NUM, mTeamNum);
+			teamUri = getContentResolver().insert(Teams.CONTENT_URI, teamData);
+			mTeamId = Integer.valueOf(teamUri.getLastPathSegment());
+			
+			if (DEBUG) Log.v(TAG, "teamUri: " + teamUri.toString());
+			if (DEBUG) Log.v(TAG, "teamId: "+mTeamId);
+		} else {
+			mTeamId = teamCur.getInt(teamCur.getColumnIndex(Teams._ID));
+			
+			Log.v(TAG, "Teams._ID =  "+mTeamId);
+		}
+			
 		// insert new match into match tables if it doesn't already exist
 		final Cursor matchCur = getContentResolver().query(Matches.CONTENT_URI, null, Matches.MATCH_NUM + " = ?", new String[] { "" + mMatchNum }, null);
 			
 		// get the referenced matchId
-		Uri matchUri; int matchId;	
+		Uri matchUri;
 		if (matchCur == null || !matchCur.moveToFirst()) {			
 			ContentValues matchData = new ContentValues();
 			matchData.put(Matches.MATCH_NUM, mMatchNum);
 			matchUri = getContentResolver().insert(Matches.CONTENT_URI, matchData);
+			mMatchId = Integer.valueOf(matchUri.getLastPathSegment());
+			
 			if (DEBUG) Log.v(TAG, "matchUri: " + matchUri.toString());
-			matchId = Integer.valueOf(matchUri.getLastPathSegment());
-			if (DEBUG) Log.v(TAG, "matchId: "+matchId);
+			if (DEBUG) Log.v(TAG, "matchId: "+mMatchId);
 		} else {
-			matchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
-			Log.v(TAG, ""+matchId);
+			mMatchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
+
+			Log.v(TAG, "Matches._ID =  " + mMatchId);
 		}
 		
 		autoData.put(TeamMatches.TEAM_ID, mTeamId);
 		teleOpData.put(TeamMatches.TEAM_ID, mTeamId);
 		generalData.put(TeamMatches.TEAM_ID, mTeamId);
 		
-		autoData.put(TeamMatches.MATCH_ID, matchId);
-		teleOpData.put(TeamMatches.MATCH_ID, matchId);
-		generalData.put(TeamMatches.MATCH_ID, matchId);
+		autoData.put(TeamMatches.MATCH_ID, mMatchId);
+		teleOpData.put(TeamMatches.MATCH_ID, mMatchId);
+		generalData.put(TeamMatches.MATCH_ID, mMatchId);
 		
-		// get already existing cummulative data
+		// get already existing cumulative data
 		final Uri summaryUri = Teams.buildTeamIdUri(""+mTeamId);
 		final Cursor summaryCur = getContentResolver().query(summaryUri, SUMMARY_PROJ, null, null, null);
 		
@@ -370,14 +430,12 @@ public class MatchPagerActivity extends FragmentActivity {
 			summaryData.put(Teams.SUMMARY_TOTAL_SCORE, summaryTotalScore);
 		}
 		
-		Log.v(TAG, autoData.toString());
-		
 		// check if a TeamMatch record already exists
-		final Uri queryUri = Matches.buildMatchIdTeamIdUri("" + matchId, "" + mTeamId);
+		final Uri queryUri = Matches.buildMatchIdTeamIdUri("" + mMatchId, "" + mTeamId);
 		final Cursor cur = getContentResolver().query(queryUri, new String[] { TeamMatches.TEAM_ID, TeamMatches.MATCH_ID }, null, null, null);
 		
 		final Uri insertUri = Matches.buildMatchTeamIdUri(""+mTeamId);
-		final Uri updateUri = Matches.buildMatchIdTeamIdUri(""+matchId, ""+mTeamId);
+		final Uri updateUri = Matches.buildMatchIdTeamIdUri(""+mMatchId, ""+mTeamId);
 		
 		if (cur != null && cur.moveToFirst()) {
 			// update the existing record
@@ -412,6 +470,7 @@ public class MatchPagerActivity extends FragmentActivity {
 	public void clearScreen() {
 		if (DEBUG) Log.v(TAG, "clearScreen()");
 		
+		MatchFragment fragStart = ((MatchInputStartFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_START));
 		MatchFragment fragAuto = ((MatchInputAutoFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_AUTO));
 		MatchFragment fragTeleOp = ((MatchInputTeleOpFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_TELEOP));
 		MatchFragment fragGeneral = ((MatchInputGeneralFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_GENERAL));
@@ -422,6 +481,7 @@ public class MatchPagerActivity extends FragmentActivity {
 
 		// TODO: figure out if the life-cycle will ever cause this to be null!
 		
+		if (fragStart != null) fragStart.clearScreen();
 		if (fragAuto != null) fragAuto.clearScreen();
 		if (fragTeleOp != null) fragTeleOp.clearScreen();
 		if (fragGeneral != null) fragGeneral.clearScreen();
@@ -488,14 +548,15 @@ public class MatchPagerActivity extends FragmentActivity {
 		private static final String TAG = "MatchFragmentAdapter";
 		private static final boolean DEBUG = false;
 		
-		public static final int POSITION_AUTO = 0;
-		public static final int POSITION_TELEOP = 1;
-		public static final int POSITION_GENERAL = 2;
+		public static final int POSITION_START = 0;
+		public static final int POSITION_AUTO = 1;
+		public static final int POSITION_TELEOP = 2;
+		public static final int POSITION_GENERAL = 3;
 		
 		private Map<Integer, WeakReference<MatchFragment>> mPageReferenceMap 
 					= new HashMap<Integer, WeakReference<MatchFragment>>();
 		
-		private static final String[] TITLES = new String[] { "Autonomous", "Tele-Op", "General" };
+		private static final String[] TITLES = new String[] { "Start", "Autonomous", "Tele-Op", "General" };
 
 		public static final int NUM_TITLES = TITLES.length;
 
@@ -510,6 +571,9 @@ public class MatchPagerActivity extends FragmentActivity {
 			MatchFragment result = null;
 			
 			switch (position) {
+			case POSITION_START:
+				result = MatchInputStartFragment.newInstance();
+				break;
 			case POSITION_AUTO:				
 				result = MatchInputAutoFragment.newInstance();
 				break;

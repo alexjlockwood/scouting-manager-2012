@@ -149,7 +149,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		super.onActivityCreated(savedInstanceState);
 		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");		
 		
-		loadData();
+		//loadData();
 	}
 	
 	@Override
