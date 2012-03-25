@@ -38,7 +38,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 	
 	private int mTeamId;
 	private int mMatchId;
-	private int mMatchNum;
+	//private int mMatchNum;
 	
 	private static final String HIGH_MADE_STORAGE_KEY = "high_made";
 	private static final String MED_MADE_STORAGE_KEY = "med_made";
@@ -82,7 +82,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		if (savedInstanceState != null) {
 			mTeamId = savedInstanceState.getInt("mTeamId");
 			mMatchId = savedInstanceState.getInt("mMatchId");
-			mMatchNum = savedInstanceState.getInt("mMatchNum");
+			//mMatchNum = savedInstanceState.getInt("mMatchNum");
 			
 			mHighMadeInit = savedInstanceState.getInt(HIGH_MADE_STORAGE_KEY);
 			mMedMadeInit = savedInstanceState.getInt(MED_MADE_STORAGE_KEY);
@@ -144,7 +144,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		
 		outState.putInt("mTeamId", mTeamId);
 		outState.putInt("mMatchId", mMatchId);
-		outState.putInt("mMatchNum", mMatchNum);
+		//outState.putInt("mMatchNum", mMatchNum);
 		
 		outState.putInt(HIGH_MADE_STORAGE_KEY, mHighMadeInit);
 		outState.putInt(MED_MADE_STORAGE_KEY, mHighMadeInit);
@@ -270,18 +270,18 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 	}
 	
 	@Override
-	public void loadData() {
+	public void loadData(int teamId, int matchId) {
 		if (DEBUG) Log.v(TAG, "loadData()");
 		
-		mTeamId = ((MatchPagerActivity) getActivity()).getCurrentTeamId();
-		mMatchNum = ((MatchPagerActivity) getActivity()).getCurrentMatchNum();
-		
+		mTeamId = teamId;
+		mMatchId = matchId;
+		/*
 		final Cursor matchCur = getActivity().getContentResolver().query(Matches.CONTENT_URI, null, Matches.MATCH_NUM + " = ?", new String[] { "" + mMatchNum }, null);
 		
 		if (matchCur != null && matchCur.moveToFirst()) {
 			
 			mMatchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
-			
+			*/
 			Uri teamUri = Matches.buildMatchIdTeamIdUri(""+mMatchId, ""+mTeamId);
 			final Cursor cur = getActivity().getContentResolver().query(teamUri, PROJECTION, null, null, null);
 		
@@ -300,7 +300,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 				mMedAtmpCounter.setText("" + numMedShotsAtmp);
 				mLowAtmpCounter.setText("" + numLowShotsAtmp);
 			}
-		}
+		//}
 	}
 
 	@Override

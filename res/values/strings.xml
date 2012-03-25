@@ -52,6 +52,7 @@
     
     <!-- Match Input Activity -->
     <string name="menu_change_match">Change match </string>
+    <string name="menu_load_match">Load match</string>
     <string name="menu_clear_data">Clear screen</string>
     
     <string name="autonomous">Autonomous</string>
@@ -67,9 +68,11 @@
     
     <string name="invalid_team_number">Invalid team number.</string>
     <string name="invalid_match_number">Invalid match number.</string>
+    <string name="invalid_team_match_no_exist">No data was found.</string>
     <string name="invalid_user_input">Invalid user input.</string>
     <string name="invalid_user_input_wins">Win or loss?</string>
     
+    <string name="data_load_successful">Data loaded.</string>
 	<string name="save_insert_successful">Data saved.</string>
 	<string name="save_update_successful">Data updated.</string>
     <string name="screen_reset">Screen cleared.</string>

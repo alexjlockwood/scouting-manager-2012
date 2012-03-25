@@ -125,7 +125,7 @@ public class MatchInputStartFragment extends MatchFragment {
 	}
 	
 	@Override
-	public void loadData() {
+	public void loadData(int teamId, int matchId) {
 		/* No implementation required */
 	}
 

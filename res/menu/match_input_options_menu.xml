@@ -7,8 +7,11 @@
     <item android:id="@+id/bt_cancel" 
           android:title="@string/cancel" 
           android:showAsAction="ifRoom|withText" />
-        <item android:id="@+id/edit_match_number"
+    <!-- <item android:id="@+id/edit_match_number"
           android:title="@string/menu_change_match"
+          android:showAsAction="never" /> -->
+    <item android:id="@+id/load_match"
+          android:title="@string/menu_load_match"
           android:showAsAction="never" />
     <item android:id="@+id/clear_data"
           android:title="@string/menu_clear_data"

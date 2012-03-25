@@ -105,7 +105,7 @@ public class MatchPagerActivity extends FragmentActivity {
 		mIndicator = (TabPageIndicator) findViewById(R.id.match_indicator);
 		mIndicator.setViewPager(mPager);
 	}
-	/*
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putInt("mTeamId", mTeamId);
@@ -120,9 +120,9 @@ public class MatchPagerActivity extends FragmentActivity {
 		mTeamId = savedInstanceState.getInt("mTeamId");
 		mTeamNum = savedInstanceState.getInt("mTeamNum");
 		mMatchNum = savedInstanceState.getInt("mMatchNum");
-	}*/
+	}
 	
-	public boolean setCurrentIds() {
+	public boolean setCurrentNums() {
 		ContentValues startData = ((MatchInputStartFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_START)).getData();
 		if (startData != null) {
 			mTeamNum = startData.getAsInteger(Teams.TEAM_NUM);
@@ -134,7 +134,7 @@ public class MatchPagerActivity extends FragmentActivity {
 			return false;
 		}
 	}
-	
+	/*
 	public int getCurrentTeamId() {
 		ContentValues startData = ((MatchInputStartFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_START)).getData();
 		if (startData != null) {
@@ -150,7 +150,8 @@ public class MatchPagerActivity extends FragmentActivity {
 		} 
 		return -1;
 	}
-	/*
+	
+	
 	public static class MatchPickerDialog extends DialogFragment {
 		private static final String TAG = "EnterMatchDialog";
 		private static final boolean DEBUG = true;
@@ -228,8 +229,11 @@ public class MatchPagerActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (DEBUG) Log.v(TAG, "onOptionsItemSelected");
 		switch (item.getItemId()) {
-		case R.id.edit_match_number:
+		// case R.id.edit_match_number:
 			//showDialog();
+			//return true;
+		case R.id.load_match:
+			loadMatch();
 			return true;
 		case R.id.clear_data:
 			clearScreen();
@@ -242,6 +246,70 @@ public class MatchPagerActivity extends FragmentActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void loadMatch() {
+		if (DEBUG) Log.v(TAG, "loadMatch()");
+		
+		ContentValues startData = null;
+		MatchFragment fragStart = ((MatchInputStartFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_START));
+		
+		// check if user has input a match/team number
+		if (fragStart != null) {
+			startData = fragStart.getData();
+			if (startData == null) {
+				Toast.makeText(this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
+				mPager.setCurrentItem(MatchFragmentAdapter.POSITION_START);
+				
+				int box = ((MatchInputStartFragment) fragStart).getFaultyEditTextBox();
+				((MatchInputStartFragment) fragStart).selectFaultyEditTextBox(box);
+				((MatchInputStartFragment) fragStart).resetFaultyEditTextBox();
+				
+				return;
+			}
+		}
+		
+		// check if the match/team number user has entered is valid
+		
+		final Cursor teamCur = getContentResolver().query(Teams.CONTENT_URI, new String[] { Teams._ID, Teams.TEAM_NUM }, Teams.TEAM_NUM + " = ?", new String[] { "" + startData.getAsInteger(Teams.TEAM_NUM) }, null);
+		if (teamCur == null || !teamCur.moveToFirst()) {
+			Toast.makeText(this, R.string.invalid_team_match_no_exist, Toast.LENGTH_SHORT).show();		
+			mPager.setCurrentItem(MatchFragmentAdapter.POSITION_START);
+			//((MatchInputStartFragment) fragStart).selectFaultyEditTextBox(MatchInputStartFragment.EDIT_TEXT_TEAM);
+			return;
+		} 
+		
+		final Cursor matchCur = getContentResolver().query(Matches.CONTENT_URI, new String[] { Matches._ID, Matches.MATCH_NUM }, Matches.MATCH_NUM + " = ?", new String[] { "" + startData.getAsInteger(Matches.MATCH_NUM) }, null);
+		if (matchCur == null || !matchCur.moveToFirst()) {
+			Toast.makeText(this, R.string.invalid_team_match_no_exist, Toast.LENGTH_SHORT).show();
+			mPager.setCurrentItem(MatchFragmentAdapter.POSITION_START);
+			// ((MatchInputStartFragment) fragStart).selectFaultyEditTextBox(MatchInputStartFragment.EDIT_TEXT_MATCH);
+			return;
+		}
+		
+		int teamId = teamCur.getInt(teamCur.getColumnIndex(Teams._ID));
+		int matchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
+		
+		final Cursor teamMatchCur = getContentResolver().query(Matches.buildMatchIdTeamIdUri(""+matchId, ""+teamId), new String[] { TeamMatches._ID, TeamMatches.TEAM_ID, TeamMatches.MATCH_ID }, TeamMatches.TEAM_ID + " = ? AND " + TeamMatches.MATCH_ID + " = ?", new String[] { "" + teamId, ""+matchId }, null);
+		if (teamMatchCur == null || !teamMatchCur.moveToFirst()) {
+			Toast.makeText(this, R.string.invalid_team_match_no_exist, Toast.LENGTH_SHORT).show();
+			mPager.setCurrentItem(MatchFragmentAdapter.POSITION_START);
+			return;
+		}
+		
+		// just a pre-caution. this should always work though.
+		if (!setCurrentNums()) { 
+			Toast.makeText(this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		// otherwise, the team-match exists, and we load the data.
+		
+		((MatchInputAutoFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_AUTO)).loadData(teamId, matchId);
+		((MatchInputTeleOpFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_TELEOP)).loadData(teamId, matchId);
+		((MatchInputGeneralFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_GENERAL)).loadData(teamId, matchId);
+		
+		Toast.makeText(this, R.string.data_load_successful, Toast.LENGTH_SHORT).show();
 	}
 
 	public void saveData() {
@@ -318,7 +386,7 @@ public class MatchPagerActivity extends FragmentActivity {
 		}
 		
 		// just a pre-caution. this should always work though.
-		if (!setCurrentIds()) { 
+		if (!setCurrentNums()) { 
 			Toast.makeText(this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
 			return;
 		}

@@ -20,7 +20,6 @@ import com.cmu.scout.R;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.TeamMatches;
 import com.cmu.scout.provider.ScoutContract.Teams;
-import com.cmu.scout.ui.MatchPagerActivity;
 
 public class MatchInputGeneralFragment extends MatchFragment {
 	
@@ -95,7 +94,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	
 	private int mTeamId;
 	private int mMatchId;
-	private int mMatchNum;
+	//private int mMatchNum;
 	
 	private static final String GENERAL_WIN_STORAGE_KEY = "general_win";
 	private static final String GENERAL_LOSS_STORAGE_KEY = "general_loss";
@@ -115,7 +114,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		if (savedInstanceState != null) {
 			mTeamId = savedInstanceState.getInt("mTeamId");
 			mMatchId = savedInstanceState.getInt("mMatchId");
-			mMatchNum = savedInstanceState.getInt("mMatchNum");
+			//mMatchNum = savedInstanceState.getInt("mMatchNum");
 			
 			mGeneralWinInit = savedInstanceState.getBoolean(GENERAL_WIN_STORAGE_KEY);
 			mGeneralLossInit = savedInstanceState.getBoolean(GENERAL_LOSS_STORAGE_KEY);
@@ -159,7 +158,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		
 		outState.putInt("mTeamId", mTeamId);
 		outState.putInt("mMatchId", mMatchId);
-		outState.putInt("mMatchNum", mMatchNum);
+		//outState.putInt("mMatchNum", mMatchNum);
 		
 		outState.putBoolean(GENERAL_WIN_STORAGE_KEY, mGeneralWinInit);
 		outState.putBoolean(GENERAL_LOSS_STORAGE_KEY, mGeneralLossInit);
@@ -254,21 +253,21 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	}
 	
 	@Override
-	public void loadData() {
+	public void loadData(int teamId, int matchId) {
 		if (DEBUG) Log.v(TAG, "loadData()");
 		
-		mTeamId = ((MatchPagerActivity) getActivity()).getCurrentTeamId();
-		mMatchNum = ((MatchPagerActivity) getActivity()).getCurrentMatchNum();
+		mTeamId = teamId;
+		mMatchId = matchId;
 		
 		mGeneralWinInit = false;
 		mGeneralLossInit = false;
 		mGeneralScoreInit = 0;
-		
+		/*
 		final Cursor matchCur = getActivity().getContentResolver().query(Matches.CONTENT_URI, null, Matches.MATCH_NUM + " = ?", new String[] { "" + mMatchNum }, null);
 
 		if (matchCur != null && matchCur.moveToFirst()) {
 			mMatchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
-		
+		*/
 			final Uri teamUri = Matches.buildMatchIdTeamIdUri(""+mMatchId, ""+mTeamId);
 			final Cursor cur = getActivity().getContentResolver().query(teamUri, PROJECTION, null, null, null);
 
@@ -366,7 +365,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		    	mFinalScore.setText(""+finalScore);
 		    	mGeneralScoreInit = finalScore;
 			}
-		}
+		//}
 	}
 
 	@Override

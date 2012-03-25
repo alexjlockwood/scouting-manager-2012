@@ -9,7 +9,7 @@ public abstract class MatchFragment extends Fragment {
 	
 	abstract public void clearScreen();
 	
-	abstract public void loadData();
+	abstract public void loadData(int teamId, int matchId);
 	
 	abstract public ContentValues getData();
 }

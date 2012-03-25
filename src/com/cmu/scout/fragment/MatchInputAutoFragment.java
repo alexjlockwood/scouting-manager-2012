@@ -38,7 +38,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 	
 	private int mTeamId;
 	private int mMatchId;
-	private int mMatchNum;
+	//private int mMatchNum;
 	
 	private static final String AUTO_HIGH_MADE_STORAGE_KEY = "auto_high_made";
 	private static final String AUTO_MED_MADE_STORAGE_KEY = "auto_med_made";
@@ -81,7 +81,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 		if (savedInstanceState != null) {
 			mTeamId = savedInstanceState.getInt("mTeamId");
 			mMatchId = savedInstanceState.getInt("mMatchId");
-			mMatchNum = savedInstanceState.getInt("mMatchNum");
+			//mMatchNum = savedInstanceState.getInt("mMatchNum");
 			
 			mAutoHighMadeInit = savedInstanceState.getInt(AUTO_HIGH_MADE_STORAGE_KEY);
 			mAutoMedMadeInit = savedInstanceState.getInt(AUTO_MED_MADE_STORAGE_KEY);
@@ -143,7 +143,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 		
 		outState.putInt("mTeamId", mTeamId);
 		outState.putInt("mMatchId", mMatchId);
-		outState.putInt("mMatchNum", mMatchNum);
+		//outState.putInt("mMatchNum", mMatchNum);
 		
 		outState.putInt(AUTO_HIGH_MADE_STORAGE_KEY, mAutoHighMadeInit);
 		outState.putInt(AUTO_MED_MADE_STORAGE_KEY, mAutoHighMadeInit);
@@ -269,19 +269,19 @@ public class MatchInputAutoFragment extends MatchFragment {
 	}
 	
 	@Override
-	public void loadData() {
+	public void loadData(int teamId, int matchId) {
 		if (DEBUG) Log.v(TAG, "loadData()");
 		
 		// TODO: THIS IS BAD DESIGN. FRAGMENTS SHOULD BE DESIGNED FOR REUSE
-		mTeamId = ((MatchPagerActivity) getActivity()).getCurrentTeamId();
-		mMatchNum = ((MatchPagerActivity) getActivity()).getCurrentMatchNum();
-		
+		mTeamId = teamId; // ((MatchPagerActivity) getActivity()).getCurrentTeamId();
+		mMatchId = matchId; // ((MatchPagerActivity) getActivity()).getCurrentMatchNum();
+		/*
 		final Cursor matchCur = getActivity().getContentResolver().query(Matches.CONTENT_URI, null, Matches.MATCH_NUM + " = ?", new String[] { "" + mMatchNum }, null);
 		
 		if (matchCur != null && matchCur.moveToFirst()) {
 			
 			mMatchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
-			
+			*/
 			Uri teamUri = Matches.buildMatchIdTeamIdUri(""+mMatchId, ""+mTeamId);
 			final Cursor cur = getActivity().getContentResolver().query(teamUri, PROJECTION, null, null, null);
 				
@@ -301,7 +301,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 				mAutoMedAtmpCounter.setText("" + numMedShotsAtmp);
 				mAutoLowAtmpCounter.setText("" + numLowShotsAtmp);
 			}
-		}
+		//}
 	}
 
 	@Override
