@@ -55,7 +55,7 @@
         <RadioGroup
             android:id="@+id/RBG_Pick_Ball"
             style="@style/match_radio_group"
-            android:layout_width="210dp"
+            android:layout_width="320dp"
             android:layout_alignTop="@id/TV_pick_up_balls"
             android:layout_toRightOf="@id/TV_pick_up_balls" >
 
@@ -68,6 +68,11 @@
                 android:id="@+id/RB_Pick_Ball_Floor"
                 style="@style/match_radio_button"
                 android:text="@string/from_floor" />
+            
+            <RadioButton
+                android:id="@+id/RB_Pick_Ball_Both"
+                style="@style/match_radio_button"
+                android:text="@string/both" />
         </RadioGroup>
 
         <!-- Speed? -->
@@ -245,7 +250,14 @@
             android:layout_toRightOf="@id/TV_balance_num"
             android:gravity="center"
             android:orientation="horizontal" >
-
+            
+            <RadioButton
+                android:id="@+id/RB_Balance_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="@string/one" />
+            
             <RadioButton
                 android:id="@+id/RB_Balance_2"
                 android:layout_width="wrap_content"
@@ -286,6 +298,7 @@
                 android:id="@+id/RB_alliance_red"
                 style="@style/match_radio_button"
                 android:text="@string/red" />
+            
         </RadioGroup>
 
         <!-- Win/lose match? -->
@@ -299,7 +312,7 @@
         <RadioGroup
             android:id="@+id/RBG_win_match"
             style="@style/match_radio_group"
-            android:layout_width="210dp"
+            android:layout_width="320dp"
             android:layout_alignTop="@id/TV_win_match"
             android:layout_toRightOf="@id/TV_win_match" >
 
@@ -312,6 +325,12 @@
                 android:id="@+id/RB_match_loss"
                 style="@style/match_radio_button"
                 android:text="@string/loss" />
+            <!--  
+            <RadioButton
+                android:id="@+id/RB_match_draw"
+                style="@style/match_radio_button"
+                android:text="@string/draw" />
+            -->
         </RadioGroup>
 
         <!-- Final score? -->

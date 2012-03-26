@@ -92,6 +92,7 @@
 	<string name="win_match">Win/loss?</string>
 	<string name="win">Win</string>
 	<string name="loss">Loss</string>
+	<string name="draw">Draw</string>
 	<string name="final_score">Final score</string>
 	
 	<string name="blue">Blue</string>

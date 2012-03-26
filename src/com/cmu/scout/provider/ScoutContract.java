@@ -333,15 +333,16 @@ public final class ScoutContract {
 		String WHICH_ALLIANCE = "which_alliance";
 		
 		/**
-		 * Did their alliance win the match?
+		 * Did their alliance win/lose/draw the match?
 		 * <P>
 		 * Type: INTEGER<br>
 		 * Default: -1<br>
 		 * </P>
 		 * <P>
 		 * Possible values:<br>
-		 * 0: No (loss)
-		 * 1: Yes (win)
+		 * 0: Lose<br>
+		 * 1: Win<br>
+		 * 2: Draw<br>
 		 * -1: No value
 		 * </P>
 		 **/
@@ -367,6 +368,7 @@ public final class ScoutContract {
 		 * <P>
 		 * Possible values:<br>
 		 * 0: Did not attempt (not currently implemented)<br>
+		 * 1: One<br>
 		 * 2: Two<br>
 		 * 3: Three<br>
 		 * -1: No value<br>
@@ -401,6 +403,7 @@ public final class ScoutContract {
 		 * Possible values:<br>
 		 * 0: From feeder<br>
 		 * 1: From floor<br>
+		 * 2: Both<br>
 		 * -1: No value<br>
 		 * </P>
 		 */

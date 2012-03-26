@@ -182,7 +182,7 @@ public class DisplayMatchesGeneralFragment extends ListFragment implements
 	        String resultStr = (resultRow == 0) ? "Loss" : (resultRow == 1) ? "Win" : "N/A";
 	        String crossStr = (crossRow == 1) ? "Bridge" : (crossRow == 2) ? "Barrier" : (crossRow == 3) ? "Bridge/Barrier" : "N/A";
 	        String pickBallsStr = (pickBallsRow == 0) ? "Feeder" : (pickBallsRow == 1) ? "Floor" : (pickBallsRow == 2) ? "Feeder/Floor" : "N/A";
-	        String balancedStr = (balancedRow == 2) ? "2 robots" : (balancedRow == 3) ? "3 robots" : "N/A";
+	        String balancedStr = (balancedRow == 1) ? "1 robot" : (balancedRow == 2) ? "2 robots" : (balancedRow == 3) ? "3 robots" : "N/A";
 	        
 	        holder.result.setText(resultStr);
 	        holder.cross.setText(crossStr);

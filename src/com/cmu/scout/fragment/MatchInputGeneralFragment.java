@@ -28,6 +28,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		
 	private ToggleButton mToggleBalance;
 	
+	private RadioButton mRadioButtonBalance1;
 	private RadioButton mRadioButtonBalance2;
 	private RadioButton mRadioButtonBalance3;
 
@@ -50,6 +51,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	static {
 		mViewIdMap = new HashMap<Integer,Integer>();
 
+		mViewIdMap.put(R.id.RB_Balance_1, 1);
 		mViewIdMap.put(R.id.RB_Balance_2, 2);
 		mViewIdMap.put(R.id.RB_Balance_3, 3);
 		mViewIdMap.put(R.id.RB_Cross_Bridge, 1);
@@ -57,6 +59,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		mViewIdMap.put(R.id.RB_Cross_Both, 3);
 		mViewIdMap.put(R.id.RB_Pick_Ball_Feeder, 0);
 		mViewIdMap.put(R.id.RB_Pick_Ball_Floor, 1);
+		mViewIdMap.put(R.id.RB_Pick_Ball_Both, 2);
 		mViewIdMap.put(R.id.RB_Speed_Pr, 0);
 		mViewIdMap.put(R.id.RB_Speed_Fr, 1);
 		mViewIdMap.put(R.id.RB_Speed_Gd, 2);
@@ -75,6 +78,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		mViewIdMap.put(R.id.RB_alliance_red, 1);
 		mViewIdMap.put(R.id.RB_match_loss, 0);
 		mViewIdMap.put(R.id.RB_match_win, 1);
+		//mViewIdMap.put(R.id.RB_match_draw, 2);
 		mViewIdMap.put(-1,-1);
 	}
 	
@@ -125,6 +129,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		final View parent = inflater.inflate(R.layout.match_scout_general_page, container, false);
 		
 		mToggleBalance = (ToggleButton) parent.findViewById(R.id.TBT_Balance);
+		mRadioButtonBalance1 = (RadioButton) parent.findViewById(R.id.RB_Balance_1);
 		mRadioButtonBalance2 = (RadioButton) parent.findViewById(R.id.RB_Balance_2);
 		mRadioButtonBalance3 = (RadioButton) parent.findViewById(R.id.RB_Balance_3);
 		
@@ -172,6 +177,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		switch(viewId) {
 		case R.id.TBT_Balance:
 			boolean isToggleChecked = mToggleBalance.isChecked();
+			mRadioButtonBalance1.setEnabled(isToggleChecked);
 			mRadioButtonBalance2.setEnabled(isToggleChecked);
 			mRadioButtonBalance3.setEnabled(isToggleChecked);
 			break;
@@ -231,8 +237,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 				// then only loss was checked
 				summaryNumWins = 1;
 				summaryNumLosses = -1;
-			}
-			
+			}			
 		} else if (mViewIdMap.get(winMatch) == 0) {
 			// then loss is checked
 			if (!mGeneralWinInit && !mGeneralLossInit) {
@@ -283,18 +288,21 @@ public class MatchInputGeneralFragment extends MatchFragment {
 				int winMatch  = cur.getInt(cur.getColumnIndex(TeamMatches.WIN_MATCH));
 				int finalScore  = cur.getInt(cur.getColumnIndex(TeamMatches.FINAL_SCORE));
 			
-				if (numBalanced == 2 || numBalanced == 3) {
+				if (numBalanced == 1 || numBalanced == 2 || numBalanced == 3) {
 					mToggleBalance.setChecked(true);
+					mRadioButtonBalance1.setEnabled(true);
 					mRadioButtonBalance2.setEnabled(true);
 					mRadioButtonBalance3.setEnabled(true);
 				
 					switch(numBalanced) {
+					case 1: mRadioBalance.check(R.id.RB_Balance_1); break;
 					case 2: mRadioBalance.check(R.id.RB_Balance_2); break;
 					case 3: mRadioBalance.check(R.id.RB_Balance_3); break;
 					default: mRadioBalance.check(-1); break;
 					}
 				} else {
 					mToggleBalance.setChecked(false);
+					mRadioButtonBalance1.setEnabled(false);
 					mRadioButtonBalance2.setEnabled(false);
 					mRadioButtonBalance3.setEnabled(false);
 					mRadioBalance.check(-1);
@@ -311,6 +319,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 				switch(pickUpBalls) {
 				case 0: mRadioPickBalls.check(R.id.RB_Pick_Ball_Feeder); break;
 				case 1: mRadioPickBalls.check(R.id.RB_Pick_Ball_Floor); break;
+				case 2: mRadioPickBalls.check(R.id.RB_Pick_Ball_Both); break;
 				default: mRadioPickBalls.check(-1); break;
 				}
 		    	
@@ -373,6 +382,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		if (DEBUG) Log.v(TAG, "clearScreen()");
 
     	mToggleBalance.setChecked(false);
+    	mRadioButtonBalance1.setEnabled(false);
     	mRadioButtonBalance2.setEnabled(false);
     	mRadioButtonBalance3.setEnabled(false);
     	
