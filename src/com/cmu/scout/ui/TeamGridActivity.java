@@ -98,6 +98,10 @@ public class TeamGridActivity extends BaseCameraActivity
 			FragmentManager.enableDebugLogging(true);
 		}
 		
+		// enable "up" navigation
+		ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		final Intent data = getIntent();
 		if (data != null) {
 			mCalledFromTeam = data.getBooleanExtra(DashboardActivity.INTENT_CALL_FROM_TEAM, false);

@@ -93,7 +93,13 @@ public class TeamInputActivity extends BaseCameraActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.team_input_main);
+		
+		// enable "up" navigation
+		final ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		findViews();
+		
 		final Intent intent = getIntent();
 		if (intent != null) {
 			loadInfo(intent.getData());
@@ -158,6 +164,12 @@ public class TeamInputActivity extends BaseCameraActivity
 		case R.id.clear_data:
 			clearData();
 			return true;
+		case android.R.id.home:
+            // app icon in action bar clicked; go home
+            Intent intent = new Intent(this, TeamGridActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
 		//case R.id.bt_cancel:
 			//showConfirmExitDialog();
 			//return true;

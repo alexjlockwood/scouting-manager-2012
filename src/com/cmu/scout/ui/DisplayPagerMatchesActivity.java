@@ -173,6 +173,8 @@ public class DisplayPagerMatchesActivity extends FragmentActivity {
 		
 		final ActionBar actionBar = getActionBar();
 		if (actionBar != null) {
+			// enable "up" navigation
+			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setTitle(R.string.display_team_matches_title);
 			actionBar.setSubtitle("Team " + mTeamNum);
 		}
@@ -191,7 +193,7 @@ public class DisplayPagerMatchesActivity extends FragmentActivity {
 		switch(item.getItemId()) {
 		case android.R.id.home:
 			// go to home screen when app icon in action bar is clicked
-			Intent intent = new Intent(this, DashboardActivity.class);
+			Intent intent = new Intent(this, DisplayPagerActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         	startActivity(intent);
         	return true;
