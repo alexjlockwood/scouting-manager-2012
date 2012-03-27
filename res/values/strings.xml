@@ -119,6 +119,7 @@
     <!-- Display strings -->
     
     <string name="menu_display_team_matches">Display matches</string>
+    <string name="menu_edit_team_input">Edit team info</string>
 
 	<!-- Display Headers -->
     <string name="team">Team</string>

@@ -4,4 +4,8 @@
     <item
         android:id="@+id/menu_display_team_matches"
         android:title="@string/menu_display_team_matches"/>
+    <item
+        android:id="@+id/menu_edit_team_input"
+        android:title="@string/menu_edit_team_input" />
+
 </menu>

@@ -411,10 +411,10 @@ public class MatchPagerActivity extends FragmentActivity {
 			
 		// insert new match into match tables if it doesn't already exist
 		final Cursor matchCur = getContentResolver().query(Matches.CONTENT_URI, null, Matches.MATCH_NUM + " = ?", new String[] { "" + mMatchNum }, null);
-			
+
 		// get the referenced matchId
 		Uri matchUri;
-		if (matchCur == null || !matchCur.moveToFirst()) {			
+		if (matchCur == null || !matchCur.moveToFirst()) {
 			ContentValues matchData = new ContentValues();
 			matchData.put(Matches.MATCH_NUM, mMatchNum);
 			matchUri = getContentResolver().insert(Matches.CONTENT_URI, matchData);
@@ -422,6 +422,7 @@ public class MatchPagerActivity extends FragmentActivity {
 			
 			if (DEBUG) Log.v(TAG, "matchUri: " + matchUri.toString());
 			if (DEBUG) Log.v(TAG, "matchId: "+mMatchId);
+			
 		} else {
 			mMatchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
 
