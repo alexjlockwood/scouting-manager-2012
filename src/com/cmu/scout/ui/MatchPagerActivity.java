@@ -624,7 +624,7 @@ public class MatchPagerActivity extends FragmentActivity {
 		private Map<Integer, WeakReference<MatchFragment>> mPageReferenceMap 
 					= new HashMap<Integer, WeakReference<MatchFragment>>();
 		
-		private static final String[] TITLES = new String[] { "Match Info", "Autonomous", "Tele-Op", "Other" };
+		private static final String[] TITLES = new String[] { "Start", "Autonomous", "Tele-Op", "Other" };
 
 		public static final int NUM_TITLES = TITLES.length;
 
