@@ -96,25 +96,34 @@ public class TeamInputActivity extends BaseCameraActivity
 		findViews();
 		final Intent intent = getIntent();
 		if (intent != null) {
-			final Uri teamUri = intent.getData();
-			
-			Cursor cur = getContentResolver().query(teamUri, null, null, null, null);
-			if (cur != null && cur.moveToFirst()) {
-				mTeamId = cur.getInt(cur.getColumnIndex(Teams._ID));
-				mTeamNum = cur.getInt(cur.getColumnIndex(Teams.TEAM_NUM));
-				final ActionBar actionBar = getActionBar();
-				if (actionBar != null) {
-					actionBar.setTitle(R.string.team_scouting_title);
-					actionBar.setSubtitle("Team " + mTeamNum);
-				}
-				
-				loadInfo(cur);
-			}
-			cur.close();
+			loadInfo(intent.getData());
 		}	
 	}
 	
-	private void loadInfo(final Cursor cur) {	
+	@Override
+	public void onPause() {
+		super.onPause();
+		saveData();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		loadInfo(getIntent().getData());
+	}
+	
+	private void loadInfo(Uri teamUri) {	
+		Cursor cur = getContentResolver().query(teamUri, null, null, null, null);
+		if (cur != null && cur.moveToFirst()) {
+			mTeamId = cur.getInt(cur.getColumnIndex(Teams._ID));
+			mTeamNum = cur.getInt(cur.getColumnIndex(Teams.TEAM_NUM));
+			final ActionBar actionBar = getActionBar();
+			if (actionBar != null) {
+				actionBar.setTitle(R.string.team_scouting_title);
+				actionBar.setSubtitle("Team " + mTeamNum);
+			}
+		}
+		
 		loadContactPicture();
 		
 		mTeamName.setText(cur.getString(cur.getColumnIndex(Teams.TEAM_NAME)));
@@ -149,13 +158,13 @@ public class TeamInputActivity extends BaseCameraActivity
 		case R.id.clear_data:
 			clearData();
 			return true;
-		case R.id.bt_cancel:
-			showConfirmExitDialog();
-			return true;
-		case R.id.bt_save:
-			saveData();
-			finish();
-			return true;
+		//case R.id.bt_cancel:
+			//showConfirmExitDialog();
+			//return true;
+		//case R.id.bt_save:
+			//saveData();
+			//finish();
+			//return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -182,8 +191,7 @@ public class TeamInputActivity extends BaseCameraActivity
 		mCheckRight = (CheckBox) parent.findViewById(R.id.CB_Right);
 	}
 
-	private void saveData(){
-		
+	private void saveData(){	
 		int drive_n = mDrive.getSelectedItemPosition()-1;
 		int wheel_n = mWheel.getSelectedItemPosition()-1;
 		int strategy_n = mStrategy.getSelectedItemPosition()-1;
@@ -216,7 +224,7 @@ public class TeamInputActivity extends BaseCameraActivity
 		// update the existing record
 		// should always have data in database at this point
 		getContentResolver().update(uri, values, null, null);
-		Toast.makeText(this, R.string.save_insert_successful, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, R.string.save_insert_successful, Toast.LENGTH_SHORT).show();
 	}
 	
 	private void clearData(){
@@ -432,11 +440,11 @@ public class TeamInputActivity extends BaseCameraActivity
 			}
     	}
     }
-    
+    /*
 	@Override
 	public void onBackPressed() {
 		showConfirmExitDialog();
-	}
+	}*/
 	
 	public void showConfirmExitDialog() {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-	<item android:id="@+id/bt_save" 
+	<!--  <item android:id="@+id/bt_save" 
    		  android:title="@string/save"
           android:showAsAction="ifRoom|withText" 
           android:icon="@drawable/ic_checkmark_holo_light"/>   
     <item android:id="@+id/bt_cancel" 
           android:title="@string/cancel" 
-          android:showAsAction="ifRoom|withText" />     
+          android:showAsAction="ifRoom|withText" />    --> 
     <item android:id="@+id/clear_data"
           android:title="@string/menu_clear_data"
           android:showAsAction="never" />
