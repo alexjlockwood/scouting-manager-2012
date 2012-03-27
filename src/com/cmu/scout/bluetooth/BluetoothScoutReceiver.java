@@ -22,7 +22,7 @@ public class BluetoothScoutReceiver extends BroadcastReceiver {
 			context.unregisterReceiver(this);
 			BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 			sendToDeviceActivity.connectDevice(device.getAddress());
-		} 
+		}
 		
 		// TODO: check this part!
 		// WHERE IS THE BEST PLACE TO UNREGISTER THE RECEIVER?
