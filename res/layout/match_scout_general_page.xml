@@ -312,7 +312,7 @@
         <RadioGroup
             android:id="@+id/RBG_win_match"
             style="@style/match_radio_group"
-            android:layout_width="320dp"
+            android:layout_width="210dp"
             android:layout_alignTop="@id/TV_win_match"
             android:layout_toRightOf="@id/TV_win_match" >
 
