@@ -213,6 +213,27 @@ public class TeamGridActivity extends BaseCameraActivity
 			mCurrentTeamId = -1;
 			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_CODE, info.id);
 			return true;
+		case R.id.menu_view_picture:
+			Intent intent = new Intent();  
+			intent.setAction(android.content.Intent.ACTION_VIEW);
+			
+			Uri teamUri = Teams.buildTeamIdUri(""+info.id);
+			Cursor cur = getContentResolver().query(teamUri, null, null, null, null);
+			
+			Uri uri = null;
+			if (cur != null && cur.moveToFirst()) {
+				String photo = cur.getString(cur.getColumnIndex(Teams.TEAM_PHOTO));
+				uri = (!TextUtils.isEmpty(photo)) ? Uri.parse(photo) : null;
+				cur.close();
+			}
+			
+			if (uri != null) {
+				intent.setDataAndType(uri, "image/*");  
+				startActivity(intent);
+			} else {
+				Toast.makeText(this, R.string.image_not_found, Toast.LENGTH_SHORT).show();
+			}
+			return true;
 		case R.id.menu_delete_team:
 			showConfirmDeleteDialog(info.id);
 			return true;

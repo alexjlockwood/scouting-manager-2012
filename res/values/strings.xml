@@ -47,6 +47,7 @@
     <!-- Team Grid Activity -->
     <string name="menu_add_team">Add Team</string>
     <string name="menu_delete_team">Delete Team</string>
+    <string name="menu_view_picture">Show in Gallery</string>
     <string name="menu_delete_match">Delete Match</string>
     <string name="duplicate_team_number">The team you entered already exists.</string>
     
@@ -215,5 +216,7 @@
     <string name="team_number">Enter team:</string>
     <string name="match_number_hint">#</string>
     <string name="team_number_hint">#</string>
+    
+    <string name="image_not_found">Image not found.</string>
         
 </resources>

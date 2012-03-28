@@ -2,6 +2,8 @@
     
     <item android:id="@+id/menu_take_picture"
         android:title="@string/menu_take_picture" />
+    <item android:id="@+id/menu_view_picture"
+        android:title="@string/menu_view_picture" />
     <item android:id="@+id/menu_delete_team"
         android:title="@string/menu_delete_team" />
         
