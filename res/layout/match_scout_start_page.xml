@@ -33,7 +33,7 @@
 
         <EditText
             android:id="@+id/ET_match_number"
-            android:layout_width="75dp"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/TV_match_number"
             android:layout_toRightOf="@id/TV_match_number"
@@ -44,14 +44,14 @@
 
         <EditText
             android:id="@+id/ET_team_number"
-            android:layout_width="75dp"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/TV_team_number"
             android:layout_alignLeft="@id/ET_match_number"
             android:layout_toRightOf="@id/TV_team_number"
             android:hint="@string/team_number_hint"
             android:inputType="number"
-            android:maxLength="3"
+            android:maxLength="5"
             android:selectAllOnFocus="true" />
     </RelativeLayout>
 
