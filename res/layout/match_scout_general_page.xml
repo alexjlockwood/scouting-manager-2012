@@ -55,7 +55,7 @@
         <RadioGroup
             android:id="@+id/RBG_Pick_Ball"
             style="@style/match_radio_group"
-            android:layout_width="320dp"
+            android:layout_width="315dp"
             android:layout_alignTop="@id/TV_pick_up_balls"
             android:layout_toRightOf="@id/TV_pick_up_balls" >
 
