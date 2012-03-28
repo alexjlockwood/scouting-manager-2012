@@ -4,48 +4,55 @@
     android:layout_height="match_parent"
     android:padding="5dp" >
 
-    <EditText
-        android:id="@+id/ET_team_number"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="10dp"
-        android:hint="@string/team_number_hint"
-        android:inputType="number"
-        android:maxLength="5"
-        android:selectAllOnFocus="true" />
-
-    <EditText
-        android:id="@+id/ET_match_number"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/ET_team_number"
-        android:layout_alignLeft="@id/ET_team_number"
-        android:hint="@string/match_number_hint"
-        android:inputType="number"
-        android:maxLength="5"
-        android:selectAllOnFocus="true" />
-
-    <TextView
-        android:id="@+id/TV_match_number"
+    <RelativeLayout
+        android:id="@+id/Start_Screen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ET_match_number"
-        android:layout_marginRight="25dp"
-        android:layout_toLeftOf="@id/ET_match_number"
-        android:text="@string/match_number"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:layout_centerInParent="true" >
 
-    <TextView
-        android:id="@+id/TV_team_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ET_team_number"
-        android:layout_alignLeft="@id/TV_match_number"
-        android:text="@string/team_number"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/TV_match_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="25dp"
+            android:text="@string/match_number"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/TV_team_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/TV_match_number"
+            android:layout_below="@id/TV_match_number"
+            android:text="@string/team_number"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/ET_match_number"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/TV_match_number"
+            android:layout_toRightOf="@id/TV_match_number"
+            android:hint="@string/match_number_hint"
+            android:inputType="number"
+            android:maxLength="3"
+            android:selectAllOnFocus="true" />
+
+        <EditText
+            android:id="@+id/ET_team_number"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/TV_team_number"
+            android:layout_alignLeft="@id/ET_match_number"
+            android:layout_toRightOf="@id/TV_team_number"
+            android:hint="@string/team_number_hint"
+            android:inputType="number"
+            android:maxLength="3"
+            android:selectAllOnFocus="true" />
+    </RelativeLayout>
 
 </RelativeLayout>

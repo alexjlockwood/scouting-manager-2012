@@ -118,8 +118,8 @@
    
     <!-- Display strings -->
     
-    <string name="menu_display_team_matches">Display matches</string>
-    <string name="menu_edit_team_input">Edit team info</string>
+    <string name="menu_display_team_matches">Display team\'s matches</string>
+    <string name="menu_edit_team_input">Edit team\'s info</string>
 
 	<!-- Display Headers -->
     <string name="team">Team</string>
@@ -213,7 +213,7 @@
     
     <string name="match_number">Enter match:</string>
     <string name="team_number">Enter team:</string>
-    <string name="match_number_hint">match #</string>
-    <string name="team_number_hint">team #</string>
+    <string name="match_number_hint">#</string>
+    <string name="team_number_hint">#</string>
         
 </resources>

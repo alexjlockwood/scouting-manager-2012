@@ -214,7 +214,7 @@ public class DisplayPagerMatchesActivity extends FragmentActivity {
 		private static final String[] TITLES = new String[] { 
 			"Autonomous",
 			"Teleop",
-			"General"
+			"Other"
 		};
 
 		private int mCount = TITLES.length;
