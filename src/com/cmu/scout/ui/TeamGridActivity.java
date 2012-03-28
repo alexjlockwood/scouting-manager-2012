@@ -256,6 +256,7 @@ public class TeamGridActivity extends BaseCameraActivity
 			if (cur != null && cur.moveToFirst()) {
 				// user is attempting to insert duplicate team number into database
 				Toast.makeText(this, R.string.duplicate_team_number, Toast.LENGTH_SHORT).show();
+				cur.close();
 			} else {
 				// insert new team into database
 				int teamNum = Integer.valueOf(teamName);

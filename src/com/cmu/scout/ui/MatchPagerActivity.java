@@ -290,12 +290,19 @@ public class MatchPagerActivity extends FragmentActivity {
 		int teamId = teamCur.getInt(teamCur.getColumnIndex(Teams._ID));
 		int matchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
 		
+		// close cursors
+		teamCur.close();
+		matchCur.close();
+		
 		final Cursor teamMatchCur = getContentResolver().query(Matches.buildMatchIdTeamIdUri(""+matchId, ""+teamId), new String[] { TeamMatches._ID, TeamMatches.TEAM_ID, TeamMatches.MATCH_ID }, TeamMatches.TEAM_ID + " = ? AND " + TeamMatches.MATCH_ID + " = ?", new String[] { "" + teamId, ""+matchId }, null);
 		if (teamMatchCur == null || !teamMatchCur.moveToFirst()) {
 			Toast.makeText(this, R.string.invalid_team_match_no_exist, Toast.LENGTH_SHORT).show();
 			mPager.setCurrentItem(MatchFragmentAdapter.POSITION_START);
 			return;
 		}
+		
+		// close cursor
+		teamMatchCur.close();
 		
 		// just a pre-caution. this should always work though.
 		if (!setCurrentNums()) { 
@@ -393,6 +400,7 @@ public class MatchPagerActivity extends FragmentActivity {
 		
 		// insert new team into teams tables if it doesn't already exist
 		final Cursor teamCur = getContentResolver().query(Teams.CONTENT_URI, null, Teams.TEAM_NUM + " = ?", new String[] { "" + mTeamNum }, null);
+		
 		// get the referenced teamId
 		Uri teamUri;
 		if (teamCur == null || !teamCur.moveToFirst()) {			
@@ -400,13 +408,9 @@ public class MatchPagerActivity extends FragmentActivity {
 			teamData.put(Teams.TEAM_NUM, mTeamNum);
 			teamUri = getContentResolver().insert(Teams.CONTENT_URI, teamData);
 			mTeamId = Integer.valueOf(teamUri.getLastPathSegment());
-			
-			if (DEBUG) Log.v(TAG, "teamUri: " + teamUri.toString());
-			if (DEBUG) Log.v(TAG, "teamId: "+mTeamId);
 		} else {
 			mTeamId = teamCur.getInt(teamCur.getColumnIndex(Teams._ID));
-			
-			Log.v(TAG, "Teams._ID =  "+mTeamId);
+			teamCur.close();
 		}
 			
 		// insert new match into match tables if it doesn't already exist
@@ -419,14 +423,9 @@ public class MatchPagerActivity extends FragmentActivity {
 			matchData.put(Matches.MATCH_NUM, mMatchNum);
 			matchUri = getContentResolver().insert(Matches.CONTENT_URI, matchData);
 			mMatchId = Integer.valueOf(matchUri.getLastPathSegment());
-			
-			if (DEBUG) Log.v(TAG, "matchUri: " + matchUri.toString());
-			if (DEBUG) Log.v(TAG, "matchId: "+mMatchId);
-			
 		} else {
 			mMatchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
-
-			Log.v(TAG, "Matches._ID =  " + mMatchId);
+			matchCur.close();
 		}
 		
 		autoData.put(TeamMatches.TEAM_ID, mTeamId);
@@ -452,6 +451,8 @@ public class MatchPagerActivity extends FragmentActivity {
 			int summaryNumWins = summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_NUM_WINS));
 			int summaryNumLosses = summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_NUM_LOSSES));
 			int summaryTotalScore = summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_TOTAL_SCORE));
+			
+			summaryCur.close();
 			
 			// get auto cumulative data
 			summaryAutoNumScored += autoData.getAsInteger(Teams.SUMMARY_AUTO_NUM_SCORED);
@@ -521,6 +522,8 @@ public class MatchPagerActivity extends FragmentActivity {
 			getContentResolver().update(updateUri, generalData, null, null);
 			getContentResolver().update(summaryUri, summaryData, null, null);
 			Toast.makeText(this, R.string.save_update_successful, Toast.LENGTH_SHORT).show();
+			
+			cur.close();
 		} else {
 			// insert the new record, then update
 			getContentResolver().insert(insertUri, autoData);

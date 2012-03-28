@@ -181,7 +181,6 @@ public class DisplayAutoFragment extends ListFragment implements
 		if (DEBUG) Log.v(TAG, "sorting: " + mSort + " --> " + (mSortColumn+mSortOrder));
 		
 		mSort = mSortColumn + mSortOrder;
-		Log.v(TAG, mSort);
 		getLoaderManager().restartLoader(DISPLAY_AUTO_LOADER, null, this);
 	}
 	

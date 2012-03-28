@@ -45,7 +45,6 @@ public class DisplayPagerActivity extends FragmentActivity
 		// enable "up" navigation
 		final ActionBar actionBar = getActionBar();
 	   
-		
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			//actionBar.setTitle(R.string.app_name);

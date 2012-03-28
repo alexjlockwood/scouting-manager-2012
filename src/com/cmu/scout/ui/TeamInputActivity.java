@@ -128,24 +128,26 @@ public class TeamInputActivity extends BaseCameraActivity
 				actionBar.setTitle(R.string.team_scouting_title);
 				actionBar.setSubtitle("Team " + mTeamNum);
 			}
+	
+			loadContactPicture();
+		
+			mTeamName.setText(cur.getString(cur.getColumnIndex(Teams.TEAM_NAME)));
+			mComment.setText(cur.getString(cur.getColumnIndex(Teams.COMMENTS)));
+			mDrive.setSelection(cur.getInt(cur.getColumnIndex(Teams.DRIVE_SYSTEM))+1);
+			mWheel.setSelection(cur.getInt(cur.getColumnIndex(Teams.WHEELS))+1);
+			mStrategy.setSelection(cur.getInt(cur.getColumnIndex(Teams.STRATEGY))+1);
+			mToggleAuto.setChecked(cur.getInt(cur.getColumnIndex(Teams.HAS_AUTONOMOUS))>0);
+			mToggleKinect.setChecked(cur.getInt(cur.getColumnIndex(Teams.HAS_KINECT))>0);
+			mToggleBarrier.setChecked(cur.getInt(cur.getColumnIndex(Teams.CAN_CROSS))>0);
+			mToggleBridge.setChecked(cur.getInt(cur.getColumnIndex(Teams.CAN_PUSH_DOWN_BRIDGE))>0);
+		
+			String s = "" + cur.getInt(cur.getColumnIndex(Teams.PREFERRED_START));
+			mCheckLeft.setChecked(s.charAt(0) == '1');
+			mCheckMiddle.setChecked(s.contains("2"));
+			mCheckRight.setChecked(s.contains("3"));
+		
+			cur.close();
 		}
-		
-		loadContactPicture();
-		
-		mTeamName.setText(cur.getString(cur.getColumnIndex(Teams.TEAM_NAME)));
-		mComment.setText(cur.getString(cur.getColumnIndex(Teams.COMMENTS)));
-		mDrive.setSelection(cur.getInt(cur.getColumnIndex(Teams.DRIVE_SYSTEM))+1);
-		mWheel.setSelection(cur.getInt(cur.getColumnIndex(Teams.WHEELS))+1);
-		mStrategy.setSelection(cur.getInt(cur.getColumnIndex(Teams.STRATEGY))+1);
-		mToggleAuto.setChecked(cur.getInt(cur.getColumnIndex(Teams.HAS_AUTONOMOUS))>0);
-		mToggleKinect.setChecked(cur.getInt(cur.getColumnIndex(Teams.HAS_KINECT))>0);
-		mToggleBarrier.setChecked(cur.getInt(cur.getColumnIndex(Teams.CAN_CROSS))>0);
-		mToggleBridge.setChecked(cur.getInt(cur.getColumnIndex(Teams.CAN_PUSH_DOWN_BRIDGE))>0);
-		
-		String s = "" + cur.getInt(cur.getColumnIndex(Teams.PREFERRED_START));
-		mCheckLeft.setChecked(s.charAt(0) == '1');
-		mCheckMiddle.setChecked(s.contains("2"));
-		mCheckRight.setChecked(s.contains("3"));
 	}
 
 	/**
@@ -450,7 +452,10 @@ public class TeamInputActivity extends BaseCameraActivity
 			} else {
 				mContact.setImageDrawable(getResources().getDrawable(R.drawable.ic_contact_picture));
 			}
+			cur.close();
     	}
+    	
+    	
     }
     /*
 	@Override

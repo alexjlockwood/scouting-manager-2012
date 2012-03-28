@@ -132,8 +132,11 @@ public class DisplayPagerMatchesActivity extends FragmentActivity {
 				
 				// update the database
 				getContentResolver().delete(teamMatchesUri, TeamMatches._ID + " = " + teamMatchesId, null);
-				getContentResolver().update(teamUri, values, null, null);				
+				getContentResolver().update(teamUri, values, null, null);
+				
+				teamMatchesCur.close();
 			}
+			teamCur.close();
 		}
 	}	
 	
@@ -169,6 +172,7 @@ public class DisplayPagerMatchesActivity extends FragmentActivity {
 		final Cursor teamNumCur = getContentResolver().query(teamUri, new String[] { Teams.TEAM_NUM }, null, null, null);
 		if (teamNumCur != null && teamNumCur.moveToFirst()) {
 			mTeamNum = teamNumCur.getInt(teamNumCur.getColumnIndex(Teams.TEAM_NUM));
+			teamNumCur.close();
 		}
 		
 		final ActionBar actionBar = getActionBar();
