@@ -146,7 +146,7 @@ public class DashboardActivity extends Activity implements Runnable {
 					Toast.makeText(this, "Data not found.", Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				Toast.makeText(DashboardActivity.this, "Device does not support this feature.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, "This device does not support this feature.", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case R.id.dashboard_manage:			
@@ -160,7 +160,7 @@ public class DashboardActivity extends Activity implements Runnable {
 				Thread thread = new Thread(this);
 				thread.start();
 			} else {
-				Toast.makeText(DashboardActivity.this, "Device does not support this feature.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, "This device does not support this feature.", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}
@@ -402,10 +402,10 @@ public class DashboardActivity extends Activity implements Runnable {
 			else{
 				pd.dismiss();
 				if(msg.arg1==1){
-					Toast.makeText(pd.getContext(), "Data exported successfully.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(pd.getContext(), "Data written to external storage.", Toast.LENGTH_SHORT).show();
 				}
 				else{
-					Toast.makeText(pd.getContext(), "Exported failed.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(pd.getContext(), "Export failed.", Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
