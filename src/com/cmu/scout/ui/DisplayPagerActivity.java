@@ -39,7 +39,7 @@ public class DisplayPagerActivity extends FragmentActivity
 		setContentView(R.layout.display_teams_pager);
 		
 		if (DEBUG) {
-			FragmentManager.enableDebugLogging(true);
+			//FragmentManager.enableDebugLogging(true);
 		}
 		
 		// enable "up" navigation
@@ -47,7 +47,6 @@ public class DisplayPagerActivity extends FragmentActivity
 	   
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
-			//actionBar.setTitle(R.string.app_name);
 			actionBar.setTitle(R.string.display_title);
 		}
 		
@@ -71,6 +70,12 @@ public class DisplayPagerActivity extends FragmentActivity
         	return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void onTeamEdit(Uri uri) {
+		final Intent data = new Intent(this, TeamInputActivity.class);
+		data.setData(uri);
+		startActivity(data);
 	}
 	
 	@Override

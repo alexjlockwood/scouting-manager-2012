@@ -21,7 +21,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -40,7 +39,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
@@ -66,13 +64,9 @@ public class TeamGridActivity extends BaseCameraActivity
 	
 	// intent used to restore suggested match id
 	public static final String INTENT_SUGGEST_MATCH_ID = "suggest_match_id";
-	
-	// intents passed to match pager activity
-	public static final String INTENT_TEAM_ID = "intent_team_id";
-	public static final String INTENT_MATCH_ID = "intent_match_id";
 		
 	private int mSuggestMatchId = 1;
-	
+	 
 	private static final String PHOTO_PATH_STORAGE_KEY = "CurrentPhotoPath";
 	private static final String TEAM_ID_STORAGE_KEY = "CurrentTeamId";
 	private static final String CAMERA_ACTION = "android.hardware.camera";
@@ -81,8 +75,6 @@ public class TeamGridActivity extends BaseCameraActivity
 	private long mCurrentTeamId;
 	private static final String JPEG_FILE_PREFIX = "IMG_";
 	private static final String JPEG_FILE_SUFFIX = ".jpg";
-			
-	private boolean mCalledFromTeam;
 
 	private String mSelection = null;
 	
@@ -95,26 +87,16 @@ public class TeamGridActivity extends BaseCameraActivity
 		
 		if (DEBUG) {
 			Log.v(TAG, "+++ ON CREATE +++");
-			FragmentManager.enableDebugLogging(true);
+			//FragmentManager.enableDebugLogging(true);
 		}
 		
 		// enable "up" navigation
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 		
-		final Intent data = getIntent();
-		if (data != null) {
-			mCalledFromTeam = data.getBooleanExtra(DashboardActivity.INTENT_CALL_FROM_TEAM, false);
-			
-			Resources res = getResources();
-			//setActionBarTitle(res.getString(R.string.app_name));
-			if (mCalledFromTeam) {
-				setActionBarTitle(res.getString(R.string.team_scouting_title));
-			} else {
-				setActionBarTitle(res.getString(R.string.match_scouting_title));
-			}
-		}
-		
+		Resources res = getResources();
+		setActionBarTitle(res.getString(R.string.team_scouting_title));
+
 		getSupportLoaderManager().initLoader(TEAM_GRID_LOADER, null, this);
 
 		mAdapter = new ButtonAdapter(getApplicationContext(), R.layout.team_grid_button, null, 0);
@@ -149,14 +131,10 @@ public class TeamGridActivity extends BaseCameraActivity
 	}
 
 	public void onTeamSelected(int id) {
-		if(!mCalledFromTeam) {
-			showMatchPickerDialog(id, mSuggestMatchId);
-		} else {
-			final Intent data = new Intent(getApplicationContext(), TeamInputActivity.class);
-			final Uri uri = Teams.buildTeamIdUri("" + id);
-			data.setData(uri);
-			startActivity(data);
-		}
+		final Intent data = new Intent(getApplicationContext(), TeamInputActivity.class);
+		final Uri uri = Teams.buildTeamIdUri("" + id);
+		data.setData(uri);
+		startActivity(data);
 	}
 
 	/**
@@ -241,20 +219,20 @@ public class TeamGridActivity extends BaseCameraActivity
 		return super.onContextItemSelected(item);
 	}
 	
-	   private void setActionBarTitle(String title) {
-	    	if (DEBUG) Log.v(TAG, "setActionBarTitle()");
-	    	if (title != null) {
-	        	final ActionBar actionBar = getActionBar();
-	        	actionBar.setTitle(title);
-	        }
-	    }
+	private void setActionBarTitle(String title) {
+		if (DEBUG) Log.v(TAG, "setActionBarTitle()");
+		if (title != null) {
+			final ActionBar actionBar = getActionBar();
+			actionBar.setTitle(title);
+		}
+	}
 
-	    @SuppressWarnings("unused")
-		private void setActionBarSubtitle(String subtitle) {
-	    	if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
-	    	final ActionBar actionBar = getActionBar();
-	    	actionBar.setSubtitle(subtitle);
-	    }
+	@SuppressWarnings("unused")
+	private void setActionBarSubtitle(String subtitle) {
+		if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
+		final ActionBar actionBar = getActionBar();
+		actionBar.setSubtitle(subtitle);
+	}
 
 	/**
 	 * Add-team dialog methods
@@ -292,7 +270,7 @@ public class TeamGridActivity extends BaseCameraActivity
 	
 	public void doNegativeClick() {
 		if (DEBUG) Log.v(TAG, "doNegativeClick()");
-		// Do nothing
+		/* Do nothing */
 	}
 
 	public static class AddTeamDialog extends DialogFragment {
@@ -380,11 +358,8 @@ public class TeamGridActivity extends BaseCameraActivity
 				long photoId = Long.parseLong(Uri.parse(uri).getLastPathSegment());
 				Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(getContentResolver(), photoId, MediaStore.Images.Thumbnails.MICRO_KIND, null);
 				img.setImageBitmap(bitmap);
-				//BitmapDrawable d = new BitmapDrawable(getApplicationContext().getResources(), bitmap);
-				//button.setCompoundDrawablesWithIntrinsicBounds(null, d, null, null);
 			} else {
 				img.setImageDrawable(getResources().getDrawable(R.drawable.ic_contact_picture));
-				//button.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.btn_team, 0, 0);
 			}
 		}
 	}
@@ -401,7 +376,7 @@ public class TeamGridActivity extends BaseCameraActivity
 
     @Override 
     public boolean onQueryTextSubmit(String query) {
-        // Don't care about this.
+        // we don't care about this...
         return true;
     }
 
@@ -410,15 +385,16 @@ public class TeamGridActivity extends BaseCameraActivity
     	Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
     	switch (requestCode) {
     	case SUGGEST_MATCH_ID_CODE:
-    		if (resultCode == RESULT_OK) {
-    			if (DEBUG) Log.v(TAG, "mSuggestMatchId before: " + mSuggestMatchId);
-    			mSuggestMatchId = data.getIntExtra(INTENT_MATCH_ID, 0) + 1;
-    			if (DEBUG) Log.v(TAG, "mSuggestMatchId after: " + mSuggestMatchId);
-    			break;
-    		} else {
-    			Log.v(TAG, "activity result canceled. suggest id = 1");
-    			mSuggestMatchId = 1;
-    		}
+    		//if (resultCode == RESULT_OK) {
+    			//if (DEBUG) Log.v(TAG, "mSuggestMatchId before: " + mSuggestMatchId);
+    			//mSuggestMatchId = data.getIntExtra(INTENT_MATCH_ID, 0) + 1;
+    			//if (DEBUG) Log.v(TAG, "mSuggestMatchId after: " + mSuggestMatchId);
+    			//break;
+    		//} else {
+    			//Log.v(TAG, "activity result canceled. suggest id = 1");
+    			//mSuggestMatchId = 1;
+    			//break;
+    		//}
     	case ACTION_TAKE_PHOTO_CODE:
     		if (resultCode == RESULT_OK) {
     			handleBigCameraPhoto();
@@ -427,7 +403,7 @@ public class TeamGridActivity extends BaseCameraActivity
     	}
     }
     
-	private void dispatchTakePictureIntent(int actionCode, long teamId) {
+	  private void dispatchTakePictureIntent(int actionCode, long teamId) {
 		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
 
 		final Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -538,7 +514,7 @@ public class TeamGridActivity extends BaseCameraActivity
 			galleryAddPic();
 		}
 	}
-	
+	/*
 	public static class MatchPickerDialog extends DialogFragment {
 		private static final String TAG = "EnterMatchDialog";
 		private static final boolean DEBUG = true;
@@ -603,7 +579,7 @@ public class TeamGridActivity extends BaseCameraActivity
 		if (DEBUG) Log.v(TAG, "showDialog()");
 		MatchPickerDialog.newInstance(teamId, suggestMatch).show(getSupportFragmentManager(), MatchPickerDialog.TAG);
 	}
-	
+	*/
 	public void showConfirmDeleteDialog(final long teamId) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    builder.setCancelable(false)

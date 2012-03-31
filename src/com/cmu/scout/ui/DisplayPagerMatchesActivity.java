@@ -75,7 +75,42 @@ public class DisplayPagerMatchesActivity extends FragmentActivity {
 		Teams.SUMMARY_TOTAL_SCORE
 	};
 	
-	public void onTeamDeleted(long teamMatchesId) {
+	public void onTeamMatchEdit(long teamMatchesId) {
+		final Intent data = new Intent(this, MatchPagerActivity.class);
+		
+		final Cursor teamMatchesCur = getContentResolver().query(TeamMatches.CONTENT_URI, 
+				new String[] {TeamMatches._ID, TeamMatches.TEAM_ID, TeamMatches.MATCH_ID },
+				TeamMatches._ID + "=?", new String[] { ""+teamMatchesId }, null);
+		
+		int teamId=-1, matchId=-1, teamNum=-1, matchNum=-1;
+		if (teamMatchesCur != null && teamMatchesCur.moveToFirst()) {
+			teamId = teamMatchesCur.getInt(teamMatchesCur.getColumnIndex(TeamMatches.TEAM_ID));
+			matchId = teamMatchesCur.getInt(teamMatchesCur.getColumnIndex(TeamMatches.MATCH_ID));
+		}
+		
+		final Cursor teamCur = getContentResolver().query(Teams.buildTeamIdUri(""+teamId),
+				new String[] { Teams._ID, Teams.TEAM_NUM }, null, null, null);
+		
+		if (teamCur != null && teamCur.moveToFirst()) {
+			teamNum = teamCur.getInt(teamCur.getColumnIndex(Teams.TEAM_NUM));
+		}
+		
+		final Cursor matchCur = getContentResolver().query(Matches.buildMatchIdUri(""+matchId),
+				new String[] {Matches._ID, Matches.MATCH_NUM }, null, null, null);
+		
+		if (matchCur != null && matchCur.moveToFirst()) {
+			matchNum = matchCur.getInt(matchCur.getColumnIndex(Matches.MATCH_NUM));
+		}
+		
+		data.putExtra(DashboardActivity.INTENT_TEAM_ID, teamId);
+		data.putExtra(DashboardActivity.INTENT_MATCH_ID, matchId);
+		data.putExtra(DashboardActivity.INTENT_TEAM_NUM, teamNum);
+		data.putExtra(DashboardActivity.INTENT_MATCH_NUM, matchNum);
+		
+		startActivity(data);
+	}
+	
+	public void onTeamMatchDelete(long teamMatchesId) {
 		final Uri teamUri = Teams.buildTeamIdUri(""+mTeamId);
 		final Uri teamMatchesUri = Matches.buildMatchTeamIdUri(""+mTeamId);
 		

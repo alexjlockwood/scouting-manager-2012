@@ -13,17 +13,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.cmu.scout.R;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.TeamMatches;
 import com.cmu.scout.provider.ScoutContract.Teams;
+import com.cmu.scout.ui.MatchPagerActivity;
 
 public class MatchInputGeneralFragment extends MatchFragment {
 	
-	private static final String TAG = "MatchFragmentGeneral";
+	private static final String TAG = "MatchInputGeneralFragment";
 	private static final boolean DEBUG = true;
 		
 	private ToggleButton mToggleBalance;
@@ -96,10 +96,6 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		TeamMatches.FINAL_SCORE
 	};
 	
-	private int mTeamId;
-	private int mMatchId;
-	//private int mMatchNum;
-	
 	private static final String GENERAL_WIN_STORAGE_KEY = "general_win";
 	private static final String GENERAL_LOSS_STORAGE_KEY = "general_loss";
 	private static final String GENERAL_SCORE_STORAGE_KEY = "general_score";
@@ -115,17 +111,14 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (savedInstanceState != null) {
-			mTeamId = savedInstanceState.getInt("mTeamId");
-			mMatchId = savedInstanceState.getInt("mMatchId");
-			//mMatchNum = savedInstanceState.getInt("mMatchNum");
-			
+		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
+		
+		if (savedInstanceState != null) {		
 			mGeneralWinInit = savedInstanceState.getBoolean(GENERAL_WIN_STORAGE_KEY);
 			mGeneralLossInit = savedInstanceState.getBoolean(GENERAL_LOSS_STORAGE_KEY);
 			mGeneralScoreInit = savedInstanceState.getInt(GENERAL_SCORE_STORAGE_KEY);
 		}
-		
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
+	
 		final View parent = inflater.inflate(R.layout.match_scout_general_page, container, false);
 		
 		mToggleBalance = (ToggleButton) parent.findViewById(R.id.TBT_Balance);
@@ -149,21 +142,9 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	}
 	
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");		
-		
-		//loadData();
-	}
-	
-	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if (DEBUG) Log.v(TAG, "ON SAVE INSTANCE STATE");
-		
-		outState.putInt("mTeamId", mTeamId);
-		outState.putInt("mMatchId", mMatchId);
-		//outState.putInt("mMatchNum", mMatchNum);
 		
 		outState.putBoolean(GENERAL_WIN_STORAGE_KEY, mGeneralWinInit);
 		outState.putBoolean(GENERAL_LOSS_STORAGE_KEY, mGeneralLossInit);
@@ -183,49 +164,34 @@ public class MatchInputGeneralFragment extends MatchFragment {
 			break;
 		}
 	}
-
+	
+	private static final String[] SUMMARY_PROJ = {
+		Teams.SUMMARY_NUM_WINS,
+		Teams.SUMMARY_NUM_LOSSES,
+		Teams.SUMMARY_TOTAL_SCORE
+	};
+	
 	@Override
-	public ContentValues getData() {
-		if (DEBUG) Log.v(TAG, "getData()");
+	public void saveData() {
+		if (DEBUG) Log.v(TAG, "saveData()");
 		
-		int numBalanced = -1;
-		if (mToggleBalance.isChecked()) {
-			numBalanced = mRadioBalance.getCheckedRadioButtonId();
-		}
+		// get ids
+		int teamId = ((MatchPagerActivity)getActivity()).getTeamId();
+		int matchId = ((MatchPagerActivity)getActivity()).getMatchId();
 		
+		Integer numBalanced = (mToggleBalance.isChecked()) ? mRadioBalance.getCheckedRadioButtonId() : -1;
 		Integer howCross    = mRadioCross.getCheckedRadioButtonId();
 		Integer pickUpBalls = mRadioPickBalls.getCheckedRadioButtonId();
 		Integer speed       = mRadioSpeed.getCheckedRadioButtonId();
 		Integer agility     = mRadioAgility.getCheckedRadioButtonId();
 		Integer strategy    = mRadioStrategy.getCheckedRadioButtonId();
-		Integer penaltyRisk = mRadioPenalty.getCheckedRadioButtonId();
-		
+		Integer penaltyRisk = mRadioPenalty.getCheckedRadioButtonId();		
 		Integer alliance    = mRadioAlliance.getCheckedRadioButtonId();
-		Integer winMatch    = mRadioWinMatch.getCheckedRadioButtonId();
-		
+		Integer winMatch    = mRadioWinMatch.getCheckedRadioButtonId();		
 		String scoreText    = mFinalScore.getText().toString();
-		Integer finalScore  = (scoreText.isEmpty()) ? 0
-							  : Integer.valueOf(mFinalScore.getText().toString());
+		Integer finalScore  = (!scoreText.isEmpty()) ? Integer.valueOf(mFinalScore.getText().toString()) : 0;
 		
-		if (winMatch < 0) {
-			// TODO: make this more specific
-			Toast.makeText(getActivity(), R.string.invalid_user_input_wins, Toast.LENGTH_SHORT).show();
-			return null;
-		}
-		
-		ContentValues values = new ContentValues();
-
-		values.put(TeamMatches.NUM_BALANCED,   mViewIdMap.get(numBalanced));	
-		values.put(TeamMatches.HOW_CROSS,      mViewIdMap.get(howCross));
-		values.put(TeamMatches.PICK_UP_BALLS,  mViewIdMap.get(pickUpBalls));
-		values.put(TeamMatches.SPEED,          mViewIdMap.get(speed));
-		values.put(TeamMatches.AGILITY,        mViewIdMap.get(agility));
-		values.put(TeamMatches.STRATEGY,       mViewIdMap.get(strategy));
-		values.put(TeamMatches.PENALTY_RISK,   mViewIdMap.get(penaltyRisk));
-		
-		values.put(TeamMatches.WHICH_ALLIANCE, mViewIdMap.get(alliance));
-		values.put(TeamMatches.WIN_MATCH,      mViewIdMap.get(winMatch));		
-		values.put(TeamMatches.FINAL_SCORE,    finalScore);
+		int summaryTotalScore = finalScore - mGeneralScoreInit;
 		
 		int summaryNumWins = 0, summaryNumLosses = 0;
 		if (mViewIdMap.get(winMatch) == 1) {
@@ -250,131 +216,156 @@ public class MatchInputGeneralFragment extends MatchFragment {
 			}
 		}
 		
-		values.put(Teams.SUMMARY_NUM_WINS, summaryNumWins);
-		values.put(Teams.SUMMARY_NUM_LOSSES, summaryNumLosses);
-		values.put(Teams.SUMMARY_TOTAL_SCORE, finalScore - mGeneralScoreInit);
+		// get already existing cumulative data
+		final Uri summaryUri = Teams.buildTeamIdUri(""+teamId);
+		final Cursor summaryCur = getActivity().getContentResolver().query(summaryUri, SUMMARY_PROJ, null, null, null);
 		
-		return values;
+		if (summaryCur != null && summaryCur.moveToFirst()) {
+			summaryNumWins += summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_NUM_WINS));
+			summaryNumLosses += summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_NUM_LOSSES));
+			summaryTotalScore += summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_TOTAL_SCORE));
+			summaryCur.close();
+		}
+			
+		ContentValues teamMatchValues = new ContentValues();
+		ContentValues summaryValues = new ContentValues();
+		
+		// add team-match data
+		//teamMatchValues.put(TeamMatches.TEAM_ID,        teamId);
+		//teamMatchValues.put(TeamMatches.MATCH_ID,       matchId);
+		teamMatchValues.put(TeamMatches.NUM_BALANCED,   mViewIdMap.get(numBalanced));	
+		teamMatchValues.put(TeamMatches.HOW_CROSS,      mViewIdMap.get(howCross));
+		teamMatchValues.put(TeamMatches.PICK_UP_BALLS,  mViewIdMap.get(pickUpBalls));
+		teamMatchValues.put(TeamMatches.SPEED,          mViewIdMap.get(speed));
+		teamMatchValues.put(TeamMatches.AGILITY,        mViewIdMap.get(agility));
+		teamMatchValues.put(TeamMatches.STRATEGY,       mViewIdMap.get(strategy));
+		teamMatchValues.put(TeamMatches.PENALTY_RISK,   mViewIdMap.get(penaltyRisk));
+		teamMatchValues.put(TeamMatches.WHICH_ALLIANCE, mViewIdMap.get(alliance));
+		teamMatchValues.put(TeamMatches.WIN_MATCH,      mViewIdMap.get(winMatch));		
+		teamMatchValues.put(TeamMatches.FINAL_SCORE,    finalScore);
+		
+		// add summary data
+		summaryValues.put(Teams.SUMMARY_NUM_WINS, summaryNumWins);
+		summaryValues.put(Teams.SUMMARY_NUM_LOSSES, summaryNumLosses);
+		summaryValues.put(Teams.SUMMARY_TOTAL_SCORE, summaryTotalScore);
+
+		getActivity().getContentResolver().update(Matches.buildMatchIdTeamIdUri(""+matchId, ""+teamId), teamMatchValues, null, null);
+		getActivity().getContentResolver().update(summaryUri, summaryValues, null, null);
 	}
 	
 	@Override
-	public void loadData(int teamId, int matchId) {
+	public void loadData() {
 		if (DEBUG) Log.v(TAG, "loadData()");
 		
-		mTeamId = teamId;
-		mMatchId = matchId;
+		int teamId = ((MatchPagerActivity)getActivity()).getTeamId();
+		int matchId = ((MatchPagerActivity)getActivity()).getMatchId();
 		
 		mGeneralWinInit = false;
 		mGeneralLossInit = false;
 		mGeneralScoreInit = 0;
-		/*
-		final Cursor matchCur = getActivity().getContentResolver().query(Matches.CONTENT_URI, null, Matches.MATCH_NUM + " = ?", new String[] { "" + mMatchNum }, null);
 
-		if (matchCur != null && matchCur.moveToFirst()) {
-			mMatchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
-		*/
-			final Uri teamUri = Matches.buildMatchIdTeamIdUri(""+mMatchId, ""+mTeamId);
-			final Cursor cur = getActivity().getContentResolver().query(teamUri, PROJECTION, null, null, null);
+		final Uri teamUri = Matches.buildMatchIdTeamIdUri(""+matchId, ""+teamId);
+		final Cursor cur = getActivity().getContentResolver().query(teamUri, PROJECTION, null, null, null);
 
-			if (cur != null && cur.moveToFirst()) {
-				int numBalanced = cur.getInt(cur.getColumnIndex(TeamMatches.NUM_BALANCED));
-				int howCross  = cur.getInt(cur.getColumnIndex(TeamMatches.HOW_CROSS));
-				int pickUpBalls  = cur.getInt(cur.getColumnIndex(TeamMatches.PICK_UP_BALLS));
-				int speed = cur.getInt(cur.getColumnIndex(TeamMatches.SPEED));
-				int agility  = cur.getInt(cur.getColumnIndex(TeamMatches.AGILITY));
-				int strategy  = cur.getInt(cur.getColumnIndex(TeamMatches.STRATEGY));
-				int penaltyRisk  = cur.getInt(cur.getColumnIndex(TeamMatches.STRATEGY));
-				int whichAlliance  = cur.getInt(cur.getColumnIndex(TeamMatches.WHICH_ALLIANCE));
-				int winMatch  = cur.getInt(cur.getColumnIndex(TeamMatches.WIN_MATCH));
-				int finalScore  = cur.getInt(cur.getColumnIndex(TeamMatches.FINAL_SCORE));
-			
-				if (numBalanced == 1 || numBalanced == 2 || numBalanced == 3) {
-					mToggleBalance.setChecked(true);
-					mRadioButtonBalance1.setEnabled(true);
-					mRadioButtonBalance2.setEnabled(true);
-					mRadioButtonBalance3.setEnabled(true);
-				
-					switch(numBalanced) {
-					case 1: mRadioBalance.check(R.id.RB_Balance_1); break;
-					case 2: mRadioBalance.check(R.id.RB_Balance_2); break;
-					case 3: mRadioBalance.check(R.id.RB_Balance_3); break;
-					default: mRadioBalance.check(-1); break;
-					}
-				} else {
-					mToggleBalance.setChecked(false);
-					mRadioButtonBalance1.setEnabled(false);
-					mRadioButtonBalance2.setEnabled(false);
-					mRadioButtonBalance3.setEnabled(false);
-					mRadioBalance.check(-1);
+		if (cur != null && cur.moveToFirst()) {
+			int numBalanced = cur.getInt(cur.getColumnIndex(TeamMatches.NUM_BALANCED));
+			int howCross  = cur.getInt(cur.getColumnIndex(TeamMatches.HOW_CROSS));
+			int pickUpBalls  = cur.getInt(cur.getColumnIndex(TeamMatches.PICK_UP_BALLS));
+			int speed = cur.getInt(cur.getColumnIndex(TeamMatches.SPEED));
+			int agility  = cur.getInt(cur.getColumnIndex(TeamMatches.AGILITY));
+			int strategy  = cur.getInt(cur.getColumnIndex(TeamMatches.STRATEGY));
+			int penaltyRisk  = cur.getInt(cur.getColumnIndex(TeamMatches.STRATEGY));
+			int whichAlliance  = cur.getInt(cur.getColumnIndex(TeamMatches.WHICH_ALLIANCE));
+			int winMatch  = cur.getInt(cur.getColumnIndex(TeamMatches.WIN_MATCH));
+			int finalScore  = cur.getInt(cur.getColumnIndex(TeamMatches.FINAL_SCORE));
+
+			cur.close();
+
+			if (numBalanced == 1 || numBalanced == 2 || numBalanced == 3) {
+				mToggleBalance.setChecked(true);
+				mRadioButtonBalance1.setEnabled(true);
+				mRadioButtonBalance2.setEnabled(true);
+				mRadioButtonBalance3.setEnabled(true);
+
+				switch(numBalanced) {
+				case 1: mRadioBalance.check(R.id.RB_Balance_1); break;
+				case 2: mRadioBalance.check(R.id.RB_Balance_2); break;
+				case 3: mRadioBalance.check(R.id.RB_Balance_3); break;
+				default: mRadioBalance.check(-1); break;
 				}
-				
-				// TODO: make use of a HashMap here somehow?
-				switch(howCross) {
-				case 1: mRadioCross.check(R.id.RB_Cross_Bridge); break;
-				case 2: mRadioCross.check(R.id.RB_Cross_Barrier); break;
-				case 3: mRadioCross.check(R.id.RB_Cross_Both); break;
-				default: mRadioCross.check(-1); break;
-				}
-	
-				switch(pickUpBalls) {
-				case 0: mRadioPickBalls.check(R.id.RB_Pick_Ball_Feeder); break;
-				case 1: mRadioPickBalls.check(R.id.RB_Pick_Ball_Floor); break;
-				case 2: mRadioPickBalls.check(R.id.RB_Pick_Ball_Both); break;
-				default: mRadioPickBalls.check(-1); break;
-				}
-		    	
-				switch(speed) {
-				case 0: mRadioSpeed.check(R.id.RB_Speed_Pr); break;
-				case 1: mRadioSpeed.check(R.id.RB_Speed_Fr); break;
-				case 2: mRadioSpeed.check(R.id.RB_Speed_Gd); break;
-				case 3: mRadioSpeed.check(R.id.RB_Speed_Ex); break;
-				default: mRadioSpeed.check(-1); break;
-				}
-				
-				switch(agility) {
-				case 0: mRadioAgility.check(R.id.RB_Agility_Pr); break;
-				case 1: mRadioAgility.check(R.id.RB_Agility_Fr); break;
-				case 2: mRadioAgility.check(R.id.RB_Agility_Gd); break;
-				case 3: mRadioAgility.check(R.id.RB_Agility_Ex); break;
-				default: mRadioAgility.check(-1); break;
-				}
-				
-				switch(strategy) {
-				case 0: mRadioStrategy.check(R.id.RB_Strategy_Offensive); break;
-				case 1: mRadioStrategy.check(R.id.RB_Strategy_Defensive); break;
-				case 2: mRadioStrategy.check(R.id.RB_Strategy_Neutral); break;
-				default: mRadioStrategy.check(-1); break;
-				}
-				
-				switch(penaltyRisk) {
-				case 0: mRadioPenalty.check(R.id.RB_Penalty_Risk_Low); break;
-				case 1: mRadioPenalty.check(R.id.RB_Penalty_Risk_Med); break;
-				case 2: mRadioPenalty.check(R.id.RB_Penalty_Risk_High); break;
-				default: mRadioPenalty.check(-1); break;
-				}
-				
-				switch(whichAlliance) {
-				case 0: mRadioAlliance.check(R.id.RB_alliance_blue); break;
-				case 1: mRadioAlliance.check(R.id.RB_alliance_red); break;
-				default: mRadioAlliance.check(-1); break;
-				}
-				
-				switch(winMatch) {
-				case 0: 
-					mRadioWinMatch.check(R.id.RB_match_loss); 
-					mGeneralLossInit = true;
-					break;
-				case 1: 
-					mRadioWinMatch.check(R.id.RB_match_win); 
-					mGeneralWinInit = true;
-					break;
-				default: mRadioWinMatch.check(-1); break;
-				}
-	
-		    	mFinalScore.setText(""+finalScore);
-		    	mGeneralScoreInit = finalScore;
+			} else {
+				mToggleBalance.setChecked(false);
+				mRadioButtonBalance1.setEnabled(false);
+				mRadioButtonBalance2.setEnabled(false);
+				mRadioButtonBalance3.setEnabled(false);
+				mRadioBalance.check(-1);
 			}
-		//}
+
+			switch(howCross) {
+			case 1: mRadioCross.check(R.id.RB_Cross_Bridge); break;
+			case 2: mRadioCross.check(R.id.RB_Cross_Barrier); break;
+			case 3: mRadioCross.check(R.id.RB_Cross_Both); break;
+			default: mRadioCross.check(-1); break;
+			}
+
+			switch(pickUpBalls) {
+			case 0: mRadioPickBalls.check(R.id.RB_Pick_Ball_Feeder); break;
+			case 1: mRadioPickBalls.check(R.id.RB_Pick_Ball_Floor); break;
+			case 2: mRadioPickBalls.check(R.id.RB_Pick_Ball_Both); break;
+			default: mRadioPickBalls.check(-1); break;
+			}
+
+			switch(speed) {
+			case 0: mRadioSpeed.check(R.id.RB_Speed_Pr); break;
+			case 1: mRadioSpeed.check(R.id.RB_Speed_Fr); break;
+			case 2: mRadioSpeed.check(R.id.RB_Speed_Gd); break;
+			case 3: mRadioSpeed.check(R.id.RB_Speed_Ex); break;
+			default: mRadioSpeed.check(-1); break;
+			}
+
+			switch(agility) {
+			case 0: mRadioAgility.check(R.id.RB_Agility_Pr); break;
+			case 1: mRadioAgility.check(R.id.RB_Agility_Fr); break;
+			case 2: mRadioAgility.check(R.id.RB_Agility_Gd); break;
+			case 3: mRadioAgility.check(R.id.RB_Agility_Ex); break;
+			default: mRadioAgility.check(-1); break;
+			}
+
+			switch(strategy) {
+			case 0: mRadioStrategy.check(R.id.RB_Strategy_Offensive); break;
+			case 1: mRadioStrategy.check(R.id.RB_Strategy_Defensive); break;
+			case 2: mRadioStrategy.check(R.id.RB_Strategy_Neutral); break;
+			default: mRadioStrategy.check(-1); break;
+			}
+
+			switch(penaltyRisk) {
+			case 0: mRadioPenalty.check(R.id.RB_Penalty_Risk_Low); break;
+			case 1: mRadioPenalty.check(R.id.RB_Penalty_Risk_Med); break;
+			case 2: mRadioPenalty.check(R.id.RB_Penalty_Risk_High); break;
+			default: mRadioPenalty.check(-1); break;
+			}
+
+			switch(whichAlliance) {
+			case 0: mRadioAlliance.check(R.id.RB_alliance_blue); break;
+			case 1: mRadioAlliance.check(R.id.RB_alliance_red); break;
+			default: mRadioAlliance.check(-1); break;
+			}
+
+			switch(winMatch) {
+			case 0: 
+				mRadioWinMatch.check(R.id.RB_match_loss); 
+				mGeneralLossInit = true;
+				break;
+			case 1: 
+				mRadioWinMatch.check(R.id.RB_match_win); 
+				mGeneralWinInit = true;
+				break;
+			default: mRadioWinMatch.check(-1); break;
+			}
+
+			mFinalScore.setText(""+finalScore);
+			mGeneralScoreInit = finalScore;
+		}
 	}
 
 	@Override
@@ -397,5 +388,17 @@ public class MatchInputGeneralFragment extends MatchFragment {
     	mRadioAlliance.clearCheck();
     	mRadioWinMatch.clearCheck();
     	mFinalScore.setText("");
+	}
+	
+	@Override 
+	public void onResume() {
+		super.onResume();
+		loadData();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();		
+		saveData();
 	}
 }

@@ -12,6 +12,8 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <support-screens android:largeScreens="true"/>
+    
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -49,7 +51,7 @@
             android:name=".ui.MatchPagerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/StyledIndicators"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity android:name=".test.MatchInputActivity" >
         </activity>

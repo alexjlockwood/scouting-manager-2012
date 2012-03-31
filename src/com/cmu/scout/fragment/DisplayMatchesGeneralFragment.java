@@ -81,11 +81,11 @@ public class DisplayMatchesGeneralFragment extends ListFragment implements
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
 		switch (item.getItemId()) {
+		case R.id.menu_match_edit_data:
+			((DisplayPagerMatchesActivity) getActivity()).onTeamMatchEdit(info.id);
+			return true;
 		case R.id.menu_delete_team_match:
-			//final Uri uri = Matches.buildMatchTeamIdUri(""+mTeamId);
-			//getActivity().getContentResolver().delete(uri, TeamMatches._ID + " = " + info.id, null);
-			
-			((DisplayPagerMatchesActivity) getActivity()).onTeamDeleted(info.id);
+			((DisplayPagerMatchesActivity) getActivity()).onTeamMatchDelete(info.id);
 			return true;
 		}
 		return super.onContextItemSelected(item);

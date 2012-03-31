@@ -2,7 +2,6 @@ package com.cmu.scout.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,8 +24,8 @@ import android.widget.TextView;
 import com.cmu.scout.R;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.Teams;
+import com.cmu.scout.ui.DisplayPagerActivity;
 import com.cmu.scout.ui.OnTeamSelectedListener;
-import com.cmu.scout.ui.TeamInputActivity;
 
 public class DisplayScoutTwoFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
@@ -125,15 +124,13 @@ public class DisplayScoutTwoFragment extends ListFragment implements
 		Uri uri;
 
 		switch (item.getItemId()) {
-		case R.id.menu_display_team_matches:
+		case R.id.menu_team_edit_data:
+			uri = Teams.buildTeamIdUri("" + info.id);
+			((DisplayPagerActivity) getActivity()).onTeamEdit(uri);
+			return true;
+		case R.id.menu_display_teams_matches:
 			uri = Matches.buildMatchTeamIdUri("" + info.id);
 			teamSelectedListener.onTeamSelected(uri);
-			return true;
-		case R.id.menu_edit_team_input:
-			final Intent data = new Intent(getActivity(), TeamInputActivity.class);
-			uri = Teams.buildTeamIdUri("" + info.id);
-			data.setData(uri);
-			startActivity(data);
 			return true;
 		}
 		return super.onContextItemSelected(item);

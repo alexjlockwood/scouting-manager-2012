@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+   
     <item
-        android:id="@+id/menu_display_team_matches"
-        android:title="@string/menu_display_team_matches"/>
-    <item
-        android:id="@+id/menu_edit_team_input"
+        android:id="@+id/menu_team_edit_data"
         android:title="@string/menu_edit_team_input" />
+    <item
+        android:id="@+id/menu_display_teams_matches"
+        android:title="@string/menu_display_team_matches"/>
+
 
 </menu>

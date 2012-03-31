@@ -180,10 +180,10 @@ public class ScoutProvider extends ContentProvider {
 				throw new SQLException("Failed to insert row into " + uri);
 			}
 		// Insert a new match-item into the team_matches table
-		case MATCHES_TEAMS_ID:
+		case TEAM_MATCHES:
 			newId = db.insert(Tables.TEAM_MATCHES, null, values);
 			if (newId > 0) {
-				newUri = Matches.buildMatchTeamIdUri("" + newId);
+				newUri = TeamMatches.CONTENT_URI.buildUpon().appendPath(""+newId).build();
 				getContext().getContentResolver().notifyChange(newUri, null);
 				return newUri;
 			} else {

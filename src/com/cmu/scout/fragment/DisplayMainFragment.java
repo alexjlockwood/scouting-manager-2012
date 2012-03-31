@@ -2,7 +2,6 @@ package com.cmu.scout.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,14 +19,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cmu.scout.R;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.Teams;
+import com.cmu.scout.ui.DisplayPagerActivity;
 import com.cmu.scout.ui.OnTeamSelectedListener;
-import com.cmu.scout.ui.TeamInputActivity;
 
 public class DisplayMainFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
@@ -133,26 +131,16 @@ public class DisplayMainFragment extends ListFragment implements
 		Uri uri;
 
 		switch (item.getItemId()) {
-		case R.id.menu_display_team_matches:
+		case R.id.menu_team_edit_data:
+			uri = Teams.buildTeamIdUri("" + info.id);
+			((DisplayPagerActivity) getActivity()).onTeamEdit(uri);
+			return true;
+		case R.id.menu_display_teams_matches:
 			uri = Matches.buildMatchTeamIdUri("" + info.id);
 			teamSelectedListener.onTeamSelected(uri);
 			return true;
-		case R.id.menu_edit_team_input:
-			final Intent data = new Intent(getActivity(), TeamInputActivity.class);
-			uri = Teams.buildTeamIdUri("" + info.id);
-			data.setData(uri);
-			startActivity(data);
-			return true;
 		}
 		return super.onContextItemSelected(item);
-	}
-	
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		if (DEBUG) Log.v(TAG, "ON LIST ITEM CLICK");
-
-		//final Uri uri = Teams.buildTeamIdUri("" + id);
-		//teamSelectedListener.onTeamSelected(uri);
 	}
 	
 	private static final String[] PROJECTION = { 

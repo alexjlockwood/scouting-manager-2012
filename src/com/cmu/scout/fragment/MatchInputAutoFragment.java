@@ -19,7 +19,7 @@ import com.cmu.scout.ui.MatchPagerActivity;
 
 public class MatchInputAutoFragment extends MatchFragment {
 	
-	private static final String TAG = "MatchInputFragmentAuto";
+	private static final String TAG = "MatchInputAutoFragment";
 	private static final boolean DEBUG = true;
 	
 	public static final int EDIT_TEXT_NONE = 0;
@@ -35,10 +35,6 @@ public class MatchInputAutoFragment extends MatchFragment {
 	private EditText mAutoMedAtmpCounter;
 	private EditText mAutoLowCounter;
 	private EditText mAutoLowAtmpCounter;
-	
-	private int mTeamId;
-	private int mMatchId;
-	//private int mMatchNum;
 	
 	private static final String AUTO_HIGH_MADE_STORAGE_KEY = "auto_high_made";
 	private static final String AUTO_MED_MADE_STORAGE_KEY = "auto_med_made";
@@ -78,11 +74,9 @@ public class MatchInputAutoFragment extends MatchFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (savedInstanceState != null) {
-			mTeamId = savedInstanceState.getInt("mTeamId");
-			mMatchId = savedInstanceState.getInt("mMatchId");
-			//mMatchNum = savedInstanceState.getInt("mMatchNum");
-			
+		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
+		
+		if (savedInstanceState != null) {	
 			mAutoHighMadeInit = savedInstanceState.getInt(AUTO_HIGH_MADE_STORAGE_KEY);
 			mAutoMedMadeInit = savedInstanceState.getInt(AUTO_MED_MADE_STORAGE_KEY);
 			mAutoLowMadeInit = savedInstanceState.getInt(AUTO_LOW_MADE_STORAGE_KEY);
@@ -94,8 +88,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 			mSummaryAutoNumAttemptInit = savedInstanceState.getInt(SUMMARY_AUTO_ATTEMPT_STORAGE_KEY);
 			mSummaryAutoNumPointsInit = savedInstanceState.getInt(SUMMARY_AUTO_POINTS_STORAGE_KEY);
 		}
-				
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
+
 		final View parent = inflater.inflate(R.layout.match_scout_auto_page, container, false);
 		
 		mAutoHighCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Hit_High);
@@ -105,16 +98,6 @@ public class MatchInputAutoFragment extends MatchFragment {
 		mAutoHighAtmpCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Atmp_High);
 		mAutoMedAtmpCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Atmp_Med);
 		mAutoLowAtmpCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Atmp_Low);
-		
-		return parent;
-	}
-	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
-				
-		//loadData();
 		
 		// store initial data so we don't add to cumulative data when we shouldn't be
 		String highShotsMade = mAutoHighCounter.getText().toString();
@@ -134,16 +117,14 @@ public class MatchInputAutoFragment extends MatchFragment {
 		mSummaryAutoNumScoredInit = (mAutoHighMadeInit + mAutoMedMadeInit + mAutoLowMadeInit);
 		mSummaryAutoNumAttemptInit = (mAutoHighAttemptInit + mAutoMedAttemptInit + mAutoLowAttemptInit);
 		mSummaryAutoNumPointsInit = (3*mAutoHighMadeInit + 2*mAutoMedMadeInit + 1*mAutoLowMadeInit);
+		
+		return parent;
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if (DEBUG) Log.v(TAG, "ON SAVE INSTANCE STATE");
-		
-		outState.putInt("mTeamId", mTeamId);
-		outState.putInt("mMatchId", mMatchId);
-		//outState.putInt("mMatchNum", mMatchNum);
 		
 		outState.putInt(AUTO_HIGH_MADE_STORAGE_KEY, mAutoHighMadeInit);
 		outState.putInt(AUTO_MED_MADE_STORAGE_KEY, mAutoHighMadeInit);
@@ -186,38 +167,20 @@ public class MatchInputAutoFragment extends MatchFragment {
 		}
 	}
 	
-	public void setFaultyEditTextBox(int box) {
-		faultyEditTextBox = box;
-	}
+	private static final String[] SUMMARY_PROJ = {
+		Teams.SUMMARY_AUTO_NUM_ATTEMPT,
+		Teams.SUMMARY_AUTO_NUM_SCORED,
+		Teams.SUMMARY_AUTO_NUM_POINTS
+	};
 	
-	public int getFaultyEditTextBox() {
-		return faultyEditTextBox;
-	}
-	
-	public void resetFaultyEditTextBox() {
-		faultyEditTextBox = EDIT_TEXT_NONE;
-	}
-	
-	public void selectFaultyEditTextBox(int box) {
-		switch (box) {
-		case EDIT_TEXT_NONE: break;
-		case EDIT_TEXT_HIGH: 
-			mAutoHighCounter.requestFocus();
-			break;
-		case EDIT_TEXT_MED: 
-			mAutoMedCounter.requestFocus();
-			break;
-		case EDIT_TEXT_LOW:
-			mAutoLowCounter.requestFocus();
-			break;
-		}
-		resetFaultyEditTextBox();
-	}
-
 	@Override
-	public ContentValues getData() {
-		if (DEBUG) Log.v(TAG, "getData()");
+	public void saveData() {
+		if (DEBUG) Log.v(TAG, "saveData()");
 		
+		int teamId = ((MatchPagerActivity)getActivity()).getTeamId();
+		int matchId = ((MatchPagerActivity)getActivity()).getMatchId();
+		
+		// retrieve data from screen
 		String highShotsMade = mAutoHighCounter.getText().toString();
 		String medShotsMade  = mAutoMedCounter.getText().toString();
 		String lowShotsMade  = mAutoLowCounter.getText().toString();
@@ -232,76 +195,70 @@ public class MatchInputAutoFragment extends MatchFragment {
 		int numMedShotsAtmp  = (medShotsAtmp.isEmpty())  ? 0 : Integer.valueOf(medShotsAtmp);
 		int numLowShotsAtmp  = (lowShotsAtmp.isEmpty())  ? 0 : Integer.valueOf(lowShotsAtmp);
 		
+		// compute summary data offset
 		int summaryAutoNumScored = (numHighShotsMade + numMedShotsMade + numLowShotsMade) - mSummaryAutoNumScoredInit;
 		int summaryAutoNumAttempt = (numHighShotsAtmp + numMedShotsAtmp + numLowShotsAtmp) - mSummaryAutoNumAttemptInit;
 		int summaryAutoNumPoints = (3*numHighShotsMade + 2*numMedShotsMade + 1*numLowShotsMade) - mSummaryAutoNumPointsInit;
 		
-		// Protect against corrupt user input
-		if (numHighShotsMade > numHighShotsAtmp) {
-			setFaultyEditTextBox(EDIT_TEXT_HIGH);
-			return null;
+		// get already existing cumulative data
+		final Uri summaryUri = Teams.buildTeamIdUri(""+teamId);
+		final Cursor summaryCur = getActivity().getContentResolver().query(summaryUri, SUMMARY_PROJ, null, null, null);
+		
+		if (summaryCur != null && summaryCur.moveToFirst()) {
+			summaryAutoNumScored += summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_AUTO_NUM_SCORED));
+			summaryAutoNumAttempt += summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_AUTO_NUM_ATTEMPT));
+			summaryAutoNumPoints += summaryCur.getInt(summaryCur.getColumnIndex(Teams.SUMMARY_AUTO_NUM_POINTS));			
+			summaryCur.close();
 		}
 		
-		if (numMedShotsMade > numMedShotsAtmp) {
-			setFaultyEditTextBox(EDIT_TEXT_MED);
-			return null;
-		}
+		ContentValues teamMatchValues = new ContentValues();
+		ContentValues summaryValues = new ContentValues();
 		
-		if (numLowShotsMade > numLowShotsAtmp) {
-			setFaultyEditTextBox(EDIT_TEXT_LOW);
-			return null;
-		}
+		// add team-match data
+		//teamMatchValues.put(TeamMatches.TEAM_ID, teamId);
+		//teamMatchValues.put(TeamMatches.MATCH_ID, matchId);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_SCORED_HIGH, numHighShotsMade);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_SCORED_MED, numMedShotsMade);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_SCORED_LOW, numLowShotsMade);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_HIGH, numHighShotsAtmp);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_MED, numMedShotsAtmp);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_LOW, numLowShotsAtmp);
 		
-		ContentValues values = new ContentValues();
+		// add summary data
+		summaryValues.put(Teams.SUMMARY_AUTO_NUM_SCORED, summaryAutoNumScored);
+		summaryValues.put(Teams.SUMMARY_AUTO_NUM_ATTEMPT, summaryAutoNumAttempt);
+		summaryValues.put(Teams.SUMMARY_AUTO_NUM_POINTS, summaryAutoNumPoints);
 		
-		values.put(TeamMatches.AUTO_NUM_SCORED_HIGH, numHighShotsMade);
-		values.put(TeamMatches.AUTO_NUM_SCORED_MED, numMedShotsMade);
-		values.put(TeamMatches.AUTO_NUM_SCORED_LOW, numLowShotsMade);
-		values.put(TeamMatches.AUTO_NUM_ATTEMPT_HIGH, numHighShotsAtmp);
-		values.put(TeamMatches.AUTO_NUM_ATTEMPT_MED, numMedShotsAtmp);
-		values.put(TeamMatches.AUTO_NUM_ATTEMPT_LOW, numLowShotsAtmp);
-		
-		values.put(Teams.SUMMARY_AUTO_NUM_SCORED, summaryAutoNumScored);
-		values.put(Teams.SUMMARY_AUTO_NUM_ATTEMPT, summaryAutoNumAttempt);
-		values.put(Teams.SUMMARY_AUTO_NUM_POINTS, summaryAutoNumPoints);
-		
-		return values;
+		getActivity().getContentResolver().update(Matches.buildMatchIdTeamIdUri(""+matchId, ""+teamId), teamMatchValues, null, null);
+		getActivity().getContentResolver().update(summaryUri, summaryValues, null, null);
 	}
 	
 	@Override
-	public void loadData(int teamId, int matchId) {
+	public void loadData() {
 		if (DEBUG) Log.v(TAG, "loadData()");
 		
-		// TODO: THIS IS BAD DESIGN. FRAGMENTS SHOULD BE DESIGNED FOR REUSE
-		mTeamId = teamId; // ((MatchPagerActivity) getActivity()).getCurrentTeamId();
-		mMatchId = matchId; // ((MatchPagerActivity) getActivity()).getCurrentMatchNum();
-		/*
-		final Cursor matchCur = getActivity().getContentResolver().query(Matches.CONTENT_URI, null, Matches.MATCH_NUM + " = ?", new String[] { "" + mMatchNum }, null);
-		
-		if (matchCur != null && matchCur.moveToFirst()) {
-			
-			mMatchId = matchCur.getInt(matchCur.getColumnIndex(Matches._ID));
-			*/
-			Uri teamUri = Matches.buildMatchIdTeamIdUri(""+mMatchId, ""+mTeamId);
-			final Cursor cur = getActivity().getContentResolver().query(teamUri, PROJECTION, null, null, null);
-				
-			if (cur != null && cur.moveToFirst()) {
+		int teamId = ((MatchPagerActivity)getActivity()).getTeamId();
+		int matchId = ((MatchPagerActivity)getActivity()).getMatchId();
 
-				int numHighShotsMade = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_SCORED_HIGH));
-				int numMedShotsMade  = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_SCORED_MED));
-				int numLowShotsMade  = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_SCORED_LOW));
-				int numHighShotsAtmp = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_ATTEMPT_HIGH));
-				int numMedShotsAtmp  = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_ATTEMPT_MED));
-				int numLowShotsAtmp  = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_ATTEMPT_LOW));
+		Uri teamUri = Matches.buildMatchIdTeamIdUri(""+matchId, ""+teamId);
+		final Cursor cur = getActivity().getContentResolver().query(teamUri, PROJECTION, null, null, null);
 		
-				mAutoHighCounter.setText("" + numHighShotsMade);
-				mAutoMedCounter.setText("" + numMedShotsMade);
-				mAutoLowCounter.setText("" + numLowShotsMade);
-				mAutoHighAtmpCounter.setText("" + numHighShotsAtmp);
-				mAutoMedAtmpCounter.setText("" + numMedShotsAtmp);
-				mAutoLowAtmpCounter.setText("" + numLowShotsAtmp);
-			}
-		//}
+		if (cur != null && cur.moveToFirst()) {
+			int numHighShotsMade = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_SCORED_HIGH));
+			int numMedShotsMade  = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_SCORED_MED));
+			int numLowShotsMade  = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_SCORED_LOW));
+			int numHighShotsAtmp = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_ATTEMPT_HIGH));
+			int numMedShotsAtmp  = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_ATTEMPT_MED));
+			int numLowShotsAtmp  = cur.getInt(cur.getColumnIndex(TeamMatches.AUTO_NUM_ATTEMPT_LOW));
+		
+			mAutoHighCounter.setText("" + numHighShotsMade);
+			mAutoMedCounter.setText("" + numMedShotsMade);
+			mAutoLowCounter.setText("" + numLowShotsMade);
+			mAutoHighAtmpCounter.setText("" + numHighShotsAtmp);
+			mAutoMedAtmpCounter.setText("" + numMedShotsAtmp);
+			mAutoLowAtmpCounter.setText("" + numLowShotsAtmp);
+		}
+		cur.close();
 	}
 
 	@Override
@@ -322,4 +279,16 @@ public class MatchInputAutoFragment extends MatchFragment {
 		score = Math.min(score+1, MatchPagerActivity.MAX_SCORE);
 		et.setText("" + score);
     }
+    
+	@Override 
+	public void onResume() {
+		super.onResume();
+		loadData();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();		
+		saveData();
+	}
 }

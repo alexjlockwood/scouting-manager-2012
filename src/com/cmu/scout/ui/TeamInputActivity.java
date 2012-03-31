@@ -106,18 +106,6 @@ public class TeamInputActivity extends BaseCameraActivity
 		}	
 	}
 	
-	@Override
-	public void onPause() {
-		super.onPause();
-		saveData();
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		loadInfo(getIntent().getData());
-	}
-	
 	private void loadInfo(Uri teamUri) {	
 		Cursor cur = getContentResolver().query(teamUri, null, null, null, null);
 		if (cur != null && cur.moveToFirst()) {
@@ -238,7 +226,6 @@ public class TeamInputActivity extends BaseCameraActivity
 		// update the existing record
 		// should always have data in database at this point
 		getContentResolver().update(uri, values, null, null);
-		//Toast.makeText(this, R.string.save_insert_successful, Toast.LENGTH_SHORT).show();
 	}
 	
 	private void clearData(){
@@ -502,5 +489,18 @@ public class TeamInputActivity extends BaseCameraActivity
 	           });
 	    AlertDialog alert = builder.create();
 	    alert.show();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		saveData();
+		Toast.makeText(this, R.string.save_team_successful, Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		loadInfo(getIntent().getData());
 	}
 }
