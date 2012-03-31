@@ -63,6 +63,7 @@ public class TeamInputActivity extends BaseCameraActivity
 	
 	private EditText mTeamName;
 	private EditText mComment;
+	private EditText mRank;
 	
 	private ToggleButton mToggleAuto;
 	private ToggleButton mToggleKinect; 
@@ -134,6 +135,11 @@ public class TeamInputActivity extends BaseCameraActivity
 			mCheckMiddle.setChecked(s.contains("2"));
 			mCheckRight.setChecked(s.contains("3"));
 		
+			int rank = cur.getInt(cur.getColumnIndex(Teams.FRIDAY_RANK));
+			if(rank > 0){
+				mRank.setText(""+rank);
+			}
+			
 			cur.close();
 		}
 	}
@@ -182,6 +188,7 @@ public class TeamInputActivity extends BaseCameraActivity
 		
 		mTeamName = (EditText) parent.findViewById(R.id.ET_Team_Name);
 		mComment = (EditText) parent.findViewById(R.id.ET_Team_Comment);
+		mRank = (EditText) parent.findViewById(R.id.ET_Team_Rank);
 		
 		mToggleAuto = (ToggleButton) parent.findViewById(R.id.TBT_Team_Auto);
 		mToggleKinect = (ToggleButton) parent.findViewById(R.id.TBT_Team_Kinect);
@@ -202,6 +209,8 @@ public class TeamInputActivity extends BaseCameraActivity
 		int barrier = (mToggleBarrier.isChecked()) ? 1:0;
 		int bridge = (mToggleBridge.isChecked()) ? 1:0;
 		
+		String rank_s = mRank.getText().toString();
+		int rank = (rank_s.isEmpty()) ? -1:new Integer(rank_s);
 		String position = "";
 		if (mCheckLeft.isChecked()) position += "1";
 		if (mCheckMiddle.isChecked()) position += "2";
@@ -222,6 +231,7 @@ public class TeamInputActivity extends BaseCameraActivity
 		values.put(Teams.CAN_CROSS,barrier);
 		values.put(Teams.CAN_PUSH_DOWN_BRIDGE, bridge);
 		values.put(Teams.PREFERRED_START, p_n);
+		values.put(Teams.FRIDAY_RANK, rank);
 		
 		// update the existing record
 		// should always have data in database at this point

@@ -225,5 +225,8 @@
     <string name="team_number_hint">#</string>
     
     <string name="image_not_found">Image not found.</string>
+    
+    <string name="rank">Rank</string>
+    <string name="friday_rank">Friday Rank</string>
         
 </resources>

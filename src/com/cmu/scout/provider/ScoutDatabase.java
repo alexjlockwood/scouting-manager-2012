@@ -69,6 +69,7 @@ public class ScoutDatabase extends SQLiteOpenHelper {
                 + Teams.CAN_CROSS + " INTEGER DEFAULT -1,"
                 + Teams.CAN_PUSH_DOWN_BRIDGE + " INTEGER DEFAULT -1,"
                 + Teams.STRATEGY + " INTEGER DEFAULT -1,"
+                + Teams.FRIDAY_RANK + " INTEGER DEFAULT -1, "
                 + Teams.COMMENTS + " TEXT,"
                 
                 /* Pre-calculated, match-dependent data */

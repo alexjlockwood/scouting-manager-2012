@@ -28,15 +28,26 @@
             android:scaleType="fitXY"
             android:layout_alignParentLeft="true"/>
 
+      <EditText
+            android:id="@+id/ET_Team_Rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            
+            android:layout_alignBottom="@id/IV_Team_Picture"
+            android:layout_marginLeft="200dp"
+            android:layout_toRightOf="@id/IV_Team_Picture"
+            
+            android:inputType="number"
+            android:maxLines="1"
+            android:hint="@string/rank" />
+        
         <EditText
             android:id="@+id/ET_Team_Name"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/IV_Team_Picture"
-            android:layout_marginLeft="200dp"
-            android:layout_toRightOf="@id/IV_Team_Picture"
+            android:layout_alignLeft="@id/ET_Team_Rank"
+            android:layout_above="@id/ET_Team_Rank"
             android:hint="@string/team_name"
-            android:inputType="text"
             android:maxLines="1"
             android:textSize="22sp" />
 

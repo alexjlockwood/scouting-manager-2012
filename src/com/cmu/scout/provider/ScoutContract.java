@@ -193,6 +193,16 @@ public final class ScoutContract {
 		 * </P>
 		 */
 		String STRATEGY = "strategy";
+	
+		/**
+		 * Friday Rank
+		 * 
+		 * <P>
+		 * Type: INTEGER<br>
+		 * Default: -1<br>
+		 * </P>
+		 */
+		String FRIDAY_RANK = "friday_rank";
 		
 		/**
 		 * Additional comments

@@ -2,21 +2,23 @@ package com.cmu.scout.ui;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,28 +31,81 @@ import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.TeamMatches;
 import com.cmu.scout.provider.ScoutContract.Teams;
 
-public class DashboardActivity extends Activity {
-	
+public class DashboardActivity extends Activity implements Runnable {
+
 	private static final String TAG = "DashboardActivity";
 	private static final boolean DEBUG = true;
-	
+
 	// intent passed to team grid
 	public static final String INTENT_CALL_FROM_TEAM = "call_from_team";
-	
+
 	private static final int DIALOG_START_MATCH = 1;
-	
+
 	public static final String INTENT_TEAM_ID = "scout_intent_team_id";
 	public static final String INTENT_MATCH_ID = "scout_intent_match_id";
 	public static final String INTENT_TEAM_NUM = "scout_intent_team_num";
 	public static final String INTENT_MATCH_NUM = "scout_intent_match_num";
 
-	
+
+	private static final String[] projectionTeam = {
+		Teams.TEAM_NUM,	
+		Teams.TEAM_NAME,
+		Teams.FRIDAY_RANK,
+		Teams.DRIVE_SYSTEM,
+		Teams.WHEELS,
+		Teams.HAS_AUTONOMOUS,
+		Teams.PREFERRED_START,
+		Teams.HAS_KINECT,
+		Teams.CAN_CROSS,
+		Teams.CAN_PUSH_DOWN_BRIDGE,
+		Teams.STRATEGY,
+		Teams.COMMENTS,
+		Teams.SUMMARY_AUTO_NUM_SCORED,
+		Teams.SUMMARY_AUTO_NUM_ATTEMPT,
+		Teams.SUMMARY_AUTO_NUM_POINTS,
+		Teams.SUMMARY_NUM_SCORED,
+		Teams.SUMMARY_NUM_ATTEMPT,
+		Teams.SUMMARY_NUM_POINTS,
+		Teams.SUMMARY_TOTAL_SCORE,
+		Teams.SUMMARY_NUM_WINS,
+		Teams.SUMMARY_NUM_LOSSES
+	};
+
+	private static final String[] projectionMatch = {
+		TeamMatches.MATCH_ID,
+		TeamMatches.TEAM_ID,
+		TeamMatches.AUTO_NUM_SCORED_HIGH,
+		TeamMatches.AUTO_NUM_ATTEMPT_HIGH,
+		TeamMatches.AUTO_NUM_SCORED_MED,
+		TeamMatches.AUTO_NUM_ATTEMPT_MED,
+		TeamMatches.AUTO_NUM_SCORED_LOW,
+		TeamMatches.AUTO_NUM_ATTEMPT_LOW,
+		TeamMatches.NUM_SCORED_HIGH,
+		TeamMatches.NUM_ATTEMPT_HIGH,
+		TeamMatches.NUM_SCORED_MED,
+		TeamMatches.NUM_ATTEMPT_MED,
+		TeamMatches.NUM_SCORED_LOW,
+		TeamMatches.NUM_ATTEMPT_LOW,
+		TeamMatches.NUM_BALANCED,
+		TeamMatches.HOW_CROSS,
+		TeamMatches.PICK_UP_BALLS,
+		TeamMatches.SPEED,
+		TeamMatches.AGILITY,
+		TeamMatches.STRATEGY,
+		TeamMatches.PENALTY_RISK,
+		TeamMatches.WHICH_ALLIANCE,
+		TeamMatches.FINAL_SCORE,
+		TeamMatches.WIN_MATCH			
+	};
+
+	private ProgressDialog pd;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard_layout);
 	}
-	
+
 	public void onClickHandler(View v) {
 		switch (v.getId()) {
 		case R.id.dashboard_teams:
@@ -65,18 +120,296 @@ public class DashboardActivity extends Activity {
 			startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
 			break;
 		case R.id.dashboard_transfer:
-			Toast.makeText(DashboardActivity.this, "Coming soon!", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.dashboard_manage:
 			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-				new ExportDataTask().execute();
+				final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+
+				emailIntent.setType("text/csv");
+				emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+				File matchFile = new File(Environment.getExternalStorageDirectory(), "match_scouting_data.csv");
+				File teamFile = new File(Environment.getExternalStorageDirectory(), "team_scouting_data.csv");
+				
+				if (matchFile.isFile() && teamFile.isFile()){
+					Uri matchUri = Uri.fromFile(matchFile);
+					Uri teamUri = Uri.fromFile(teamFile);
+				
+					ArrayList<Uri> csvUris = new ArrayList<Uri>();
+					csvUris.add(matchUri);
+					csvUris.add(teamUri);
+
+					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Scouting Manager - scouting data");
+					emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "See attachments...");
+					emailIntent.putParcelableArrayListExtra(android.content.Intent.EXTRA_STREAM, csvUris);
+
+					startActivity(Intent.createChooser(emailIntent, "Share to..."));
+				} else {
+					Toast.makeText(this, "Data not found.", Toast.LENGTH_SHORT).show();
+				}
 			} else {
-				Toast.makeText(DashboardActivity.this, "No SD card present!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, "Device does not support this feature.", Toast.LENGTH_SHORT).show();
+			}
+			break;
+		case R.id.dashboard_manage:			
+			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+				pd = new ProgressDialog(this);
+				pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				pd.setTitle("Exporting Data");
+				pd.setMessage("Starting....");
+				pd.show();
+				
+				Thread thread = new Thread(this);
+				thread.start();
+			} else {
+				Toast.makeText(DashboardActivity.this, "Device does not support this feature.", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}
 	}
+	private boolean output_team(File root){
+		Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, projectionTeam, null, null, Teams.TEAM_NUM + " ASC");
+		int numCols = teamsCur.getColumnCount();
+		Message msg = new Message();
+		msg.what = 1;
+		msg.arg1 = teamsCur.getCount();
+		handler.sendMessage(msg);
+		try{
+			if(teamsCur != null && teamsCur.moveToFirst()){
+				File out = new File(root, "team_scouting_data.csv");
+				FileWriter writer = new FileWriter(out);
+
+				for(int i = 0;i<numCols;i++){
+					writer.append(projectionTeam[i]);
+					if (i+1 != numCols) writer.append(',');
+					else writer.append('\n');
+				}
+
+				do {
+					for (int i=0; i<numCols; i++) {
+						String s = teamsCur.getString(i);
+						if(s == null || s.equals("-1")){
+							//do nothing
+						}
+						else if(i == teamsCur.getColumnIndex(Teams.DRIVE_SYSTEM)){
+							writer.append(getResources().getStringArray(R.array.drive_option)[new Integer(s)+1]);
+						}
+						else if(i == teamsCur.getColumnIndex(Teams.WHEELS)){
+							writer.append(getResources().getStringArray(R.array.wheel_option)[new Integer(s)+1]);
+						}
+						else if(i == teamsCur.getColumnIndex(Teams.STRATEGY)){
+							writer.append(getResources().getStringArray(R.array.strategy_option)[new Integer(s)+1]);
+						}
+
+						else if(i == teamsCur.getColumnIndex(Teams.PREFERRED_START)){
+
+							if(s.contains("1")){
+								writer.append("L");
+							}
+							if(s.contains("2")){
+								writer.append("M");
+							}
+							if(s.contains("3")){
+								writer.append("R");
+							}
+						}
+						else if(i == teamsCur.getColumnIndex(Teams.HAS_AUTONOMOUS)||i == teamsCur.getColumnIndex(Teams.HAS_KINECT)
+								||i == teamsCur.getColumnIndex(Teams.CAN_CROSS)||i == teamsCur.getColumnIndex(Teams.CAN_PUSH_DOWN_BRIDGE)){
+							int value = new Integer(s);
+							String st = "No Value";
+							switch(value){
+							case 0:
+								st = "No";
+								break;
+							case 1:
+								st = "Yes";
+							}
+							writer.append(st);
+						}
+
+						else{
+							writer.append(teamsCur.getString(i));
+						}
+
+						if (i+1 != numCols) writer.append(',');
+						else writer.append('\n');
+					}
+					handler.sendEmptyMessage(3);
+				} while (teamsCur.moveToNext());
+				teamsCur.close();
+				writer.flush();
+				writer.close();		
+			}
+			else{
+				return false;
+			}
+		}catch(Exception e){return false;}
+		return true;
+	}		
+
+	private static final String[] cross_option={"No Atmp","Barrier","Bridge","Both"};
+	private static final String[] pick_ball_option={"Feeder","Floor","Both"};
+	private static final String[] rate_option={"Poor","Fair","Good","Great"};
+	private static final String[] strategy_option={"Offense","Defense","Neutual"};
+	private static final String[] risk_option={"Low","Medium","High"};
 	
+	private boolean output_match(File root){
+		// map "_id"s to "team_num"s
+		// (this is necessary because the team_matches table references the team's "_id" in the teams table, 
+		// but we need the team's number)
+		Map<Integer,Integer> teamIds = new HashMap<Integer, Integer>();
+		Map<Integer,String> teamNames = new HashMap<Integer, String>();
+		Cursor teams = getContentResolver().query(Teams.CONTENT_URI, new String[]{Teams._ID,Teams.TEAM_NUM,Teams.TEAM_NAME}, null, null, Teams.TEAM_NUM + " ASC");
+		Cursor matches = getContentResolver().query(Matches.CONTENT_URI, null, null, null, Matches.MATCH_NUM + " ASC");
+		Cursor cur = getContentResolver().query(TeamMatches.CONTENT_URI, projectionMatch, null, null, TeamMatches.MATCH_ID + " ASC");
+
+		Message msg = new Message();
+		msg.what = 2;
+		msg.arg1 = teams.getCount()+matches.getCount()+cur.getCount();
+		handler.sendMessage(msg);
+
+		if (teams != null && teams.moveToFirst()) {
+			do {
+				teamIds.put(teams.getInt(teams.getColumnIndex(Teams._ID)), 
+						teams.getInt(teams.getColumnIndex(Teams.TEAM_NUM)));
+				String name = teams.getString(teams.getColumnIndex(Teams.TEAM_NAME));
+				if (name==null) name = "";
+				teamNames.put(teams.getInt(teams.getColumnIndex(Teams._ID)), name);
+				handler.sendEmptyMessage(3);
+			} while (teams.moveToNext());
+			teams.close();
+		}
+		
+		
+
+		// map "_id"s to "match_num"s
+		// (this is necessary because the team_matches table references the match's "_id" in the matches table, 
+		// but we need the match's number)
+		Map<Integer,Integer> matchIds = new HashMap<Integer, Integer>();
+
+		if (matches != null && matches.moveToFirst()) {
+			do {
+				matchIds.put(matches.getInt(matches.getColumnIndex(Matches._ID)), 
+						matches.getInt(matches.getColumnIndex(Matches.MATCH_NUM)));
+				handler.sendEmptyMessage(3);
+			} while (matches.moveToNext());		
+			matches.close();
+		} 
+		
+		
+		try{
+			int numCols = cur.getColumnCount();
+			if(cur != null && cur.moveToFirst()){
+
+				File out = new File(root, "match_scouting_data.csv");
+				FileWriter writer = new FileWriter(out);
+				writer.append("match_number,team_number,team_name,");
+				for(int i = 2;i<numCols;i++){//skip match id, team id
+					writer.append(projectionMatch[i]);
+					if (i+1 != numCols) writer.append(',');
+					else writer.append('\n');
+				}
+
+				do{
+					for(int i=0;i<numCols;i++){
+						String s = cur.getString(i);
+						if(s==null|| s.equals("-1")){
+							//do nothing
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.MATCH_ID)){
+							writer.append(matchIds.get(new Integer(s))+"");
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.TEAM_ID)){
+							writer.append(teamIds.get(new Integer(s))+",");
+							writer.append(teamNames.get(new Integer(s))+"");
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.NUM_BALANCED)){
+							if(s.equals("0")) writer.append("No Atmp");
+							else writer.append(s);
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.HOW_CROSS)){
+							writer.append(cross_option[new Integer(s)]);
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.PICK_UP_BALLS)){
+							writer.append(pick_ball_option[new Integer(s)]);
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.AGILITY)
+								||i == cur.getColumnIndex(TeamMatches.SPEED)){
+							writer.append(rate_option[new Integer(s)]);
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.STRATEGY)){
+							writer.append(strategy_option[new Integer(s)]);
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.PENALTY_RISK)){
+							writer.append(risk_option[new Integer(s)]);
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.WHICH_ALLIANCE)){
+							String color = (new Integer(s)==0)?"Blue":"Red";
+							writer.append(color);
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.WIN_MATCH)){
+							String result = (new Integer(s)==0)?"Lost":"Win";
+							writer.append(result);
+						}
+						else{
+							writer.append(s);
+						}
+
+						if (i+1 != numCols) writer.append(',');
+						else writer.append('\n');
+					}
+					handler.sendEmptyMessage(3);
+				}while(cur.moveToNext());
+				cur.close();
+				writer.flush();
+				writer.close();
+			}
+			else{
+				return false;
+			}
+		}catch(Exception e){return false;}
+
+		return true;
+	}
+
+
+	@Override
+	public void run() {
+		File root = Environment.getExternalStorageDirectory();
+		Message msg = new Message();
+		msg.what=0;
+		if (root.canWrite()){
+			msg.arg1 = (output_team(root)&&output_match(root))? 1 : 0;
+		}
+
+		handler.sendMessage(msg);
+	}
+	
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if(msg.what==1){
+				pd.setMessage("Exporting team-scout data");
+				pd.setMax(msg.arg1);
+				pd.setProgress(0);
+			}
+			else if(msg.what==2){
+				pd.setMessage("Exporting match-scout data");
+				pd.setMax(msg.arg1);
+				pd.setProgress(0);
+			}
+			else if(msg.what==3){
+				pd.incrementProgressBy(1);
+			}
+			else{
+				pd.dismiss();
+				if(msg.arg1==1){
+					Toast.makeText(pd.getContext(), "Data exported successfully.", Toast.LENGTH_SHORT).show();
+				}
+				else{
+					Toast.makeText(pd.getContext(), "Exported failed.", Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+	};
 	@Override
 	public Dialog onCreateDialog(int id) {
 		switch (id) {
@@ -86,133 +419,127 @@ public class DashboardActivity extends Activity {
 			final EditText matchBox = (EditText) textEntryView.findViewById(R.id.ET_match_number); 
 			final EditText teamBox = (EditText) textEntryView.findViewById(R.id.ET_team_number); 
 			return new AlertDialog.Builder(DashboardActivity.this)
-				/*.setIconAttribute(android.R.attr.alertDialogIcon)*/
-				.setTitle(R.string.start_match_scout_title)
-				.setView(textEntryView)
-				.setPositiveButton(R.string.ok,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								String matchText = matchBox.getText().toString();
-								String teamText = teamBox.getText().toString();
-								
-								if (TextUtils.isEmpty(matchText) || Integer.valueOf(matchText) <= 0) {
-									Toast.makeText(DashboardActivity.this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
-									//matchBox.requestFocus();
-									return;
-								}
-								
-								if (TextUtils.isEmpty(teamText) || Integer.valueOf(teamText) <= 0) {
-									Toast.makeText(DashboardActivity.this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
-									//teamBox.requestFocus();
-									return;
-								}
-								
-								int matchNum = Integer.valueOf(matchText);
-								int teamNum = Integer.valueOf(teamText);
-								
-								int matchId = checkMatchBox(matchNum);
-								int teamId = checkTeamBox(teamNum);
-								
-								if (DEBUG) {
-									Log.v(TAG, "matchNum = " + matchNum);
-									Log.v(TAG, "teamNum = " + teamNum);
-									Log.v(TAG, "matchId = " + matchId);
-									Log.v(TAG, "teamId = " + teamId);
-								}
-								
-								final Uri queryUri = Matches.buildMatchIdTeamIdUri("" + matchId, "" + teamId);
-								final Cursor cur = getContentResolver().query(queryUri, new String[] { TeamMatches.TEAM_ID, TeamMatches.MATCH_ID }, null, null, null);
+			/*.setIconAttribute(android.R.attr.alertDialogIcon)*/
+			.setTitle(R.string.start_match_scout_title)
+			.setView(textEntryView)
+			.setPositiveButton(R.string.ok,
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					String matchText = matchBox.getText().toString();
+					String teamText = teamBox.getText().toString();
 
-								if (cur == null || !cur.moveToFirst()) {
-									// then add new team-match to the table
-									ContentValues values = new ContentValues();
-									values.put(TeamMatches.MATCH_ID, matchId);
-									values.put(TeamMatches.TEAM_ID, teamId);
-									getContentResolver().insert(TeamMatches.CONTENT_URI, values);
-								}
-								
-								final Intent launchingIntent = new Intent(getApplicationContext(), MatchPagerActivity.class);
-								launchingIntent.putExtra(INTENT_MATCH_NUM, matchNum);
-								launchingIntent.putExtra(INTENT_TEAM_NUM, teamNum);
-								launchingIntent.putExtra(INTENT_MATCH_ID, matchId);
-								launchingIntent.putExtra(INTENT_TEAM_ID, teamId);
-								
-								startActivity(launchingIntent);
-							}
-						})
-				.setNegativeButton(R.string.cancel,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
+					if (TextUtils.isEmpty(matchText) || Integer.valueOf(matchText) <= 0) {
+						Toast.makeText(DashboardActivity.this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
+						//matchBox.requestFocus();
+						return;
+					}
 
-								/* User clicked cancel so do some stuff */
-							}
-						}).create();
+					if (TextUtils.isEmpty(teamText) || Integer.valueOf(teamText) <= 0) {
+						Toast.makeText(DashboardActivity.this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
+						//teamBox.requestFocus();
+						return;
+					}
+
+					int matchNum = Integer.valueOf(matchText);
+					int teamNum = Integer.valueOf(teamText);
+
+					int matchId = checkMatchBox(matchNum);
+					int teamId = checkTeamBox(teamNum);
+
+					if (DEBUG) {
+						Log.v(TAG, "matchNum = " + matchNum);
+						Log.v(TAG, "teamNum = " + teamNum);
+						Log.v(TAG, "matchId = " + matchId);
+						Log.v(TAG, "teamId = " + teamId);
+					}
+
+					final Uri queryUri = Matches.buildMatchIdTeamIdUri("" + matchId, "" + teamId);
+					final Cursor cur = getContentResolver().query(queryUri, new String[] { TeamMatches.TEAM_ID, TeamMatches.MATCH_ID }, null, null, null);
+
+					if (cur == null || !cur.moveToFirst()) {
+						// then add new team-match to the table
+						ContentValues values = new ContentValues();
+						values.put(TeamMatches.MATCH_ID, matchId);
+						values.put(TeamMatches.TEAM_ID, teamId);
+						getContentResolver().insert(TeamMatches.CONTENT_URI, values);
+						cur.close();
+					}
+
+					final Intent launchingIntent = new Intent(getApplicationContext(), MatchPagerActivity.class);
+					launchingIntent.putExtra(INTENT_MATCH_NUM, matchNum);
+					launchingIntent.putExtra(INTENT_TEAM_NUM, teamNum);
+					launchingIntent.putExtra(INTENT_MATCH_ID, matchId);
+					launchingIntent.putExtra(INTENT_TEAM_ID, teamId);
+
+					startActivity(launchingIntent);
+				}
+			})
+			.setNegativeButton(R.string.cancel,
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+
+					/* User clicked cancel so do some stuff */
+				}
+			}).create();
 		}
 		return null;
 	}
-	
-	
+
+
 	// returns the match's id
 	public int checkMatchBox(int matchNum) {
-		Log.v(TAG, "start: "+matchNum);
-		
 		// search for matchNum in the database. create new match if it doesn't already exist.
 		final Cursor matchNumCur = getContentResolver().query(Matches.CONTENT_URI, new String[] { Matches._ID, Matches.MATCH_NUM }, 
 				Matches.MATCH_NUM + "=?", new String[] { ""+matchNum }, null);
-		
+
 		if (matchNumCur != null && matchNumCur.moveToFirst()) {
-			Log.v(TAG, "match found");
 			// fetch match id
 			int matchId = matchNumCur.getInt(matchNumCur.getColumnIndex(Matches._ID));
 			matchNumCur.close();
 			return matchId;
 		} else {
-			Log.v(TAG, "match not found");
 			// create new match
 			ContentValues matchValues = new ContentValues();
 			matchValues.put(Matches.MATCH_NUM, matchNum);
 			return Integer.valueOf(getContentResolver().insert(Matches.CONTENT_URI, matchValues).getLastPathSegment());
 		}
 	}
-	
+
 	// returns the team's id
 	public int checkTeamBox(int teamNum) {
-		Log.v(TAG, "start: "+teamNum);
-		
+
 		// search for teamNum in the database. create new team if it doesn't already exist.
 		final Cursor teamNumCur = getContentResolver().query(Teams.CONTENT_URI, new String[] { Teams._ID, Teams.TEAM_NUM }, 
 				Teams.TEAM_NUM + "=?", new String[] { ""+teamNum }, null);
-		
+
 		if (teamNumCur != null && teamNumCur.moveToFirst()) {
-			Log.v(TAG, "team found");
 			// fetch team id
 			int teamId = teamNumCur.getInt(teamNumCur.getColumnIndex(Teams._ID));
 			teamNumCur.close();
 			return teamId;
 		} else {
-			Log.v(TAG, "team not found");
 			// create new team
 			ContentValues teamValues = new ContentValues();
 			teamValues.put(Teams.TEAM_NUM, teamNum);
 			return Integer.valueOf(getContentResolver().insert(Teams.CONTENT_URI, teamValues).getLastPathSegment());
 		}
 	}
-
+/*
 	private class ExportDataTask extends AsyncTask<String, String, String> {
-		
+
 		@Override
 		protected String doInBackground(String... urls) {
 			try {
 				File root = Environment.getExternalStorageDirectory();
 				if (root.canWrite()){
-					
+
 					// map "_id"s to "team_num"s
 					// (this is necessary because the team_matches table references the team's "_id" in the teams table, 
 					// but we need the team's number)
 					Map<Integer,Integer> teamIds = new HashMap<Integer, Integer>();
 					// TODO: include a projection as the second argument... we don't need all of the columns!
 					Cursor teams = getContentResolver().query(Teams.CONTENT_URI, null, null, null, Teams.TEAM_NUM + " ASC");
-					
+
 					if (teams != null && teams.moveToFirst()) {
 						do {
 							teamIds.put(teams.getInt(teams.getColumnIndex(Teams._ID)), 
@@ -221,13 +548,13 @@ public class DashboardActivity extends Activity {
 					} else {
 						return "No teams to export!";
 					}
-					
+
 					// map "_id"s to "match_num"s
 					// (this is necessary because the team_matches table references the match's "_id" in the matches table, 
 					// but we need the match's number)
 					Map<Integer,Integer> matchIds = new HashMap<Integer, Integer>();
 					Cursor matches = getContentResolver().query(Matches.CONTENT_URI, null, null, null, Matches.MATCH_NUM + " ASC");
-					
+
 					if (matches != null && matches.moveToFirst()) {
 						do {
 							matchIds.put(matches.getInt(matches.getColumnIndex(Matches._ID)), 
@@ -236,22 +563,22 @@ public class DashboardActivity extends Activity {
 					} else {
 						return "No matches to export!";
 					}
-					
+
 					// TODO: include a projection as the second argument... we don't need all of the columns!
 					Cursor teamMatches = getContentResolver().query(TeamMatches.CONTENT_URI, null, null, null, TeamMatches.MATCH_ID + " ASC");
 					int numCols = teamMatches.getColumnCount();
-					
+
 					if (teamMatches != null && teamMatches.moveToFirst()) {
 						File path = new File(root, "scouting_data.csv");
 						FileWriter writer = new FileWriter(path);
-						
+
 						// TODO: write header columns to the top of the file
-						
+
 						// TODO: write data to file similar to how the girls manage their excel spreadsheet
-						
+
 						// TODO: need some sort of mapping of int values to strings for almost 
 						// all of the columns (i.e. drive, wheels, etc.)
-						
+
 						do {
 							for (int i=0; i<numCols; i++) {				
 								writer.append(teamMatches.getString(i));
@@ -259,7 +586,7 @@ public class DashboardActivity extends Activity {
 								else writer.append('\n');
 							}
 						} while (teamMatches.moveToNext());
-						
+
 						writer.flush();
 						writer.close();
 					}
@@ -270,10 +597,10 @@ public class DashboardActivity extends Activity {
 			}
 			return "Export successful";
 		}
-		
+
 		@Override
 		protected void onPostExecute(String result) {
-	        Toast.makeText(DashboardActivity.this, result, Toast.LENGTH_SHORT).show();
-	    }
-	}
+			Toast.makeText(DashboardActivity.this, result, Toast.LENGTH_SHORT).show();
+		}
+	}*/
 }
