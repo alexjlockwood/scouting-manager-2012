@@ -31,12 +31,11 @@
       <EditText
             android:id="@+id/ET_Team_Rank"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            
+            android:layout_height="wrap_content"     
             android:layout_alignBottom="@id/IV_Team_Picture"
             android:layout_marginLeft="200dp"
             android:layout_toRightOf="@id/IV_Team_Picture"
-            
+            android:maxLength="4"
             android:inputType="number"
             android:maxLines="1"
             android:hint="@string/rank" />

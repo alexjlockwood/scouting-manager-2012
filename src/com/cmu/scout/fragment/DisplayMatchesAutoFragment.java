@@ -177,13 +177,13 @@ public class DisplayMatchesAutoFragment extends ListFragment implements
 	        
 	        holder.match.setText("" + (cur.getPosition()+1));
 	        
-	        String lowRow = "" + cur.getInt(holder.lowShotsMadeCol) + " / " + cur.getInt(holder.lowShotsAttemptCol);
-	        String medRow = "" + cur.getInt(holder.medShotsMadeCol) + " / " + cur.getInt(holder.medShotsAttemptCol);
-	        String highRow = "" + cur.getInt(holder.highShotsMadeCol) + " / " + cur.getInt(holder.highShotsAttemptCol);
+	        int lowDenom = cur.getInt(holder.lowShotsAttemptCol);
+	        int medDenom = cur.getInt(holder.medShotsAttemptCol);
+	        int highDenom = cur.getInt(holder.highShotsAttemptCol);
 	        
-	        if (lowRow.charAt(lowRow.length()-1) == '0') lowRow = "N/A";
-	        if (medRow.charAt(medRow.length()-1) == '0') medRow = "N/A";
-	        if (highRow.charAt(highRow.length()-1) == '0') highRow = "N/A";
+	        String lowRow = (lowDenom != 0) ? "" + cur.getInt(holder.lowShotsMadeCol) + " / " + lowDenom : "N/A";
+	        String medRow = (medDenom != 0) ? "" + cur.getInt(holder.medShotsMadeCol) + " / " + medDenom : "N/A";
+	        String highRow = (highDenom != 0) ? "" + cur.getInt(holder.highShotsMadeCol) + " / " + highDenom : "N/A";
 	        
 	        holder.lowShots.setText(lowRow);
 	        holder.medShots.setText(medRow);

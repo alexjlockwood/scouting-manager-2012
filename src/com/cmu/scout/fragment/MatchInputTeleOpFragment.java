@@ -28,7 +28,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 	private EditText mMedAtmpCounter;
 	private EditText mLowCounter;
 	private EditText mLowAtmpCounter;
-	
+	/*
 	private static final String HIGH_MADE_STORAGE_KEY = "high_made";
 	private static final String MED_MADE_STORAGE_KEY = "med_made";
 	private static final String LOW_MADE_STORAGE_KEY = "low_made";
@@ -39,7 +39,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 	private static final String SUMMARY_MADE_STORAGE_KEY = "summary_made";
 	private static final String SUMMARY_ATTEMPT_STORAGE_KEY = "summary_attempt";
 	private static final String SUMMARY_POINTS_STORAGE_KEY = "summary_points";
-	
+	*/
 	private int mHighMadeInit;
 	private int mMedMadeInit;
 	private int mLowMadeInit;
@@ -69,7 +69,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
-		
+		/*
 		if (savedInstanceState != null) {		
 			mHighMadeInit = savedInstanceState.getInt(HIGH_MADE_STORAGE_KEY);
 			mMedMadeInit = savedInstanceState.getInt(MED_MADE_STORAGE_KEY);
@@ -82,7 +82,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 			mSummaryNumAttemptInit = savedInstanceState.getInt(SUMMARY_ATTEMPT_STORAGE_KEY);
 			mSummaryNumPointsInit = savedInstanceState.getInt(SUMMARY_POINTS_STORAGE_KEY);
 		}
-		
+		*/
 		final View parent = inflater.inflate(R.layout.match_scout_teleop_page, container, false);
 		
 		mHighCounter = (EditText) parent.findViewById(R.id.ET_Shots_Hit_High);
@@ -93,35 +93,16 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		mMedAtmpCounter = (EditText) parent.findViewById(R.id.ET_Shots_Atmp_Med);
 		mLowAtmpCounter = (EditText) parent.findViewById(R.id.ET_Shots_Atmp_Low);
 		
-		// store initial data so we don't add to cumulative data when we shouldn't be
-		String highShotsMade = mHighCounter.getText().toString();
-		String medShotsMade  = mMedCounter.getText().toString();
-		String lowShotsMade  = mLowCounter.getText().toString();
-		String highShotsAtmp = mHighAtmpCounter.getText().toString();
-		String medShotsAtmp  = mMedAtmpCounter.getText().toString();
-		String lowShotsAtmp  = mLowAtmpCounter.getText().toString();
-		
-		mHighMadeInit = (!TextUtils.isEmpty(highShotsMade)) ? Integer.valueOf(highShotsMade) : 0;
-		mMedMadeInit = (!TextUtils.isEmpty(medShotsMade)) ? Integer.valueOf(medShotsMade) : 0;
-		mLowMadeInit = (!TextUtils.isEmpty(lowShotsMade)) ? Integer.valueOf(lowShotsMade) : 0;
-		mHighAttemptInit = (!TextUtils.isEmpty(highShotsAtmp)) ? Integer.valueOf(highShotsAtmp) : 0;
-		mMedAttemptInit = (!TextUtils.isEmpty(medShotsAtmp)) ? Integer.valueOf(medShotsAtmp) : 0;
-		mLowAttemptInit = (!TextUtils.isEmpty(lowShotsAtmp)) ? Integer.valueOf(lowShotsAtmp) : 0;
-		
-		mSummaryNumScoredInit = (mHighMadeInit + mMedMadeInit + mLowMadeInit);
-		mSummaryNumAttemptInit = (mHighAttemptInit + mMedAttemptInit + mLowAttemptInit);
-		mSummaryNumPointsInit = (3*mHighMadeInit + 2*mMedMadeInit + 1*mLowMadeInit);
-		
 		return parent;
 	}
-	
+	/*
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if (DEBUG) Log.v(TAG, "ON SAVE INSTANCE STATE");
 
 		outState.putInt(HIGH_MADE_STORAGE_KEY, mHighMadeInit);
-		outState.putInt(MED_MADE_STORAGE_KEY, mHighMadeInit);
+		outState.putInt(MED_MADE_STORAGE_KEY, mMedMadeInit);
 		outState.putInt(LOW_MADE_STORAGE_KEY, mLowMadeInit);
 		outState.putInt(HIGH_ATTEMPT_STORAGE_KEY, mHighAttemptInit);
 		outState.putInt(MED_ATTEMPT_STORAGE_KEY, mMedAttemptInit);
@@ -130,7 +111,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		outState.putInt(SUMMARY_MADE_STORAGE_KEY, mSummaryNumScoredInit);
 		outState.putInt(SUMMARY_ATTEMPT_STORAGE_KEY, mSummaryNumAttemptInit);
 		outState.putInt(SUMMARY_POINTS_STORAGE_KEY, mSummaryNumPointsInit);
-	}
+	}*/
 	
 	@Override
 	public void updateDisplay(int viewId) {
@@ -278,6 +259,25 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 	public void onResume() {
 		super.onResume();
 		loadData();
+		
+		// store initial data so we don't add to cumulative data when we shouldn't be
+		String highShotsMade = mHighCounter.getText().toString();
+		String medShotsMade  = mMedCounter.getText().toString();
+		String lowShotsMade  = mLowCounter.getText().toString();
+		String highShotsAtmp = mHighAtmpCounter.getText().toString();
+		String medShotsAtmp  = mMedAtmpCounter.getText().toString();
+		String lowShotsAtmp  = mLowAtmpCounter.getText().toString();
+		
+		mHighMadeInit = (!TextUtils.isEmpty(highShotsMade)) ? Integer.valueOf(highShotsMade) : 0;
+		mMedMadeInit = (!TextUtils.isEmpty(medShotsMade)) ? Integer.valueOf(medShotsMade) : 0;
+		mLowMadeInit = (!TextUtils.isEmpty(lowShotsMade)) ? Integer.valueOf(lowShotsMade) : 0;
+		mHighAttemptInit = (!TextUtils.isEmpty(highShotsAtmp)) ? Integer.valueOf(highShotsAtmp) : 0;
+		mMedAttemptInit = (!TextUtils.isEmpty(medShotsAtmp)) ? Integer.valueOf(medShotsAtmp) : 0;
+		mLowAttemptInit = (!TextUtils.isEmpty(lowShotsAtmp)) ? Integer.valueOf(lowShotsAtmp) : 0;
+		
+		mSummaryNumScoredInit = (mHighMadeInit + mMedMadeInit + mLowMadeInit);
+		mSummaryNumAttemptInit = (mHighAttemptInit + mMedAttemptInit + mLowAttemptInit);
+		mSummaryNumPointsInit = (3*mHighMadeInit + 2*mMedMadeInit + 1*mLowMadeInit);
 	}
 	
 	@Override

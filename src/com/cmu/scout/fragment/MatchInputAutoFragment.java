@@ -35,7 +35,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 	private EditText mAutoMedAtmpCounter;
 	private EditText mAutoLowCounter;
 	private EditText mAutoLowAtmpCounter;
-	
+	/*
 	private static final String AUTO_HIGH_MADE_STORAGE_KEY = "auto_high_made";
 	private static final String AUTO_MED_MADE_STORAGE_KEY = "auto_med_made";
 	private static final String AUTO_LOW_MADE_STORAGE_KEY = "auto_low_made";
@@ -46,7 +46,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 	private static final String SUMMARY_AUTO_MADE_STORAGE_KEY = "summary_auto_made";
 	private static final String SUMMARY_AUTO_ATTEMPT_STORAGE_KEY = "summary_auto_attempt";
 	private static final String SUMMARY_AUTO_POINTS_STORAGE_KEY = "summary_auto_points";
-	
+	*/
 	private int mAutoHighMadeInit;
 	private int mAutoMedMadeInit;
 	private int mAutoLowMadeInit;
@@ -75,7 +75,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
-		
+		/*
 		if (savedInstanceState != null) {	
 			mAutoHighMadeInit = savedInstanceState.getInt(AUTO_HIGH_MADE_STORAGE_KEY);
 			mAutoMedMadeInit = savedInstanceState.getInt(AUTO_MED_MADE_STORAGE_KEY);
@@ -87,7 +87,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 			mSummaryAutoNumScoredInit = savedInstanceState.getInt(SUMMARY_AUTO_MADE_STORAGE_KEY);
 			mSummaryAutoNumAttemptInit = savedInstanceState.getInt(SUMMARY_AUTO_ATTEMPT_STORAGE_KEY);
 			mSummaryAutoNumPointsInit = savedInstanceState.getInt(SUMMARY_AUTO_POINTS_STORAGE_KEY);
-		}
+		}*/
 
 		final View parent = inflater.inflate(R.layout.match_scout_auto_page, container, false);
 		
@@ -99,35 +99,16 @@ public class MatchInputAutoFragment extends MatchFragment {
 		mAutoMedAtmpCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Atmp_Med);
 		mAutoLowAtmpCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Atmp_Low);
 		
-		// store initial data so we don't add to cumulative data when we shouldn't be
-		String highShotsMade = mAutoHighCounter.getText().toString();
-		String medShotsMade  = mAutoMedCounter.getText().toString();
-		String lowShotsMade  = mAutoLowCounter.getText().toString();
-		String highShotsAtmp = mAutoHighAtmpCounter.getText().toString();
-		String medShotsAtmp  = mAutoMedAtmpCounter.getText().toString();
-		String lowShotsAtmp  = mAutoLowAtmpCounter.getText().toString();
-		
-		mAutoHighMadeInit = (!TextUtils.isEmpty(highShotsMade)) ? Integer.valueOf(highShotsMade) : 0;
-		mAutoMedMadeInit = (!TextUtils.isEmpty(medShotsMade)) ? Integer.valueOf(medShotsMade) : 0;
-		mAutoLowMadeInit = (!TextUtils.isEmpty(lowShotsMade)) ? Integer.valueOf(lowShotsMade) : 0;
-		mAutoHighAttemptInit = (!TextUtils.isEmpty(highShotsAtmp)) ? Integer.valueOf(highShotsAtmp) : 0;
-		mAutoMedAttemptInit = (!TextUtils.isEmpty(medShotsAtmp)) ? Integer.valueOf(medShotsAtmp) : 0;
-		mAutoLowAttemptInit = (!TextUtils.isEmpty(lowShotsAtmp)) ? Integer.valueOf(lowShotsAtmp) : 0;
-		
-		mSummaryAutoNumScoredInit = (mAutoHighMadeInit + mAutoMedMadeInit + mAutoLowMadeInit);
-		mSummaryAutoNumAttemptInit = (mAutoHighAttemptInit + mAutoMedAttemptInit + mAutoLowAttemptInit);
-		mSummaryAutoNumPointsInit = (3*mAutoHighMadeInit + 2*mAutoMedMadeInit + 1*mAutoLowMadeInit);
-		
 		return parent;
 	}
-
+/*
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if (DEBUG) Log.v(TAG, "ON SAVE INSTANCE STATE");
 		
 		outState.putInt(AUTO_HIGH_MADE_STORAGE_KEY, mAutoHighMadeInit);
-		outState.putInt(AUTO_MED_MADE_STORAGE_KEY, mAutoHighMadeInit);
+		outState.putInt(AUTO_MED_MADE_STORAGE_KEY, mAutoMedMadeInit);
 		outState.putInt(AUTO_LOW_MADE_STORAGE_KEY, mAutoLowMadeInit);
 		outState.putInt(AUTO_HIGH_ATTEMPT_STORAGE_KEY, mAutoHighAttemptInit);
 		outState.putInt(AUTO_MED_ATTEMPT_STORAGE_KEY, mAutoMedAttemptInit);
@@ -137,7 +118,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 		outState.putInt(SUMMARY_AUTO_ATTEMPT_STORAGE_KEY, mSummaryAutoNumAttemptInit);
 		outState.putInt(SUMMARY_AUTO_POINTS_STORAGE_KEY, mSummaryAutoNumPointsInit);
 	}
-
+*/
 	@Override
 	public void updateDisplay(int viewId) {
 		if (DEBUG) Log.v(TAG, "updateDisplay()");
@@ -284,6 +265,26 @@ public class MatchInputAutoFragment extends MatchFragment {
 	public void onResume() {
 		super.onResume();
 		loadData();
+		
+		// store initial data so we don't add to cumulative data when we shouldn't be
+		String highShotsMade = mAutoHighCounter.getText().toString();
+		String medShotsMade  = mAutoMedCounter.getText().toString();
+		String lowShotsMade  = mAutoLowCounter.getText().toString();
+		String highShotsAtmp = mAutoHighAtmpCounter.getText().toString();
+		String medShotsAtmp  = mAutoMedAtmpCounter.getText().toString();
+		String lowShotsAtmp  = mAutoLowAtmpCounter.getText().toString();
+		
+		mAutoHighMadeInit = (!TextUtils.isEmpty(highShotsMade)) ? Integer.valueOf(highShotsMade) : 0;
+		mAutoMedMadeInit = (!TextUtils.isEmpty(medShotsMade)) ? Integer.valueOf(medShotsMade) : 0;
+		mAutoLowMadeInit = (!TextUtils.isEmpty(lowShotsMade)) ? Integer.valueOf(lowShotsMade) : 0;
+		mAutoHighAttemptInit = (!TextUtils.isEmpty(highShotsAtmp)) ? Integer.valueOf(highShotsAtmp) : 0;
+		mAutoMedAttemptInit = (!TextUtils.isEmpty(medShotsAtmp)) ? Integer.valueOf(medShotsAtmp) : 0;
+		mAutoLowAttemptInit = (!TextUtils.isEmpty(lowShotsAtmp)) ? Integer.valueOf(lowShotsAtmp) : 0;
+		
+		mSummaryAutoNumScoredInit = (mAutoHighMadeInit + mAutoMedMadeInit + mAutoLowMadeInit);
+		mSummaryAutoNumAttemptInit = (mAutoHighAttemptInit + mAutoMedAttemptInit + mAutoLowAttemptInit);
+		
+		mSummaryAutoNumPointsInit = (3*mAutoHighMadeInit + 2*mAutoMedMadeInit + 1*mAutoLowMadeInit);
 	}
 	
 	@Override
