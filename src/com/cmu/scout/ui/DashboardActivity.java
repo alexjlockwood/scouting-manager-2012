@@ -433,12 +433,20 @@ public class DashboardActivity extends Activity implements Runnable {
 		msg.what=0;
 		if (root.canWrite()){
 			int teamRes = output_team(root);
-			if(teamRes == WRITE_SUCCESS){
-				msg.arg1 = output_match(root);
+			int matchRes = output_match(root);
+			if (teamRes == WRITE_FAIL || matchRes == WRITE_FAIL) {
+				msg.arg1 = WRITE_FAIL;
+			} else if (teamRes == WRITE_SUCCESS || matchRes == WRITE_SUCCESS) {
+				msg.arg1 = WRITE_SUCCESS;
+			} else {
+				msg.arg1 = WRITE_EMPTY;
 			}
-			else{
-				msg.arg1 = teamRes;
-			}
+			//if(teamRes == WRITE_SUCCESS){
+				//msg.arg1 = output_match(root);
+			//}
+			//else{
+				//msg.arg1 = teamRes;
+			//}
 		}
 		else{
 			msg.arg1 = WRITE_NO_ACCESS;
@@ -479,7 +487,7 @@ public class DashboardActivity extends Activity implements Runnable {
 					Toast.makeText(DashboardActivity.this, "Data written to external storage.", Toast.LENGTH_SHORT).show();
 					break;
 				case WRITE_EMPTY:
-					Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
 					break;
 				case WRITE_FAIL:
 					Toast.makeText(DashboardActivity.this, "Error writing data.", Toast.LENGTH_SHORT).show();
@@ -605,6 +613,14 @@ public class DashboardActivity extends Activity implements Runnable {
 	}
 
 	private void callChooser(){
+		Cursor teams = getContentResolver().query(Teams.CONTENT_URI, new String[]{Teams._ID,Teams.TEAM_NUM,Teams.TEAM_NAME}, null, null, null);
+		Cursor teamMatches = getContentResolver().query(TeamMatches.CONTENT_URI, null, null, null, null);
+
+		boolean exportTeams = (teams != null && teams.moveToFirst());
+		boolean exportTeamMatches = (teamMatches != null && teams.moveToFirst());
+		teams.close();
+		teamMatches.close();
+		
 		final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
 
 		emailIntent.setType("text/csv");
@@ -621,8 +637,8 @@ public class DashboardActivity extends Activity implements Runnable {
 			Uri teamUri = Uri.fromFile(teamFile);
 
 			ArrayList<Uri> csvUris = new ArrayList<Uri>();
-			csvUris.add(teamUri);
-			if (matchFile.isFile()) csvUris.add(matchUri);
+			if (exportTeams) csvUris.add(teamUri);
+			if (matchFile.isFile() && exportTeamMatches) csvUris.add(matchUri);
 
 			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Scouting Manager - scouting data");
 			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "See attachments...");
