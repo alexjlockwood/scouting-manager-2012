@@ -139,7 +139,7 @@ public class DashboardActivity extends Activity implements Runnable {
 			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
 				Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, new String[] { Teams._ID }, null, null, null);
 				if (teamsCur == null || !teamsCur.moveToFirst()) {
-					Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(DashboardActivity.this, "No data to share.", Toast.LENGTH_SHORT).show();
 				} else {
 					teamsCur.close();
 					
@@ -188,7 +188,7 @@ public class DashboardActivity extends Activity implements Runnable {
 			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
 				Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, new String[] { Teams._ID }, null, null, null);
 				if (teamsCur == null || !teamsCur.moveToFirst()) {
-					Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(DashboardActivity.this, "No data to export.", Toast.LENGTH_SHORT).show();
 				} else {
 					teamsCur.close();
 					
