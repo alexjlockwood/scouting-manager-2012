@@ -23,11 +23,11 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 	private static final boolean DEBUG = true;
 	
 	private EditText mHighCounter;
-	private EditText mHighAtmpCounter; 
+	private EditText mHighMissCounter; 
 	private EditText mMedCounter;
-	private EditText mMedAtmpCounter;
+	private EditText mMedMissCounter;
 	private EditText mLowCounter;
-	private EditText mLowAtmpCounter;
+	private EditText mLowMissCounter;
 	/*
 	private static final String HIGH_MADE_STORAGE_KEY = "high_made";
 	private static final String MED_MADE_STORAGE_KEY = "med_made";
@@ -89,9 +89,9 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		mMedCounter = (EditText) parent.findViewById(R.id.ET_Shots_Hit_Med);
 		mLowCounter = (EditText) parent.findViewById(R.id.ET_Shots_Hit_Low);
 		
-		mHighAtmpCounter = (EditText) parent.findViewById(R.id.ET_Shots_Atmp_High);
-		mMedAtmpCounter = (EditText) parent.findViewById(R.id.ET_Shots_Atmp_Med);
-		mLowAtmpCounter = (EditText) parent.findViewById(R.id.ET_Shots_Atmp_Low);
+		mHighMissCounter = (EditText) parent.findViewById(R.id.ET_Shots_Miss_High);
+		mMedMissCounter = (EditText) parent.findViewById(R.id.ET_Shots_Miss_Med);
+		mLowMissCounter = (EditText) parent.findViewById(R.id.ET_Shots_Miss_Low);
 		
 		return parent;
 	}
@@ -120,24 +120,21 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		switch(viewId) {
 		case R.id.BT_Shots_Hit_High:
 			incCount(mHighCounter);
-			incCount(mHighAtmpCounter);
 			break;
 		case R.id.BT_Shots_Hit_Med:
 			incCount(mMedCounter);
-			incCount(mMedAtmpCounter);
 			break;
 		case R.id.BT_Shots_Hit_Low:
 			incCount(mLowCounter);
-			incCount(mLowAtmpCounter);
 			break;
 		case R.id.BT_Shots_Miss_High:
-			incCount(mHighAtmpCounter);
+			incCount(mHighMissCounter);
 			break;
 		case R.id.BT_Shots_Miss_Med:
-			incCount(mMedAtmpCounter);
+			incCount(mMedMissCounter);
 			break;
 		case R.id.BT_Shots_Miss_Low:
-			incCount(mLowAtmpCounter);
+			incCount(mLowMissCounter);
 			break;
 		}
 	}
@@ -159,20 +156,21 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		String highShotsMade = mHighCounter.getText().toString();
 		String medShotsMade  = mMedCounter.getText().toString();
 		String lowShotsMade  = mLowCounter.getText().toString();
-		String highShotsAtmp = mHighAtmpCounter.getText().toString();
-		String medShotsAtmp  = mMedAtmpCounter.getText().toString();
-		String lowShotsAtmp  = mLowAtmpCounter.getText().toString();
+		String highShotsMiss = mHighMissCounter.getText().toString();
+		String medShotsMiss  = mMedMissCounter.getText().toString();
+		String lowShotsMiss  = mLowMissCounter.getText().toString();
 		
 		int numHighShotsMade = (highShotsMade.isEmpty()) ? 0 : Integer.valueOf(highShotsMade);
 		int numMedShotsMade  = (medShotsMade.isEmpty())  ? 0 : Integer.valueOf(medShotsMade);
 		int numLowShotsMade  = (lowShotsMade.isEmpty())  ? 0 : Integer.valueOf(lowShotsMade);
-		int numHighShotsAtmp = (highShotsAtmp.isEmpty()) ? 0 : Integer.valueOf(highShotsAtmp);
-		int numMedShotsAtmp  = (medShotsAtmp.isEmpty())  ? 0 : Integer.valueOf(medShotsAtmp);
-		int numLowShotsAtmp  = (lowShotsAtmp.isEmpty())  ? 0 : Integer.valueOf(lowShotsAtmp);
+		int numHighShotsMiss = (highShotsMiss.isEmpty()) ? 0 : Integer.valueOf(highShotsMiss);
+		int numMedShotsMiss  = (medShotsMiss.isEmpty())  ? 0 : Integer.valueOf(medShotsMiss);
+		int numLowShotsMiss  = (lowShotsMiss.isEmpty())  ? 0 : Integer.valueOf(lowShotsMiss);
 		
 		// compute summary data offset
 		int summaryNumScored = (numHighShotsMade + numMedShotsMade + numLowShotsMade) - mSummaryNumScoredInit;
-		int summaryNumAttempt = (numHighShotsAtmp + numMedShotsAtmp + numLowShotsAtmp) - mSummaryNumAttemptInit;
+		int summaryNumAttempt = (numHighShotsMiss + numMedShotsMiss + numLowShotsMiss) 
+			+(numHighShotsMade + numMedShotsMade + numLowShotsMade)- mSummaryNumAttemptInit;
 		int summaryNumPoints = (3*numHighShotsMade + 2*numMedShotsMade + 1*numLowShotsMade) - mSummaryNumPointsInit;
 		
 		// get already existing cumulative data
@@ -195,9 +193,9 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		teamMatchValues.put(TeamMatches.NUM_SCORED_HIGH, numHighShotsMade);
 		teamMatchValues.put(TeamMatches.NUM_SCORED_MED, numMedShotsMade);
 		teamMatchValues.put(TeamMatches.NUM_SCORED_LOW, numLowShotsMade);
-		teamMatchValues.put(TeamMatches.NUM_ATTEMPT_HIGH, numHighShotsAtmp);
-		teamMatchValues.put(TeamMatches.NUM_ATTEMPT_MED, numMedShotsAtmp);
-		teamMatchValues.put(TeamMatches.NUM_ATTEMPT_LOW, numLowShotsAtmp);
+		teamMatchValues.put(TeamMatches.NUM_ATTEMPT_HIGH, numHighShotsMiss+numHighShotsMade);
+		teamMatchValues.put(TeamMatches.NUM_ATTEMPT_MED, numMedShotsMiss+numMedShotsMade);
+		teamMatchValues.put(TeamMatches.NUM_ATTEMPT_LOW, numLowShotsMiss+numLowShotsMade);
 		
 		// add summary data
 		summaryValues.put(Teams.SUMMARY_NUM_SCORED, summaryNumScored);
@@ -229,9 +227,9 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 			mHighCounter.setText("" + numHighShotsMade);
 			mMedCounter.setText("" + numMedShotsMade);
 			mLowCounter.setText("" + numLowShotsMade);
-			mHighAtmpCounter.setText("" + numHighShotsAtmp);
-			mMedAtmpCounter.setText("" + numMedShotsAtmp);
-			mLowAtmpCounter.setText("" + numLowShotsAtmp);
+			mHighMissCounter.setText("" + (numHighShotsAtmp-numHighShotsMade));
+			mMedMissCounter.setText("" + (numMedShotsAtmp-numMedShotsMade));
+			mLowMissCounter.setText("" + (numLowShotsAtmp-numLowShotsMade));
 		}
 		cur.close();
 	}
@@ -241,11 +239,11 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		if (DEBUG) Log.v(TAG, "clearScreen()");
 
 		mHighCounter.setText(R.string.zero);
-		mHighAtmpCounter.setText(R.string.zero);
+		mHighMissCounter.setText(R.string.zero);
 		mMedCounter.setText(R.string.zero);
-		mMedAtmpCounter.setText(R.string.zero);
+		mMedMissCounter.setText(R.string.zero);
 		mLowCounter.setText(R.string.zero);
-		mLowAtmpCounter.setText(R.string.zero);
+		mLowMissCounter.setText(R.string.zero);
 	}
 	
     public void incCount(EditText et){
@@ -264,16 +262,16 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		String highShotsMade = mHighCounter.getText().toString();
 		String medShotsMade  = mMedCounter.getText().toString();
 		String lowShotsMade  = mLowCounter.getText().toString();
-		String highShotsAtmp = mHighAtmpCounter.getText().toString();
-		String medShotsAtmp  = mMedAtmpCounter.getText().toString();
-		String lowShotsAtmp  = mLowAtmpCounter.getText().toString();
+		String highShotsMiss = mHighMissCounter.getText().toString();
+		String medShotsMiss  = mMedMissCounter.getText().toString();
+		String lowShotsMiss  = mLowMissCounter.getText().toString();
 		
 		mHighMadeInit = (!TextUtils.isEmpty(highShotsMade)) ? Integer.valueOf(highShotsMade) : 0;
 		mMedMadeInit = (!TextUtils.isEmpty(medShotsMade)) ? Integer.valueOf(medShotsMade) : 0;
 		mLowMadeInit = (!TextUtils.isEmpty(lowShotsMade)) ? Integer.valueOf(lowShotsMade) : 0;
-		mHighAttemptInit = (!TextUtils.isEmpty(highShotsAtmp)) ? Integer.valueOf(highShotsAtmp) : 0;
-		mMedAttemptInit = (!TextUtils.isEmpty(medShotsAtmp)) ? Integer.valueOf(medShotsAtmp) : 0;
-		mLowAttemptInit = (!TextUtils.isEmpty(lowShotsAtmp)) ? Integer.valueOf(lowShotsAtmp) : 0;
+		mHighAttemptInit = ((!TextUtils.isEmpty(highShotsMiss)) ? Integer.valueOf(highShotsMiss) : 0) + mHighMadeInit;
+		mMedAttemptInit = ((!TextUtils.isEmpty(medShotsMiss)) ? Integer.valueOf(medShotsMiss) : 0) + mMedMadeInit;
+		mLowAttemptInit = ((!TextUtils.isEmpty(lowShotsMiss)) ? Integer.valueOf(lowShotsMiss) : 0) + mLowMadeInit;
 		
 		mSummaryNumScoredInit = (mHighMadeInit + mMedMadeInit + mLowMadeInit);
 		mSummaryNumAttemptInit = (mHighAttemptInit + mMedAttemptInit + mLowAttemptInit);

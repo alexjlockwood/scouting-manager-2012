@@ -108,14 +108,20 @@
     </style>
 
     <style name="match_basket_counter">
-        <item name="android:layout_width">70dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">110dp</item>
+        <item name="android:layout_height">70dp</item>
         <item name="android:inputType">number</item>
-        <item name="android:hint">@string/zero</item>
         <item name="android:maxLength">3</item>
         <item name="android:text">@string/zero</item>
-        <item name="android:focusableInTouchMode">true</item>
-        <item name="android:selectAllOnFocus">true</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:longClickable">false</item>
+    	<item name="android:gravity">center</item>
+    	<item name="android:onClick">decCounter</item>
+    	<item name="android:cursorVisible">false</item>
+    	
     </style>
     
     <style name="match_general_row">

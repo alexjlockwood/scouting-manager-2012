@@ -38,6 +38,8 @@ public class DisplayMatchesGeneralFragment extends ListFragment implements
 	
 	//private int mTeamId;
 	
+	private Bundle mArgs;
+	
 	public static DisplayMatchesGeneralFragment newInstance(Uri teamMatchesUri) {
 		if (DEBUG) Log.v(TAG, "newInstance()");
         DisplayMatchesGeneralFragment f = new  DisplayMatchesGeneralFragment();
@@ -60,14 +62,21 @@ public class DisplayMatchesGeneralFragment extends ListFragment implements
 		super.onActivityCreated(savedInstanceState);
 		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
 		
-		Bundle args = getArguments();
+		mArgs = getArguments();
 		//mTeamId = Integer.valueOf(Uri.parse(args.getString(TEAM_MATCHES_URI_STORAGE_KEY)).getLastPathSegment());
 		
-		getLoaderManager().initLoader(DISPLAY_MATCHES_GENERAL_LOADER, args, this);	
+		registerForContextMenu(getListView());
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		
+		// temporary work around... need to restart loader because something is messed up in the database
+		// that is preventing changes from being loaded on its own
+		getLoaderManager().restartLoader(DISPLAY_MATCHES_GENERAL_LOADER, mArgs, this);	
 		mAdapter = new AutoAdapter(getActivity(), null, 0);
 		setListAdapter(mAdapter);
-		
-		registerForContextMenu(getListView());
 	}
 	
 	@Override

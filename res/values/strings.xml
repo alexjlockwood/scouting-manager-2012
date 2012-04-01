@@ -18,10 +18,14 @@
     <string name="three">3</string>
     <string name="both">Both</string>
     <string name="percent">%</string>
- 	
+    
+    <string name="menu_share_database">Share</string>
+    <string name="num_hits">Hits</string>
+	<string name="num_miss">Misses</string>
+    	
     <!-- Camera -->
     <string name="album_name">ScoutingManager</string>
-   	<string name="menu_take_picture">Take Picture</string>
+   	<string name="menu_take_picture">Take picture</string>
     
     <!-- ActionBar Titles -->
     <string name="team_scouting_title">Team-scout</string>

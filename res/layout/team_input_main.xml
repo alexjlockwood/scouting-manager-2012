@@ -38,7 +38,8 @@
             android:maxLength="4"
             android:inputType="number"
             android:maxLines="1"
-            android:hint="@string/rank" />
+            android:hint="@string/rank" 
+            android:textSize="18sp" />
         
         <EditText
             android:id="@+id/ET_Team_Name"
@@ -47,9 +48,9 @@
             android:layout_alignLeft="@id/ET_Team_Rank"
             android:layout_above="@id/ET_Team_Rank"
             android:hint="@string/team_name"
-            android:maxLines="1"
-            android:textSize="22sp" />
-
+            android:textSize="20sp" 
+            android:inputType="text|textCapSentences"/>
+        
         <TextView
             android:id="@+id/TV_Drive"
             style="@style/team_scouting_row"
@@ -185,7 +186,8 @@
             android:layout_alignLeft="@id/TV_Team_Strategy"
             android:scrollHorizontally="false"
             android:layout_marginTop="26dp"
-            android:hint="@string/comment" />
+            android:hint="@string/comment"
+            android:inputType="text|textCapSentences" />
     </RelativeLayout>
 
 

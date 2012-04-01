@@ -22,6 +22,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,6 +32,19 @@ import com.cmu.scout.R;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.TeamMatches;
 import com.cmu.scout.provider.ScoutContract.Teams;
+
+// TODO:
+// 1) Organize DashboardActivity. Make use of an AsyncTask instead of a Thread just to be safe.
+// 2) Fix database/provider... some inserts/updates don't notify the correct Uris on content changes.
+// 3) Fix "export data" work flow. This might be better in a preferences menu or something... not a
+//    dashboard home button.
+// 4) Optimize match-scout UI. This is probably not the best way to do it. Ensure the user knows
+//    that they can click the EditText button.
+// 5) Port app to phones. Most of the app makes use of compatability library, so probably not too difficult.
+//    might require making new layouts though... current layouts are probably not compatible with
+//    multiple screens.
+// 6) Debug the database.
+// 7) Allow user to "import" a csv file into the app's internal database (must make use of Intent Filters).
 
 public class DashboardActivity extends Activity implements Runnable {
 
@@ -40,12 +55,21 @@ public class DashboardActivity extends Activity implements Runnable {
 	public static final String INTENT_CALL_FROM_TEAM = "call_from_team";
 
 	private static final int DIALOG_START_MATCH = 1;
+	private static final int WRITE_SUCCESS = 1;
+	private static final int WRITE_FAIL = 0;
+	private static final int WRITE_EMPTY = 2;
+	private static final int WRITE_NO_ACCESS = 3;
+	//private static final int MSG_DONE = 0;
+	private static final int MSG_TEAM = 1;
+	private static final int MSG_MATCH = 2;
+	private static final int MSG_INC = 3;
 
 	public static final String INTENT_TEAM_ID = "scout_intent_team_id";
 	public static final String INTENT_MATCH_ID = "scout_intent_match_id";
 	public static final String INTENT_TEAM_NUM = "scout_intent_team_num";
 	public static final String INTENT_MATCH_NUM = "scout_intent_match_num";
 
+	private boolean shareCall = false;
 
 	private static final String[] projectionTeam = {
 		Teams.TEAM_NUM,	
@@ -60,15 +84,15 @@ public class DashboardActivity extends Activity implements Runnable {
 		Teams.CAN_PUSH_DOWN_BRIDGE,
 		Teams.STRATEGY,
 		Teams.COMMENTS,
-		Teams.SUMMARY_AUTO_NUM_SCORED,
-		Teams.SUMMARY_AUTO_NUM_ATTEMPT,
-		Teams.SUMMARY_AUTO_NUM_POINTS,
-		Teams.SUMMARY_NUM_SCORED,
-		Teams.SUMMARY_NUM_ATTEMPT,
-		Teams.SUMMARY_NUM_POINTS,
-		Teams.SUMMARY_TOTAL_SCORE,
-		Teams.SUMMARY_NUM_WINS,
-		Teams.SUMMARY_NUM_LOSSES
+		//Teams.SUMMARY_AUTO_NUM_SCORED,
+		//Teams.SUMMARY_AUTO_NUM_ATTEMPT,
+		//Teams.SUMMARY_AUTO_NUM_POINTS,
+		//Teams.SUMMARY_NUM_SCORED,
+		//Teams.SUMMARY_NUM_ATTEMPT,
+		//Teams.SUMMARY_NUM_POINTS,
+		//Teams.SUMMARY_TOTAL_SCORE,
+		//Teams.SUMMARY_NUM_WINS,
+		//Teams.SUMMARY_NUM_LOSSES
 	};
 
 	private static final String[] projectionMatch = {
@@ -101,6 +125,43 @@ public class DashboardActivity extends Activity implements Runnable {
 	private ProgressDialog pd;
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.dashboard_options_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (DEBUG) Log.v(TAG, "onOptionsItemSelected");
+		switch (item.getItemId()) {
+		case R.id.share_database:
+			shareCall = true;
+			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+				Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, new String[] { Teams._ID }, null, null, null);
+				if (teamsCur == null || !teamsCur.moveToFirst()) {
+					Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
+				} else {
+					teamsCur.close();
+					
+					pd = new ProgressDialog(this);
+					pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+					pd.setTitle("Export data");
+					pd.setMessage("Writing data...");
+					pd.setCancelable(false);
+					pd.show();
+
+					Thread thread = new Thread(this);
+					thread.start();
+				}
+			} else {
+				Toast.makeText(DashboardActivity.this, "This device does not support this feature.", Toast.LENGTH_SHORT).show();
+			}
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard_layout);
@@ -120,61 +181,50 @@ public class DashboardActivity extends Activity implements Runnable {
 			startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
 			break;
 		case R.id.dashboard_transfer:
-			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-				final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-
-				emailIntent.setType("text/csv");
-				emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-				File matchFile = new File(Environment.getExternalStorageDirectory(), "match_scouting_data.csv");
-				File teamFile = new File(Environment.getExternalStorageDirectory(), "team_scouting_data.csv");
-				
-				if (matchFile.isFile() && teamFile.isFile()){
-					Uri matchUri = Uri.fromFile(matchFile);
-					Uri teamUri = Uri.fromFile(teamFile);
-				
-					ArrayList<Uri> csvUris = new ArrayList<Uri>();
-					csvUris.add(matchUri);
-					csvUris.add(teamUri);
-
-					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Scouting Manager - scouting data");
-					emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "See attachments...");
-					emailIntent.putParcelableArrayListExtra(android.content.Intent.EXTRA_STREAM, csvUris);
-
-					startActivity(Intent.createChooser(emailIntent, "Share to..."));
-				} else {
-					Toast.makeText(this, "Data not found.", Toast.LENGTH_SHORT).show();
-				}
-			} else {
-				Toast.makeText(DashboardActivity.this, "This device does not support this feature.", Toast.LENGTH_SHORT).show();
-			}
+			Toast.makeText(this,"Coming soon!", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.dashboard_manage:			
+			shareCall = false;
 			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-				pd = new ProgressDialog(this);
-				pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-				pd.setTitle("Exporting Data");
-				pd.setMessage("Starting....");
-				pd.show();
-				
-				Thread thread = new Thread(this);
-				thread.start();
+				Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, new String[] { Teams._ID }, null, null, null);
+				if (teamsCur == null || !teamsCur.moveToFirst()) {
+					Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
+				} else {
+					teamsCur.close();
+					
+					pd = new ProgressDialog(this);
+					pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+					pd.setTitle("Export data");
+					pd.setMessage("Writing data...");
+					pd.setCancelable(false);
+					pd.show();
+
+					Thread thread = new Thread(this);
+					thread.start();
+				}
 			} else {
 				Toast.makeText(DashboardActivity.this, "This device does not support this feature.", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}
 	}
-	private boolean output_team(File root){
+
+	private static final String SCOUTING_MANAGER_DIR = "scouting_manager";
+	private static final String TEAM_SCOUT_DATA_FILE = "team_scouting_data.csv";		
+	private static final String MATCH_SCOUT_DATA_FILE = "match_scouting_data.csv";
+	
+	private int output_team(File root){
 		Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, projectionTeam, null, null, Teams.TEAM_NUM + " ASC");
 		int numCols = teamsCur.getColumnCount();
 		Message msg = new Message();
-		msg.what = 1;
+		msg.what = MSG_TEAM;
 		msg.arg1 = teamsCur.getCount();
 		handler.sendMessage(msg);
 		try{
 			if(teamsCur != null && teamsCur.moveToFirst()){
-				File out = new File(root, "team_scouting_data.csv");
+				File dir = new File (root, "/" + SCOUTING_MANAGER_DIR);
+				dir.mkdirs();
+				File out = new File(dir, TEAM_SCOUT_DATA_FILE);
 				FileWriter writer = new FileWriter(out);
 
 				for(int i = 0;i<numCols;i++){
@@ -232,17 +282,18 @@ public class DashboardActivity extends Activity implements Runnable {
 						if (i+1 != numCols) writer.append(',');
 						else writer.append('\n');
 					}
-					handler.sendEmptyMessage(3);
+					handler.sendEmptyMessage(MSG_INC);
+					//Thread.sleep(20);
 				} while (teamsCur.moveToNext());
 				teamsCur.close();
 				writer.flush();
 				writer.close();		
 			}
 			else{
-				return false;
+				return WRITE_EMPTY;
 			}
-		}catch(Exception e){return false;}
-		return true;
+		}catch(Exception e){return WRITE_FAIL;}
+		return WRITE_SUCCESS;
 	}		
 
 	private static final String[] cross_option={"No Atmp","Barrier","Bridge","Both"};
@@ -250,8 +301,8 @@ public class DashboardActivity extends Activity implements Runnable {
 	private static final String[] rate_option={"Poor","Fair","Good","Great"};
 	private static final String[] strategy_option={"Offense","Defense","Neutual"};
 	private static final String[] risk_option={"Low","Medium","High"};
-	
-	private boolean output_match(File root){
+
+	private int output_match(File root){
 		// map "_id"s to "team_num"s
 		// (this is necessary because the team_matches table references the team's "_id" in the teams table, 
 		// but we need the team's number)
@@ -262,7 +313,7 @@ public class DashboardActivity extends Activity implements Runnable {
 		Cursor cur = getContentResolver().query(TeamMatches.CONTENT_URI, projectionMatch, null, null, TeamMatches.MATCH_ID + " ASC");
 
 		Message msg = new Message();
-		msg.what = 2;
+		msg.what = MSG_MATCH;
 		msg.arg1 = teams.getCount()+matches.getCount()+cur.getCount();
 		handler.sendMessage(msg);
 
@@ -273,12 +324,12 @@ public class DashboardActivity extends Activity implements Runnable {
 				String name = teams.getString(teams.getColumnIndex(Teams.TEAM_NAME));
 				if (name==null) name = "";
 				teamNames.put(teams.getInt(teams.getColumnIndex(Teams._ID)), name);
-				handler.sendEmptyMessage(3);
+				handler.sendEmptyMessage(MSG_INC);
 			} while (teams.moveToNext());
 			teams.close();
 		}
-		
-		
+
+
 
 		// map "_id"s to "match_num"s
 		// (this is necessary because the team_matches table references the match's "_id" in the matches table, 
@@ -289,17 +340,21 @@ public class DashboardActivity extends Activity implements Runnable {
 			do {
 				matchIds.put(matches.getInt(matches.getColumnIndex(Matches._ID)), 
 						matches.getInt(matches.getColumnIndex(Matches.MATCH_NUM)));
-				handler.sendEmptyMessage(3);
+				handler.sendEmptyMessage(MSG_INC);
 			} while (matches.moveToNext());		
 			matches.close();
 		} 
-		
-		
+
+
 		try{
 			int numCols = cur.getColumnCount();
 			if(cur != null && cur.moveToFirst()){
 
-				File out = new File(root, "match_scouting_data.csv");
+				
+				File dir = new File (root, "/" + SCOUTING_MANAGER_DIR);
+				dir.mkdirs();
+				File out = new File(dir, MATCH_SCOUT_DATA_FILE);
+				
 				FileWriter writer = new FileWriter(out);
 				writer.append("match_number,team_number,team_name,");
 				for(int i = 2;i<numCols;i++){//skip match id, team id
@@ -356,18 +411,18 @@ public class DashboardActivity extends Activity implements Runnable {
 						if (i+1 != numCols) writer.append(',');
 						else writer.append('\n');
 					}
-					handler.sendEmptyMessage(3);
+					handler.sendEmptyMessage(MSG_INC);
 				}while(cur.moveToNext());
 				cur.close();
 				writer.flush();
 				writer.close();
 			}
 			else{
-				return false;
+				return WRITE_EMPTY;
 			}
-		}catch(Exception e){return false;}
+		}catch(Exception e){return WRITE_FAIL;}
 
-		return true;
+		return WRITE_SUCCESS;
 	}
 
 
@@ -377,39 +432,63 @@ public class DashboardActivity extends Activity implements Runnable {
 		Message msg = new Message();
 		msg.what=0;
 		if (root.canWrite()){
-			msg.arg1 = (output_team(root)&&output_match(root))? 1 : 0;
+			int teamRes = output_team(root);
+			if(teamRes == WRITE_SUCCESS){
+				msg.arg1 = output_match(root);
+			}
+			else{
+				msg.arg1 = teamRes;
+			}
 		}
-
+		else{
+			msg.arg1 = WRITE_NO_ACCESS;
+		}
 		handler.sendMessage(msg);
 	}
-	
+
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			if(msg.what==1){
-				pd.setMessage("Exporting team-scout data");
+			switch(msg.what){
+			case MSG_TEAM:
+				pd.setMessage("Writing team-scout data...");
 				pd.setMax(msg.arg1);
 				pd.setProgress(0);
-			}
-			else if(msg.what==2){
-				pd.setMessage("Exporting match-scout data");
+				break;
+
+			case MSG_MATCH:
+				pd.setMessage("Writing match-scout data...");
 				pd.setMax(msg.arg1);
 				pd.setProgress(0);
-			}
-			else if(msg.what==3){
+				break;
+
+			case MSG_INC:
 				pd.incrementProgressBy(1);
-			}
-			else{
+				break;
+
+			default:
 				pd.dismiss();
-				if(msg.arg1==1){
-					Toast.makeText(pd.getContext(), "Data written to external storage.", Toast.LENGTH_SHORT).show();
+				if (shareCall){
+					shareCall = false;
+					callChooser();
+					return;
 				}
-				else{
-					Toast.makeText(pd.getContext(), "Export failed.", Toast.LENGTH_SHORT).show();
+
+				switch(msg.arg1){
+				case WRITE_SUCCESS:
+					Toast.makeText(DashboardActivity.this, "Data written to external storage.", Toast.LENGTH_SHORT).show();
+					break;
+				case WRITE_EMPTY:
+					Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
+					break;
+				case WRITE_FAIL:
+					Toast.makeText(DashboardActivity.this, "Error writing data.", Toast.LENGTH_SHORT).show();
 				}
+
 			}
 		}
 	};
+	
 	@Override
 	public Dialog onCreateDialog(int id) {
 		switch (id) {
@@ -524,7 +603,37 @@ public class DashboardActivity extends Activity implements Runnable {
 			return Integer.valueOf(getContentResolver().insert(Teams.CONTENT_URI, teamValues).getLastPathSegment());
 		}
 	}
-/*
+
+	private void callChooser(){
+		final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+
+		emailIntent.setType("text/csv");
+		emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		File dir = new File (Environment.getExternalStorageDirectory(), "/" + SCOUTING_MANAGER_DIR);
+		dir.mkdirs();
+		
+		File matchFile = new File(dir, MATCH_SCOUT_DATA_FILE);
+		File teamFile = new File(dir, TEAM_SCOUT_DATA_FILE);
+
+		if (teamFile.isFile()){
+			Uri matchUri = Uri.fromFile(matchFile);
+			Uri teamUri = Uri.fromFile(teamFile);
+
+			ArrayList<Uri> csvUris = new ArrayList<Uri>();
+			csvUris.add(teamUri);
+			if (matchFile.isFile()) csvUris.add(matchUri);
+
+			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Scouting Manager - scouting data");
+			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "See attachments...");
+			emailIntent.putParcelableArrayListExtra(android.content.Intent.EXTRA_STREAM, csvUris);
+
+			startActivity(Intent.createChooser(emailIntent, "Share scouting data..."));
+		} else {
+			Toast.makeText(this, "No data to share.", Toast.LENGTH_SHORT).show();
+		}
+	}
+	/*
 	private class ExportDataTask extends AsyncTask<String, String, String> {
 
 		@Override

@@ -30,11 +30,11 @@ public class MatchInputAutoFragment extends MatchFragment {
 	public int faultyEditTextBox = EDIT_TEXT_NONE;
 	
 	private EditText mAutoHighCounter;
-	private EditText mAutoHighAtmpCounter; 
+	private EditText mAutoHighMissCounter; 
 	private EditText mAutoMedCounter;
-	private EditText mAutoMedAtmpCounter;
+	private EditText mAutoMedMissCounter;
 	private EditText mAutoLowCounter;
-	private EditText mAutoLowAtmpCounter;
+	private EditText mAutoLowMissCounter;
 	/*
 	private static final String AUTO_HIGH_MADE_STORAGE_KEY = "auto_high_made";
 	private static final String AUTO_MED_MADE_STORAGE_KEY = "auto_med_made";
@@ -95,9 +95,9 @@ public class MatchInputAutoFragment extends MatchFragment {
 		mAutoMedCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Hit_Med);
 		mAutoLowCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Hit_Low);
 		
-		mAutoHighAtmpCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Atmp_High);
-		mAutoMedAtmpCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Atmp_Med);
-		mAutoLowAtmpCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Atmp_Low);
+		mAutoHighMissCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Miss_High);
+		mAutoMedMissCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Miss_Med);
+		mAutoLowMissCounter = (EditText) parent.findViewById(R.id.ET_Auto_Shots_Miss_Low);
 		
 		return parent;
 	}
@@ -126,24 +126,21 @@ public class MatchInputAutoFragment extends MatchFragment {
 		switch(viewId) {
 		case R.id.BT_Auto_Shots_Hit_High:
 			incCount(mAutoHighCounter);
-			incCount(mAutoHighAtmpCounter);
 			break;
 		case R.id.BT_Auto_Shots_Hit_Med:
 			incCount(mAutoMedCounter);
-			incCount(mAutoMedAtmpCounter);
 			break;
 		case R.id.BT_Auto_Shots_Hit_Low:
 			incCount(mAutoLowCounter);
-			incCount(mAutoLowAtmpCounter);
 			break;
 		case R.id.BT_Auto_Shots_Miss_High:
-			incCount(mAutoHighAtmpCounter);
+			incCount(mAutoHighMissCounter);
 			break;
 		case R.id.BT_Auto_Shots_Miss_Med:
-			incCount(mAutoMedAtmpCounter);
+			incCount(mAutoMedMissCounter);
 			break;
 		case R.id.BT_Auto_Shots_Miss_Low:
-			incCount(mAutoLowAtmpCounter);
+			incCount(mAutoLowMissCounter);
 			break;
 		}
 	}
@@ -165,20 +162,21 @@ public class MatchInputAutoFragment extends MatchFragment {
 		String highShotsMade = mAutoHighCounter.getText().toString();
 		String medShotsMade  = mAutoMedCounter.getText().toString();
 		String lowShotsMade  = mAutoLowCounter.getText().toString();
-		String highShotsAtmp = mAutoHighAtmpCounter.getText().toString();
-		String medShotsAtmp  = mAutoMedAtmpCounter.getText().toString();
-		String lowShotsAtmp  = mAutoLowAtmpCounter.getText().toString();
+		String highShotsMiss = mAutoHighMissCounter.getText().toString();
+		String medShotsMiss  = mAutoMedMissCounter.getText().toString();
+		String lowShotsMiss  = mAutoLowMissCounter.getText().toString();
 		
 		int numHighShotsMade = (highShotsMade.isEmpty()) ? 0 : Integer.valueOf(highShotsMade);
 		int numMedShotsMade  = (medShotsMade.isEmpty())  ? 0 : Integer.valueOf(medShotsMade);
 		int numLowShotsMade  = (lowShotsMade.isEmpty())  ? 0 : Integer.valueOf(lowShotsMade);
-		int numHighShotsAtmp = (highShotsAtmp.isEmpty()) ? 0 : Integer.valueOf(highShotsAtmp);
-		int numMedShotsAtmp  = (medShotsAtmp.isEmpty())  ? 0 : Integer.valueOf(medShotsAtmp);
-		int numLowShotsAtmp  = (lowShotsAtmp.isEmpty())  ? 0 : Integer.valueOf(lowShotsAtmp);
+		int numHighShotsMiss = (highShotsMiss.isEmpty()) ? 0 : Integer.valueOf(highShotsMiss);
+		int numMedShotsMiss  = (medShotsMiss.isEmpty())  ? 0 : Integer.valueOf(medShotsMiss);
+		int numLowShotsMiss  = (lowShotsMiss.isEmpty())  ? 0 : Integer.valueOf(lowShotsMiss);
 		
 		// compute summary data offset
 		int summaryAutoNumScored = (numHighShotsMade + numMedShotsMade + numLowShotsMade) - mSummaryAutoNumScoredInit;
-		int summaryAutoNumAttempt = (numHighShotsAtmp + numMedShotsAtmp + numLowShotsAtmp) - mSummaryAutoNumAttemptInit;
+		int summaryAutoNumAttempt = (numHighShotsMiss + numMedShotsMiss + numLowShotsMiss) 
+			+(numHighShotsMade + numMedShotsMade + numLowShotsMade) - mSummaryAutoNumAttemptInit;
 		int summaryAutoNumPoints = (3*numHighShotsMade + 2*numMedShotsMade + 1*numLowShotsMade) - mSummaryAutoNumPointsInit;
 		
 		// get already existing cumulative data
@@ -201,9 +199,9 @@ public class MatchInputAutoFragment extends MatchFragment {
 		teamMatchValues.put(TeamMatches.AUTO_NUM_SCORED_HIGH, numHighShotsMade);
 		teamMatchValues.put(TeamMatches.AUTO_NUM_SCORED_MED, numMedShotsMade);
 		teamMatchValues.put(TeamMatches.AUTO_NUM_SCORED_LOW, numLowShotsMade);
-		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_HIGH, numHighShotsAtmp);
-		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_MED, numMedShotsAtmp);
-		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_LOW, numLowShotsAtmp);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_HIGH, numHighShotsMiss + numHighShotsMade);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_MED, numMedShotsMiss + numMedShotsMade);
+		teamMatchValues.put(TeamMatches.AUTO_NUM_ATTEMPT_LOW, numLowShotsMiss + numLowShotsMade);
 		
 		// add summary data
 		summaryValues.put(Teams.SUMMARY_AUTO_NUM_SCORED, summaryAutoNumScored);
@@ -235,9 +233,9 @@ public class MatchInputAutoFragment extends MatchFragment {
 			mAutoHighCounter.setText("" + numHighShotsMade);
 			mAutoMedCounter.setText("" + numMedShotsMade);
 			mAutoLowCounter.setText("" + numLowShotsMade);
-			mAutoHighAtmpCounter.setText("" + numHighShotsAtmp);
-			mAutoMedAtmpCounter.setText("" + numMedShotsAtmp);
-			mAutoLowAtmpCounter.setText("" + numLowShotsAtmp);
+			mAutoHighMissCounter.setText("" + (numHighShotsAtmp - numHighShotsMade));
+			mAutoMedMissCounter.setText("" + (numMedShotsAtmp - numMedShotsMade));
+			mAutoLowMissCounter.setText("" + (numLowShotsAtmp - numLowShotsMade));
 		}
 		cur.close();
 	}
@@ -247,11 +245,11 @@ public class MatchInputAutoFragment extends MatchFragment {
 		if (DEBUG) Log.v(TAG, "clearScreen()");
 		
 		mAutoHighCounter.setText(R.string.zero);
-		mAutoHighAtmpCounter.setText(R.string.zero);
+		mAutoHighMissCounter.setText(R.string.zero);
 		mAutoMedCounter.setText(R.string.zero);
-		mAutoMedAtmpCounter.setText(R.string.zero);
+		mAutoMedMissCounter.setText(R.string.zero);
 		mAutoLowCounter.setText(R.string.zero);
-		mAutoLowAtmpCounter.setText(R.string.zero);
+		mAutoLowMissCounter.setText(R.string.zero);
 	}
 	
     public void incCount(EditText et){
@@ -270,16 +268,16 @@ public class MatchInputAutoFragment extends MatchFragment {
 		String highShotsMade = mAutoHighCounter.getText().toString();
 		String medShotsMade  = mAutoMedCounter.getText().toString();
 		String lowShotsMade  = mAutoLowCounter.getText().toString();
-		String highShotsAtmp = mAutoHighAtmpCounter.getText().toString();
-		String medShotsAtmp  = mAutoMedAtmpCounter.getText().toString();
-		String lowShotsAtmp  = mAutoLowAtmpCounter.getText().toString();
+		String highShotsMiss = mAutoHighMissCounter.getText().toString();
+		String medShotsMiss  = mAutoMedMissCounter.getText().toString();
+		String lowShotsMiss  = mAutoLowMissCounter.getText().toString();
 		
 		mAutoHighMadeInit = (!TextUtils.isEmpty(highShotsMade)) ? Integer.valueOf(highShotsMade) : 0;
 		mAutoMedMadeInit = (!TextUtils.isEmpty(medShotsMade)) ? Integer.valueOf(medShotsMade) : 0;
 		mAutoLowMadeInit = (!TextUtils.isEmpty(lowShotsMade)) ? Integer.valueOf(lowShotsMade) : 0;
-		mAutoHighAttemptInit = (!TextUtils.isEmpty(highShotsAtmp)) ? Integer.valueOf(highShotsAtmp) : 0;
-		mAutoMedAttemptInit = (!TextUtils.isEmpty(medShotsAtmp)) ? Integer.valueOf(medShotsAtmp) : 0;
-		mAutoLowAttemptInit = (!TextUtils.isEmpty(lowShotsAtmp)) ? Integer.valueOf(lowShotsAtmp) : 0;
+		mAutoHighAttemptInit = ((!TextUtils.isEmpty(highShotsMiss)) ? Integer.valueOf(highShotsMiss) : 0) + mAutoHighMadeInit;
+		mAutoMedAttemptInit = ((!TextUtils.isEmpty(medShotsMiss)) ? Integer.valueOf(medShotsMiss) : 0) + mAutoMedMadeInit;
+		mAutoLowAttemptInit = ((!TextUtils.isEmpty(lowShotsMiss)) ? Integer.valueOf(lowShotsMiss) : 0) + mAutoLowMadeInit;
 		
 		mSummaryAutoNumScoredInit = (mAutoHighMadeInit + mAutoMedMadeInit + mAutoLowMadeInit);
 		mSummaryAutoNumAttemptInit = (mAutoHighAttemptInit + mAutoMedAttemptInit + mAutoLowAttemptInit);

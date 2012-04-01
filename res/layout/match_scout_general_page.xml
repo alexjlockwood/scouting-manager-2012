@@ -255,21 +255,21 @@
                 android:id="@+id/RB_Balance_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:state_enabled="false"
                 android:text="@string/one" />
             
             <RadioButton
                 android:id="@+id/RB_Balance_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:state_enabled="false"
                 android:text="@string/two" />
 
             <RadioButton
                 android:id="@+id/RB_Balance_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:state_enabled="false"
                 android:text="@string/three" />
         </RadioGroup>
 
@@ -350,8 +350,9 @@
             android:layout_toRightOf="@id/TV_final_score"
             android:hint="@string/score"
             android:inputType="number"
-            android:maxLength="3"
-            android:textSize="20sp" />
+            android:maxLength="4"
+            android:textSize="20sp" 
+            android:selectAllOnFocus="true" />
 
         <!-- Comment -->
         <!--

@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cmu.scout.R;
@@ -274,6 +275,13 @@ public class MatchPagerActivity extends FragmentActivity {
 			WeakReference<MatchFragment> weakRef = mPageReferenceMap.get(position);
 			return (weakRef != null) ? weakRef.get() : null;
 		}
+	}
+	
+	public void decCounter(View v){
+		EditText et = (EditText)(v);
+		int value = new Integer(et.getText().toString())-1;
+		value = Math.max(0, value);
+		et.setText(""+value);
 	}
 	/*
 	@Override
