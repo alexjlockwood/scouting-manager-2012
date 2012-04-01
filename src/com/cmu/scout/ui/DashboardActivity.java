@@ -239,6 +239,11 @@ public class DashboardActivity extends Activity implements Runnable {
 						if(s == null || s.equals("-1")){
 							//do nothing
 						}
+						else if(i == teamsCur.getColumnIndex(Teams.TEAM_NAME)){
+					        // sanitize data input
+							s = s.replace("\"", "\"\"");
+					        writer.append("\""+s+"\"");
+						}
 						else if(i == teamsCur.getColumnIndex(Teams.DRIVE_SYSTEM)){
 							writer.append(getResources().getStringArray(R.array.drive_option)[new Integer(s)+1]);
 						}
@@ -247,6 +252,11 @@ public class DashboardActivity extends Activity implements Runnable {
 						}
 						else if(i == teamsCur.getColumnIndex(Teams.STRATEGY)){
 							writer.append(getResources().getStringArray(R.array.strategy_option)[new Integer(s)+1]);
+						}
+						else if(i == teamsCur.getColumnIndex(Teams.COMMENTS)){
+					        // sanitize data input
+							s = s.replace("\"", "\"\"");
+					        writer.append("\""+s+"\"");
 						}
 
 						else if(i == teamsCur.getColumnIndex(Teams.PREFERRED_START)){
