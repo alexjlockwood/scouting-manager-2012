@@ -1,22 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cmu.scout"
-    android:versionCode="3"
-    android:versionName="1.01" >
+    android:versionCode="1"
+    android:versionName="1.0" >
 
-    <uses-sdk
-        android:minSdkVersion="11" />
+    <uses-sdk android:minSdkVersion="11" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <support-screens 
-        android:smallScreens="false"
-        android:normalScreens="false"
+    <compatible-screens>
+        <screen
+            android:screenDensity="ldpi"
+            android:screenSize="large" />
+        <screen
+            android:screenDensity="mdpi"
+            android:screenSize="large" />
+        <screen
+            android:screenDensity="hdpi"
+            android:screenSize="large" />
+        <screen
+            android:screenDensity="xhdpi"
+            android:screenSize="large" />
+        <screen
+            android:screenDensity="ldpi"
+            android:screenSize="xlarge" />
+        <screen
+            android:screenDensity="mdpi"
+            android:screenSize="xlarge" />
+        <screen
+            android:screenDensity="hdpi"
+            android:screenSize="xlarge" />
+        <screen
+            android:screenDensity="hdpi"
+            android:screenSize="xlarge" />
+    </compatible-screens>
+
+    <support-screens
         android:largeScreens="true"
+        android:normalScreens="false"
+        android:smallScreens="false"
         android:xlargeScreens="true" />
-    
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -46,8 +72,7 @@
         </activity>
 
         <!-- Match Activities -->
-        <activity
-            android:name="com.cmu.scout.ui.TeamGridActivity" >
+        <activity android:name="com.cmu.scout.ui.TeamGridActivity" >
         </activity>
         <activity
             android:name=".ui.MatchPagerActivity"
@@ -65,15 +90,13 @@
             android:name=".ui.DisplayPagerActivity"
             android:theme="@style/StyledIndicators" >
         </activity>
-        
         <activity
             android:name=".ui.DisplayPagerMatchesActivity"
             android:theme="@style/StyledIndicators" >
         </activity>
-        
+
         <!-- Base Camera Activity -->
-        <activity android:name=".camera.BaseCameraActivity">
-            
+        <activity android:name=".camera.BaseCameraActivity" >
         </activity>
 
         <!-- Bluetooth Activities -->
