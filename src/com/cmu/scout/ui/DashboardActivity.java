@@ -45,6 +45,8 @@ import com.cmu.scout.provider.ScoutContract.Teams;
 //    multiple screens.
 // 6) Debug the database.
 // 7) Allow user to "import" a csv file into the app's internal database (must make use of Intent Filters).
+// 8) The "share" data button shouldn't export data to external storage... it should save it to
+//    internal storage instead.
 
 public class DashboardActivity extends Activity implements Runnable {
 
@@ -55,6 +57,8 @@ public class DashboardActivity extends Activity implements Runnable {
 	public static final String INTENT_CALL_FROM_TEAM = "call_from_team";
 
 	private static final int DIALOG_START_MATCH = 1;
+	private static final int DIALOG_EXPORT_DATA = 2;
+	
 	private static final int WRITE_SUCCESS = 1;
 	private static final int WRITE_FAIL = 0;
 	private static final int WRITE_EMPTY = 2;
@@ -191,16 +195,7 @@ public class DashboardActivity extends Activity implements Runnable {
 					Toast.makeText(DashboardActivity.this, "No data to export.", Toast.LENGTH_SHORT).show();
 				} else {
 					teamsCur.close();
-					
-					pd = new ProgressDialog(this);
-					pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-					pd.setTitle("Export data");
-					pd.setMessage("Writing data...");
-					pd.setCancelable(false);
-					pd.show();
-
-					Thread thread = new Thread(this);
-					thread.start();
+					showDialog(DIALOG_EXPORT_DATA);
 				}
 			} else {
 				Toast.makeText(DashboardActivity.this, "This device does not support this feature.", Toast.LENGTH_SHORT).show();
@@ -488,7 +483,17 @@ public class DashboardActivity extends Activity implements Runnable {
 				pd.dismiss();
 				if (shareCall){
 					shareCall = false;
-					callChooser();
+					switch(msg.arg1){
+					case WRITE_SUCCESS:
+						Toast.makeText(DashboardActivity.this, "Data written to external storage.", Toast.LENGTH_SHORT).show();
+						callChooser();
+						break;
+					case WRITE_EMPTY:
+						//Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
+						break;
+					case WRITE_FAIL:
+						Toast.makeText(DashboardActivity.this, "Error writing data.", Toast.LENGTH_SHORT).show();
+					}
 					return;
 				}
 
@@ -578,6 +583,32 @@ public class DashboardActivity extends Activity implements Runnable {
 					/* User clicked cancel so do some stuff */
 				}
 			}).create();
+		case DIALOG_EXPORT_DATA:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setCancelable(false)
+			.setTitle(R.string.confirm_export_title)
+			.setMessage(R.string.confirm_export_message)
+			.setIcon(R.drawable.ic_dialog_alert_holo_light)
+			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					pd = new ProgressDialog(DashboardActivity.this);
+					pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+					pd.setTitle("Export data");
+					pd.setMessage("Writing data...");
+					pd.setCancelable(false);
+					pd.show();
+
+					Thread thread = new Thread(DashboardActivity.this);
+					thread.start();
+				}
+			})
+			.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			AlertDialog alert = builder.create();
+			alert.show();
 		}
 		return null;
 	}
