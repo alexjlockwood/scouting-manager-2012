@@ -160,12 +160,12 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 		String medShotsMiss  = mMedMissCounter.getText().toString();
 		String lowShotsMiss  = mLowMissCounter.getText().toString();
 		
-		int numHighShotsMade = (highShotsMade.isEmpty()) ? 0 : Integer.valueOf(highShotsMade);
-		int numMedShotsMade  = (medShotsMade.isEmpty())  ? 0 : Integer.valueOf(medShotsMade);
-		int numLowShotsMade  = (lowShotsMade.isEmpty())  ? 0 : Integer.valueOf(lowShotsMade);
-		int numHighShotsMiss = (highShotsMiss.isEmpty()) ? 0 : Integer.valueOf(highShotsMiss);
-		int numMedShotsMiss  = (medShotsMiss.isEmpty())  ? 0 : Integer.valueOf(medShotsMiss);
-		int numLowShotsMiss  = (lowShotsMiss.isEmpty())  ? 0 : Integer.valueOf(lowShotsMiss);
+		int numHighShotsMade = (highShotsMade == null || highShotsMade.length() == 0) ? 0 : Integer.valueOf(highShotsMade);
+		int numMedShotsMade  = (medShotsMade == null || medShotsMade.length() == 0)  ? 0 : Integer.valueOf(medShotsMade);
+		int numLowShotsMade  = (lowShotsMade == null || lowShotsMade.length() == 0)  ? 0 : Integer.valueOf(lowShotsMade);
+		int numHighShotsMiss = (highShotsMiss == null || highShotsMiss.length() == 0) ? 0 : Integer.valueOf(highShotsMiss);
+		int numMedShotsMiss  = (medShotsMiss == null || medShotsMiss.length() == 0)  ? 0 : Integer.valueOf(medShotsMiss);
+		int numLowShotsMiss  = (lowShotsMiss == null || lowShotsMiss.length() == 0)  ? 0 : Integer.valueOf(lowShotsMiss);
 		
 		// compute summary data offset
 		int summaryNumScored = (numHighShotsMade + numMedShotsMade + numLowShotsMade) - mSummaryNumScoredInit;
@@ -248,7 +248,7 @@ public class MatchInputTeleOpFragment extends MatchFragment {
 	
     public void incCount(EditText et){
     	String scoreStr = et.getText().toString();
-		int score = (!scoreStr.isEmpty()) ? new Integer(scoreStr) : 0;
+		int score = (scoreStr == null || scoreStr.length() == 0) ? 0 : new Integer(scoreStr);
 		score = Math.min(score+1, MatchPagerActivity.MAX_SCORE);
 		et.setText("" + score);
     }

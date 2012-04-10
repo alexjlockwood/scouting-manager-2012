@@ -210,12 +210,12 @@ public class TeamInputActivity extends BaseCameraActivity
 		int bridge = (mToggleBridge.isChecked()) ? 1:0;
 		
 		String rank_s = mRank.getText().toString();
-		int rank = (rank_s.isEmpty()) ? -1:new Integer(rank_s);
+		int rank = (rank_s == null || rank_s.length() == 0) ? -1 : new Integer(rank_s);
 		String position = "";
 		if (mCheckLeft.isChecked()) position += "1";
 		if (mCheckMiddle.isChecked()) position += "2";
 		if (mCheckRight.isChecked()) position += "3";
-		int p_n = (!position.isEmpty()) ? new Integer(position) : 0;
+		int p_n = (position == null || position.length() == 0) ? 0 : new Integer(position);
 		
 		final Uri uri = Teams.buildTeamIdUri(""+mTeamId);
 		

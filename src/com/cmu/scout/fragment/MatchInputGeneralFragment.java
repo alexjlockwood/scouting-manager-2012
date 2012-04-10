@@ -189,7 +189,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		Integer alliance    = mRadioAlliance.getCheckedRadioButtonId();
 		Integer winMatch    = mRadioWinMatch.getCheckedRadioButtonId();		
 		String scoreText    = mFinalScore.getText().toString();
-		Integer finalScore  = (!scoreText.isEmpty()) ? Integer.valueOf(mFinalScore.getText().toString()) : 0;
+		Integer finalScore  = (scoreText == null || scoreText.length() == 0) ? 0 : Integer.valueOf(mFinalScore.getText().toString());
 		
 		int summaryTotalScore = finalScore - mGeneralScoreInit;
 		
