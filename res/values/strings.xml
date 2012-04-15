@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- General application -->
-    <string name="app_name">Scouting Manager (Beta)</string>
+    <string name="app_name">Scouting Manager</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="set">Set</string>

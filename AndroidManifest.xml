@@ -1,50 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cmu.scout"
-    android:versionCode="5"
-    android:versionName="1.01" >
+    android:versionCode="6"
+    android:versionName="1.1" >
 
-    <uses-sdk android:minSdkVersion="11" />
+    <uses-sdk android:minSdkVersion="8" 
+        android:targetSdkVersion="15" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <compatible-screens>
-        <screen
-            android:screenDensity="ldpi"
-            android:screenSize="large" />
-        <screen
-            android:screenDensity="mdpi"
-            android:screenSize="large" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="large" />
-        <screen
-            android:screenDensity="xhdpi"
-            android:screenSize="large" />
-        <screen
-            android:screenDensity="ldpi"
-            android:screenSize="xlarge" />
-        <screen
-            android:screenDensity="mdpi"
-            android:screenSize="xlarge" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="xlarge" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="xlarge" />
-    </compatible-screens>
-
-    <support-screens
-        android:largeScreens="true"
-        android:normalScreens="false"
-        android:smallScreens="false"
-        android:xlargeScreens="true" />
-
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -71,21 +37,21 @@
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
 
-        <!-- Match Activities -->
+        <!-- Team Grid Activities -->
         <activity android:name="com.cmu.scout.ui.TeamGridActivity" >
         </activity>
+        <activity android:name="com.cmu.scout.ui.BaseTeamGridActivity" >
+        </activity>
+
+        <!-- Match Activity -->
         <activity
             android:name=".ui.MatchPagerActivity"
-            android:screenOrientation="landscape"
             android:theme="@style/StyledIndicators"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
-        <activity android:name=".test.MatchInputActivity" >
+            android:windowSoftInputMode="adjustPan" 
+            android:configChanges="orientation" >
         </activity>
 
         <!-- Display Activities -->
-        <activity android:name=".test.DisplayTeamsActivity" >
-        </activity>
         <activity
             android:name=".ui.DisplayPagerActivity"
             android:theme="@style/StyledIndicators" >
@@ -98,20 +64,8 @@
         <!-- Base Camera Activity -->
         <activity android:name=".camera.BaseCameraActivity" >
         </activity>
-
-        <!-- Bluetooth Activities -->
-        <activity android:name=".bluetooth.Test2BluetoothActivity" >
-        </activity>
-        <activity android:name=".bluetooth.TestBluetoothActivity" >
-        </activity>
-        <activity android:name=".test.SendToDeviceActivity" >
-        </activity>
-        <!-- Activities created for testing purposes -->
-        <activity android:name="com.cmu.scout.test.TeamListActivity" >
-        </activity>
-        <activity android:name="com.cmu.scout.test.TeamDetailsActivity" >
-        </activity>
-
+        
+        <!-- Content Provider -->
         <provider
             android:name="com.cmu.scout.provider.ScoutProvider"
             android:authorities="com.cmu.scout.provider.Scout" >

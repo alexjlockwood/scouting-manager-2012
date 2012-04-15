@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="android:style/Theme.Light"></style>
+    <style name="AppTheme" parent="Theme.Sherlock.Light"></style>
     
     <style name="DashboardButton">
         <item name="android:layout_gravity">center_vertical</item>
@@ -40,7 +40,7 @@
     
     <!-- ViewPagerIndicator custom styles -->
     
-    <style name="StyledIndicators" parent="@android:style/Theme.Light">
+    <style name="StyledIndicators" parent="Theme.Sherlock.Light">
         <item name="vpiCirclePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
         <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>

@@ -6,15 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -22,12 +23,13 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.cmu.scout.R;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.TeamMatches;
@@ -48,7 +50,7 @@ import com.cmu.scout.provider.ScoutContract.Teams;
 // 8) The "share" data button shouldn't export data to external storage... it should save it to
 //    internal storage instead.
 
-public class DashboardActivity extends Activity implements Runnable {
+public class DashboardActivity extends SherlockActivity implements Runnable {
 
 	private static final String TAG = "DashboardActivity";
 	private static final boolean DEBUG = true;
@@ -130,7 +132,7 @@ public class DashboardActivity extends Activity implements Runnable {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.dashboard_options_menu, menu);
+		getSupportMenuInflater().inflate(R.menu.dashboard_options_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -174,15 +176,28 @@ public class DashboardActivity extends Activity implements Runnable {
 	public void onClickHandler(View v) {
 		switch (v.getId()) {
 		case R.id.dashboard_teams:
-			Intent teamData = new Intent(getApplicationContext(), TeamGridActivity.class);
-			teamData.putExtra(INTENT_CALL_FROM_TEAM, true);
-			startActivity(teamData);
-			break;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				Intent teamData = new Intent(getApplicationContext(), TeamGridActivity.class);
+				teamData.putExtra(INTENT_CALL_FROM_TEAM, true);
+				startActivity(teamData);
+				break;	
+			} else {
+				Intent teamData = new Intent(getApplicationContext(), BaseTeamGridActivity.class);
+				teamData.putExtra(INTENT_CALL_FROM_TEAM, true);
+				startActivity(teamData);
+				break;
+			}
 		case R.id.dashboard_match:
 			showDialog(DIALOG_START_MATCH);
 			break;
 		case R.id.dashboard_display:
-			startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
+			boolean isTablet = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+	        
+			if (isTablet) {
+				startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
+			} else {
+				Toast.makeText(DashboardActivity.this, "This feature is currently only supported on tablets.", Toast.LENGTH_SHORT).show();
+			}
 			break;
 		case R.id.dashboard_transfer:
 			Toast.makeText(this,"Coming soon!", Toast.LENGTH_SHORT).show();
@@ -493,6 +508,7 @@ public class DashboardActivity extends Activity implements Runnable {
 						break;
 					case WRITE_FAIL:
 						Toast.makeText(DashboardActivity.this, "Error writing data.", Toast.LENGTH_SHORT).show();
+						break;
 					}
 					return;
 				}
@@ -506,6 +522,7 @@ public class DashboardActivity extends Activity implements Runnable {
 					break;
 				case WRITE_FAIL:
 					Toast.makeText(DashboardActivity.this, "Error writing data.", Toast.LENGTH_SHORT).show();
+					break;
 				}
 
 			}

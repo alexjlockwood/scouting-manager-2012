@@ -10,12 +10,12 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.cmu.scout.R;
 
-public class BaseCameraActivity extends FragmentActivity {
+public class BaseCameraActivity extends SherlockFragmentActivity {
 	
 	private static final String TAG = "BaseCameraActivity";
 	private static final boolean DEBUG = true;

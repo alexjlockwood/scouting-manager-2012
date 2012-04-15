@@ -4,12 +4,4 @@
         android:icon="@drawable/ic_menu_add_team"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_add_team"/> 
-    <item
-        android:id="@+id/search"
-        android:actionViewClass="android.widget.SearchView"
-        android:icon="@drawable/ic_menu_search_holo_light"
-        android:showAsAction="ifRoom"
-        android:inputType="number"
-        android:title="@string/menu_search"
-        android:hint="@string/search_hint" />
 </menu>

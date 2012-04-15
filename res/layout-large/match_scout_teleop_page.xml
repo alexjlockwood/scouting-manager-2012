@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:padding="5dp" >
+
+    <!-- Nest these Views in RelativeLayout and center them in screen -->
+
+    <RelativeLayout
+        android:id="@+id/TeleOp_Screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+        <!-- High Basket -->
+
+        <TextView
+            android:id="@+id/TV_Shots_High"
+            style="@style/match_basket_header"
+            android:text="@string/STR_Shots_High" />
+
+        <TextView
+            android:id="@+id/TV_Num_Hits"
+            style="@style/match_basket_header"
+            android:layout_marginLeft="250dp"
+            android:layout_alignBaseline="@id/TV_Shots_High"
+            android:layout_toRightOf="@id/TV_Shots_High"
+            android:text="@string/num_hits"/>
+    
+        <TextView
+            android:id="@+id/TV_Num_Miss"
+            style="@style/match_basket_header"
+            android:layout_marginLeft="100dp"
+            android:layout_alignBaseline="@id/TV_Shots_High"
+            android:layout_toRightOf="@id/TV_Num_Hits"
+            android:text="@string/num_miss"/>
+        
+        <Button
+            android:id="@+id/BT_Shots_Hit_High"
+            style="@style/match_button_hit"
+            android:layout_alignLeft="@id/TV_Shots_High"
+            android:layout_below="@id/TV_Shots_High" />
+
+        <Button
+            android:id="@+id/BT_Shots_Miss_High"
+            style="@style/match_button_miss"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_High"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/BT_Shots_Hit_High" />
+
+        <EditText
+            android:id="@+id/ET_Shots_Hit_High"
+            style="@style/match_basket_counter"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_High"
+            android:layout_alignLeft="@id/TV_Num_Hits"
+            android:layout_toRightOf="@id/BT_Shots_Miss_High" />
+<!--  
+        <TextView
+            android:id="@+id/TV_Slash_1"
+            style="@style/match_slash"
+            android:layout_alignBaseline="@id/BT_Auto_Shots_Hit_High"
+            android:layout_marginLeft="22dp"
+            android:layout_toRightOf="@id/ET_Auto_Shots_Hit_High" />
+-->
+        <EditText
+            android:id="@+id/ET_Shots_Miss_High"
+            style="@style/match_basket_counter"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_High"
+            android:layout_alignLeft="@id/TV_Num_Miss"
+            android:layout_toRightOf="@id/ET_Shots_Hit_High" />
+
+        <!-- Medium Basket -->
+
+        <TextView
+            android:id="@+id/TV_Shots_Med"
+            style="@style/match_basket_header"
+            android:layout_marginTop="25dp"
+            android:layout_below="@id/BT_Shots_Hit_High"
+            android:text="@string/STR_Shots_Med" />
+
+        <Button
+            android:id="@+id/BT_Shots_Hit_Med"
+            style="@style/match_button_hit"
+            android:layout_alignLeft="@id/BT_Shots_Hit_High"
+            android:layout_below="@id/TV_Shots_Med" />
+
+        <Button
+            android:id="@+id/BT_Shots_Miss_Med"
+            style="@style/match_button_miss"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_Med"
+            android:layout_alignLeft="@id/BT_Shots_Miss_High" />
+
+        <EditText
+            android:id="@+id/ET_Shots_Hit_Med"
+            style="@style/match_basket_counter"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_Med"
+            android:layout_alignLeft="@id/ET_Shots_Hit_High" />
+<!--
+        <TextView
+            android:id="@+id/TV_Slash_2"
+            style="@style/match_slash"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_Med"
+            android:layout_alignLeft="@id/TV_Slash_1" />
+-->
+        <EditText
+            android:id="@+id/ET_Shots_Miss_Med"
+            style="@style/match_basket_counter"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_Med"
+            android:layout_alignLeft="@id/ET_Shots_Miss_High" />
+
+        <!-- Low Basket -->
+
+        <TextView
+            android:id="@+id/TV_Shots_Low"
+            style="@style/match_basket_header"
+            android:layout_marginTop="25dp"
+            android:layout_below="@id/BT_Shots_Hit_Med"
+            android:text="@string/STR_Shots_Low" />
+
+        <Button
+            android:id="@+id/BT_Shots_Hit_Low"
+            style="@style/match_button_hit"
+            android:layout_alignLeft="@id/BT_Shots_Hit_High"
+            android:layout_below="@id/TV_Shots_Low" />
+
+        <Button
+            android:id="@+id/BT_Shots_Miss_Low"
+            style="@style/match_button_miss"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_Low"
+            android:layout_alignLeft="@id/BT_Shots_Miss_High" />
+
+        <EditText
+            android:id="@+id/ET_Shots_Hit_Low"
+            style="@style/match_basket_counter"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_Low"
+            android:layout_alignLeft="@id/ET_Shots_Hit_High" />
+<!--
+        <TextView
+            android:id="@+id/TV_Slash_3"
+            style="@style/match_slash"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_Low"
+            android:layout_alignLeft="@id/TV_Slash_1" />
+-->
+        <EditText
+            android:id="@+id/ET_Shots_Miss_Low"
+            style="@style/match_basket_counter"
+            android:layout_alignBaseline="@id/BT_Shots_Hit_Low"
+            android:layout_alignLeft="@id/ET_Shots_Miss_High" />
+    </RelativeLayout>
+    <!--
+    <TextView
+        android:id="@+id/teleop_header"
+        style="@style/match_header"
+        android:layout_above="@id/TeleOp_Screen"
+        android:text="@string/teleop" />
+    -->
+
+</RelativeLayout>

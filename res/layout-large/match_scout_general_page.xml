@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:padding="5dp" >
+
+    <!-- Nest these Views in RelativeLayout and center them in screen -->
+
+    <RelativeLayout
+        android:id="@+id/General_Screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+        <!-- Can cross? -->
+
+        <TextView
+            android:id="@+id/TV_can_cross"
+            style="@style/match_general_row"
+            android:text="@string/can_cross" />
+
+        <RadioGroup
+            android:id="@+id/RBG_Cross"
+            style="@style/match_radio_group"
+            android:layout_width="315dp"
+            android:layout_alignTop="@id/TV_can_cross"
+            android:layout_toRightOf="@id/TV_can_cross" >
+
+            <RadioButton
+                android:id="@+id/RB_Cross_Bridge"
+                style="@style/match_radio_button"
+                android:text="@string/bridge" />
+
+            <RadioButton
+                android:id="@+id/RB_Cross_Barrier"
+                style="@style/match_radio_button"
+                android:text="@string/barrier" />
+
+            <RadioButton
+                android:id="@+id/RB_Cross_Both"
+                style="@style/match_radio_button"
+                android:text="@string/both" />
+        </RadioGroup>
+
+        <!-- Pick up balls? -->
+
+        <TextView
+            android:id="@+id/TV_pick_up_balls"
+            style="@style/match_general_row"
+            android:layout_below="@id/TV_can_cross"
+            android:text="@string/pick_up_balls" />
+
+        <RadioGroup
+            android:id="@+id/RBG_Pick_Ball"
+            style="@style/match_radio_group"
+            android:layout_width="315dp"
+            android:layout_alignTop="@id/TV_pick_up_balls"
+            android:layout_toRightOf="@id/TV_pick_up_balls" >
+
+            <RadioButton
+                android:id="@+id/RB_Pick_Ball_Feeder"
+                style="@style/match_radio_button"
+                android:text="@string/from_feeder" />
+
+            <RadioButton
+                android:id="@+id/RB_Pick_Ball_Floor"
+                style="@style/match_radio_button"
+                android:text="@string/from_floor" />
+            
+            <RadioButton
+                android:id="@+id/RB_Pick_Ball_Both"
+                style="@style/match_radio_button"
+                android:text="@string/both" />
+        </RadioGroup>
+
+        <!-- Speed? -->
+
+        <TextView
+            android:id="@+id/TV_speed"
+            style="@style/match_general_row"
+            android:layout_below="@id/TV_pick_up_balls"
+            android:text="@string/speed" />
+
+        <RadioGroup
+            android:id="@+id/RBG_Speed"
+            style="@style/match_radio_group"
+            android:layout_width="420dp"
+            android:layout_alignTop="@id/TV_speed"
+            android:layout_toRightOf="@id/TV_speed" >
+
+            <RadioButton
+                android:id="@+id/RB_Speed_Pr"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Pr" />
+
+            <RadioButton
+                android:id="@+id/RB_Speed_Fr"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Fr" />
+
+            <RadioButton
+                android:id="@+id/RB_Speed_Gd"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Gd" />
+
+            <RadioButton
+                android:id="@+id/RB_Speed_Ex"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Ex" />
+        </RadioGroup>
+
+        <!-- Agility? -->
+
+        <TextView
+            android:id="@+id/TV_agility"
+            style="@style/match_general_row"
+            android:layout_below="@id/TV_speed"
+            android:text="@string/agility" />
+
+        <RadioGroup
+            android:id="@+id/RBG_Agility"
+            style="@style/match_radio_group"
+            android:layout_width="420dp"
+            android:layout_alignTop="@id/TV_agility"
+            android:layout_toRightOf="@id/TV_agility" >
+
+            <RadioButton
+                android:id="@+id/RB_Agility_Pr"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Pr" />
+
+            <RadioButton
+                android:id="@+id/RB_Agility_Fr"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Fr" />
+
+            <RadioButton
+                android:id="@+id/RB_Agility_Gd"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Gd" />
+
+            <RadioButton
+                android:id="@+id/RB_Agility_Ex"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Ex" />
+        </RadioGroup>
+
+        <!-- Strategy? -->
+
+        <TextView
+            android:id="@+id/TV_strategy"
+            style="@style/match_general_row"
+            android:layout_below="@id/TV_agility"
+            android:text="@string/strategy" />
+
+        <RadioGroup
+            android:id="@+id/RBG_Strategy"
+            style="@style/match_radio_group"
+            android:layout_width="315dp"
+            android:layout_alignTop="@id/TV_strategy"
+            android:layout_toRightOf="@id/TV_strategy" >
+            
+            <RadioButton
+                android:id="@+id/RB_Strategy_Offensive"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Offensive" />
+
+            <RadioButton
+                android:id="@+id/RB_Strategy_Defensive"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Defensive" />
+            
+            <RadioButton android:id="@+id/RB_Strategy_Neutral"
+                style="@style/match_radio_button"
+                android:text="@string/neutral" />
+        </RadioGroup>
+
+        <!-- Penalty Risk? -->
+
+        <TextView
+            android:id="@+id/TV_penalty_risk"
+            style="@style/match_general_row"
+            android:layout_below="@id/TV_strategy"
+            android:text="@string/penalty_risk" />
+
+        <RadioGroup
+            android:id="@+id/RBG_Penalty_Risk"
+            style="@style/match_radio_group"
+            android:layout_width="315dp"
+            android:layout_alignTop="@id/TV_penalty_risk"
+            android:layout_toRightOf="@id/TV_penalty_risk" >
+
+            <RadioButton
+                android:id="@+id/RB_Penalty_Risk_Low"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Low" />
+
+            <RadioButton
+                android:id="@+id/RB_Penalty_Risk_Med"
+                style="@style/match_radio_button"
+                android:text="@string/STR_Med" />
+
+            <RadioButton
+                android:id="@+id/RB_Penalty_Risk_High"
+                style="@style/match_radio_button"
+                android:text="@string/STR_High" />
+        </RadioGroup>
+
+        <!-- Can balance? -->
+
+        <TextView
+            android:id="@+id/TV_can_balance"
+            style="@style/match_general_row"
+            android:layout_below="@id/TV_penalty_risk"
+            android:text="@string/can_balance" />
+
+        <ToggleButton
+            android:id="@+id/TBT_Balance"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@id/TV_can_balance"
+            android:layout_alignTop="@id/TV_can_balance"
+            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@id/TV_can_balance"
+            android:onClick="onClickHandler"
+            android:textOff="@string/no"
+            android:textOn="@string/yes" />
+
+        <TextView
+            android:id="@+id/TV_balance_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/TV_can_balance"
+            android:layout_alignTop="@id/TV_can_balance"
+            android:layout_marginLeft="40dp"
+            android:layout_toRightOf="@id/TBT_Balance"
+            android:gravity="center"
+            android:text="@string/can_balance_num"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/RBG_Balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/TV_balance_num"
+            android:layout_alignTop="@id/TV_balance_num"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@id/TV_balance_num"
+            android:gravity="center"
+            android:orientation="horizontal" >
+            
+            <RadioButton
+                android:id="@+id/RB_Balance_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:state_enabled="false"
+                android:text="@string/one" />
+            
+            <RadioButton
+                android:id="@+id/RB_Balance_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:state_enabled="false"
+                android:text="@string/two" />
+
+            <RadioButton
+                android:id="@+id/RB_Balance_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:state_enabled="false"
+                android:text="@string/three" />
+        </RadioGroup>
+
+        <!-- Red or blue alliance? -->
+        
+        <TextView
+            android:id="@+id/TV_which_alliance"
+            style="@style/match_general_row"
+            android:layout_below="@id/TV_can_balance"
+            android:layout_marginTop="40dp"
+            android:text="@string/which_alliance" />
+
+        <RadioGroup
+            android:id="@+id/RBG_which_alliance"
+            style="@style/match_radio_group"
+            android:layout_width="210dp"
+            android:layout_alignTop="@id/TV_which_alliance"
+            android:layout_toRightOf="@id/TV_which_alliance" >
+
+            <RadioButton
+                android:id="@+id/RB_alliance_blue"
+                style="@style/match_radio_button"
+                android:text="@string/blue" />
+
+            <RadioButton
+                android:id="@+id/RB_alliance_red"
+                style="@style/match_radio_button"
+                android:text="@string/red" />
+            
+        </RadioGroup>
+
+        <!-- Win/lose match? -->
+
+        <TextView
+            android:id="@+id/TV_win_match"
+            style="@style/match_general_row"
+            android:layout_below="@id/TV_which_alliance"
+            android:text="@string/win_match" />
+
+        <RadioGroup
+            android:id="@+id/RBG_win_match"
+            style="@style/match_radio_group"
+            android:layout_width="210dp"
+            android:layout_alignTop="@id/TV_win_match"
+            android:layout_toRightOf="@id/TV_win_match" >
+
+            <RadioButton
+                android:id="@+id/RB_match_win"
+                style="@style/match_radio_button"
+                android:text="@string/win" />
+
+            <RadioButton
+                android:id="@+id/RB_match_loss"
+                style="@style/match_radio_button"
+                android:text="@string/loss" />
+            <!--  
+            <RadioButton
+                android:id="@+id/RB_match_draw"
+                style="@style/match_radio_button"
+                android:text="@string/draw" />
+            -->
+        </RadioGroup>
+
+        <!-- Final score? -->
+
+        <TextView
+            android:id="@+id/TV_final_score"
+            style="@style/match_general_row"
+            
+            android:layout_below="@id/TV_win_match"
+            android:text="@string/final_score" />
+
+        <EditText
+            android:id="@+id/ET_final_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/TV_final_score"
+            android:layout_toRightOf="@id/TV_final_score"
+            android:hint="@string/score"
+            android:inputType="number"
+            android:maxLength="4"
+            android:textSize="20sp" 
+            android:selectAllOnFocus="true" />
+
+        <!-- Comment -->
+        <!--
+        <EditText
+            android:id="@+id/ET_Comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/TV_General_Sub"
+            android:layout_below="@id/TBT_Balance"
+            android:layout_marginTop="20dp"
+            android:hint="@string/comment"
+            android:textSize="20sp" />
+        -->
+    </RelativeLayout>
+    <!--
+    <TextView
+        android:id="@+id/TV_General_Title"
+        style="@style/match_header"
+        android:layout_above="@id/General_Screen"
+        android:text="@string/general" />
+    -->
+
+</RelativeLayout>

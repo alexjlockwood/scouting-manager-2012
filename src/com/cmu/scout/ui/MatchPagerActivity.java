@@ -4,22 +4,23 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.ActionBar;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.cmu.scout.R;
 import com.cmu.scout.fragment.MatchFragment;
 import com.cmu.scout.fragment.MatchInputAutoFragment;
@@ -29,7 +30,7 @@ import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
-public class MatchPagerActivity extends FragmentActivity {
+public class MatchPagerActivity extends SherlockFragmentActivity {
 	
 	private static final String TAG = "MatchPagerActivity";
 	private static final boolean DEBUG = true;
@@ -60,8 +61,12 @@ public class MatchPagerActivity extends FragmentActivity {
 			mTeamNum = data.getIntExtra(DashboardActivity.INTENT_TEAM_NUM, -1);
 			mMatchNum = data.getIntExtra(DashboardActivity.INTENT_MATCH_NUM, -1);
 			
-			setActionBarTitle(getResources().getString(R.string.match_scouting_title));
+			ActionBar actionBar = getSupportActionBar();
+	    	actionBar.setDisplayHomeAsUpEnabled(true);
+			
+	    	setActionBarTitle(getResources().getString(R.string.match_scouting_title));
 			setActionBarSubtitle("Team " + mTeamNum + ", Match " + mMatchNum);
+			
 		}
 		
 		mAdapter = new MatchFragmentAdapter(getSupportFragmentManager());
@@ -74,6 +79,13 @@ public class MatchPagerActivity extends FragmentActivity {
 		mIndicator.setViewPager(mPager);
 	}
 
+	// bypass any recreation when screen rotate
+		// save operations for efficiency
+	@Override
+	public void onConfigurationChanged(Configuration newconfig){
+		super.onConfigurationChanged(newconfig);
+	}
+	
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -100,18 +112,24 @@ public class MatchPagerActivity extends FragmentActivity {
 
     private void setActionBarTitle(String title) {
     	if (DEBUG) Log.v(TAG, "setActionBarTitle()");
-    	if (title != null) {
-        	final ActionBar actionBar = getActionBar();
-        	actionBar.setTitle(title);
-        }
+    	//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    		if (title != null) {
+    			final ActionBar actionBar = getSupportActionBar();
+    			actionBar.setTitle(title);
+    		}
+    	//}
     }
 
     private void setActionBarSubtitle(String subtitle) {
     	if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
-    	final ActionBar actionBar = getActionBar();
-    	actionBar.setSubtitle(subtitle);
+    	//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    		if (subtitle != null) {
+    			final ActionBar actionBar = getSupportActionBar();
+    			actionBar.setSubtitle(subtitle);
+    		}
+    	//}
     }
-	
+    
     public int getTeamId() {
     	return mTeamId;
     }
@@ -122,7 +140,7 @@ public class MatchPagerActivity extends FragmentActivity {
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.match_input_options_menu, menu);
+		getSupportMenuInflater().inflate(R.menu.match_input_options_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

@@ -1,17 +1,17 @@
 package com.cmu.scout.ui;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MenuItem;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.cmu.scout.R;
 import com.cmu.scout.fragment.DisplayAutoFragment;
 import com.cmu.scout.fragment.DisplayMainFragment;
@@ -22,7 +22,7 @@ import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
-public class DisplayPagerActivity extends FragmentActivity 
+public class DisplayPagerActivity extends SherlockFragmentActivity 
 		implements OnTeamSelectedListener {
 	
 	private static final String TAG = "DisplayPagerActivity";
@@ -42,13 +42,15 @@ public class DisplayPagerActivity extends FragmentActivity
 			//FragmentManager.enableDebugLogging(true);
 		}
 		
-		// enable "up" navigation
-		final ActionBar actionBar = getActionBar();
+	    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	    	// enable "up" navigation
+			final ActionBar actionBar = getSupportActionBar();
 	   
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setTitle(R.string.display_title);
-		}
+			if (actionBar != null) {
+				actionBar.setDisplayHomeAsUpEnabled(true);
+				actionBar.setTitle(R.string.display_title);
+			}
+	    //}
 		
 		mAdapter = new DisplayFragmentAdapter(getSupportFragmentManager());
 

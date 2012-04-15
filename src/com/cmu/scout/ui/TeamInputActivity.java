@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -17,26 +16,27 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.cmu.scout.R;
 import com.cmu.scout.camera.BaseCameraActivity;
 import com.cmu.scout.provider.ScoutContract.Teams;
 
 public class TeamInputActivity extends BaseCameraActivity 
-		implements PopupMenu.OnMenuItemClickListener {
+		/*implements PopupMenu.OnMenuItemClickListener*/ {
 
 	private static final String TAG = "TeamInputActivity";
 	private static final boolean DEBUG = true;
@@ -96,8 +96,10 @@ public class TeamInputActivity extends BaseCameraActivity
 		setContentView(R.layout.team_input_main);
 		
 		// enable "up" navigation
-		final ActionBar actionBar = getActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
+		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		//}
 		
 		findViews();
 		
@@ -112,11 +114,14 @@ public class TeamInputActivity extends BaseCameraActivity
 		if (cur != null && cur.moveToFirst()) {
 			mTeamId = cur.getInt(cur.getColumnIndex(Teams._ID));
 			mTeamNum = cur.getInt(cur.getColumnIndex(Teams.TEAM_NUM));
-			final ActionBar actionBar = getActionBar();
-			if (actionBar != null) {
-				actionBar.setTitle(R.string.team_scouting_title);
-				actionBar.setSubtitle("Team " + mTeamNum);
-			}
+			
+			//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				final ActionBar actionBar = getSupportActionBar();
+				if (actionBar != null) {
+					actionBar.setTitle(R.string.team_scouting_title);
+					actionBar.setSubtitle("Team " + mTeamNum);
+				}
+			//}
 	
 			loadContactPicture();
 		
@@ -150,7 +155,7 @@ public class TeamInputActivity extends BaseCameraActivity
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.team_input_options_menu, menu);
+		getSupportMenuInflater().inflate(R.menu.team_input_options_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -162,10 +167,18 @@ public class TeamInputActivity extends BaseCameraActivity
 			return true;
 		case android.R.id.home:
             // app icon in action bar clicked; go home
-            Intent intent = new Intent(this, TeamGridActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            return true;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				Intent intent = new Intent(this, TeamGridActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				return true;
+			} else {
+				Intent intent = new Intent(this, BaseTeamGridActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				return true;
+			}
+			
 		//case R.id.bt_cancel:
 			//showConfirmExitDialog();
 			//return true;
@@ -263,19 +276,22 @@ public class TeamInputActivity extends BaseCameraActivity
 	// popup menu for take photo
     public void onPhotoClick(View view){
     	Log.v(TAG, "onPhotoClick()");
-    	PopupMenu popup = new PopupMenu(this, view);		
     	
-    	final boolean cameraAvailable = isCameraAvailable(this, CAMERA_ACTION)
-				&& isIntentAvailable(this, "android.media.action.IMAGE_CAPTURE");
+    	//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    		/*PopupMenu popup = new PopupMenu(this, view);		
+    	
+    		final boolean cameraAvailable = isCameraAvailable(this, CAMERA_ACTION)
+    				&& isIntentAvailable(this, "android.media.action.IMAGE_CAPTURE");
 		
-    	popup.getMenuInflater().inflate(R.menu.team_photo_popup_menu, popup.getMenu());
+    		popup.getMenuInflater().inflate(R.menu.team_photo_popup_menu, popup.getMenu());
 		
-    	// add only if the device has the camera application installed
-    	popup.setOnMenuItemClickListener(this);
-    	popup.getMenu().findItem(R.id.team_take_photo).setEnabled(cameraAvailable);
-    	popup.show();
+    		// add only if the device has the camera application installed
+    		popup.setOnMenuItemClickListener(this);
+    		popup.getMenu().findItem(R.id.team_take_photo).setEnabled(cameraAvailable);
+    		popup.show();*/
+    	//}
     }
-    
+   /* 
     @Override
     public boolean onMenuItemClick(MenuItem item) {   
     	Log.v(TAG, "onMenuItemClick()");
@@ -297,7 +313,7 @@ public class TeamInputActivity extends BaseCameraActivity
     	}
     	return false;
     }
-    
+    */
 	private void dispatchTakePictureIntent(int actionCode, int teamId) {
 		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
 

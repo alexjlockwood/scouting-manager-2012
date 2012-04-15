@@ -54,7 +54,6 @@
     <Button
         android:id="@+id/btn_sample6"
         style="@style/DashboardButton"
-        android:clickable="false"
-        android:onClick="onClickHandler" />
+        android:clickable="false" />
 
 </com.cmu.scout.ui.DashboardLayout>

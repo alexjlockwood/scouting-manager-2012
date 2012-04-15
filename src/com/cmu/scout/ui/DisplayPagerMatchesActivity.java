@@ -1,19 +1,19 @@
 package com.cmu.scout.ui;
 
-import android.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MenuItem;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.cmu.scout.R;
 import com.cmu.scout.fragment.DisplayMatchesAutoFragment;
 import com.cmu.scout.fragment.DisplayMatchesGeneralFragment;
@@ -25,7 +25,7 @@ import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
-public class DisplayPagerMatchesActivity extends FragmentActivity {
+public class DisplayPagerMatchesActivity extends SherlockFragmentActivity {
 	
 	private static final String TAG = "DisplayPagerMatchesActivity";
 	private static final boolean DEBUG = true;
@@ -210,13 +210,16 @@ public class DisplayPagerMatchesActivity extends FragmentActivity {
 			teamNumCur.close();
 		}
 		
-		final ActionBar actionBar = getActionBar();
-		if (actionBar != null) {
-			// enable "up" navigation
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setTitle(R.string.display_team_matches_title);
-			actionBar.setSubtitle("Team " + mTeamNum);
-		}
+		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			final ActionBar actionBar = getSupportActionBar();
+		
+			if (actionBar != null) {
+				// enable "up" navigation
+				actionBar.setDisplayHomeAsUpEnabled(true);
+				actionBar.setTitle(R.string.display_team_matches_title);
+				actionBar.setSubtitle("Team " + mTeamNum);
+			}
+		//}
 		
 		mAdapter = new DisplayFragmentAdapter(getSupportFragmentManager());
 

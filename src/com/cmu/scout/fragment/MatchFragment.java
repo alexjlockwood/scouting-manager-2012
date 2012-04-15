@@ -1,8 +1,8 @@
 package com.cmu.scout.fragment;
 
-import android.support.v4.app.Fragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public abstract class MatchFragment extends Fragment {
+public abstract class MatchFragment extends SherlockFragment {
 	
 	abstract public void updateDisplay(int viewId);
 	
