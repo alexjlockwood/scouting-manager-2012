@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
@@ -36,6 +37,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +50,8 @@ import com.cmu.scout.camera.BaseCameraActivity;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.Teams;
 
-public class BaseTeamGridActivity extends BaseCameraActivity 
-		implements /*OnQueryTextListener,*/ LoaderManager.LoaderCallbacks<Cursor> {
+public class HoneyCombTeamGridActivity extends BaseCameraActivity 
+		implements OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor> {
 
 	private static final String TAG = "TeamGridActivity";
 	private static final boolean DEBUG = true;
@@ -144,10 +147,10 @@ public class BaseTeamGridActivity extends BaseCameraActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.team_grid_options_menu, menu);
 		
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			//SearchView search = (SearchView) menu.findItem(R.id.search).getActionView();
-			//search.setOnQueryTextListener(this);
-		//}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			SearchView search = (SearchView) menu.findItem(R.id.search).getActionView();
+			search.setOnQueryTextListener(this);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -302,13 +305,13 @@ public class BaseTeamGridActivity extends BaseCameraActivity
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
 								String teamName = ((EditText) edit).getText().toString();
-								((BaseTeamGridActivity) getActivity()).doPositiveClick(teamName);
+								((TeamGridActivity) getActivity()).doPositiveClick(teamName);
 							}
 						})
 					.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
-								((BaseTeamGridActivity) getActivity()).doNegativeClick();
+								((TeamGridActivity) getActivity()).doNegativeClick();
 							}
 						}).create();
 		}
@@ -374,7 +377,7 @@ public class BaseTeamGridActivity extends BaseCameraActivity
 		 getSupportLoaderManager().restartLoader(TEAM_GRID_LOADER, null, this);
 	}
 	
-	/*
+	
 	@Override
 	public boolean onQueryTextChange(String newText) {
         // Called when the action bar search text has changed.  Update
@@ -389,7 +392,7 @@ public class BaseTeamGridActivity extends BaseCameraActivity
     public boolean onQueryTextSubmit(String query) {
         // we don't care about this...
         return true;
-    }*/
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -60,7 +60,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 
 	private static final int DIALOG_START_MATCH = 1;
 	private static final int DIALOG_EXPORT_DATA = 2;
-	
+
 	private static final int WRITE_SUCCESS = 1;
 	private static final int WRITE_FAIL = 0;
 	private static final int WRITE_EMPTY = 2;
@@ -125,7 +125,8 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		TeamMatches.PENALTY_RISK,
 		TeamMatches.WHICH_ALLIANCE,
 		TeamMatches.FINAL_SCORE,
-		TeamMatches.WIN_MATCH			
+		TeamMatches.WIN_MATCH,
+		TeamMatches.COMMENTS
 	};
 
 	private ProgressDialog pd;
@@ -148,7 +149,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 					Toast.makeText(DashboardActivity.this, "No data to share.", Toast.LENGTH_SHORT).show();
 				} else {
 					teamsCur.close();
-					
+
 					pd = new ProgressDialog(this);
 					pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 					pd.setTitle("Export data");
@@ -166,7 +167,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -174,25 +175,28 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 	}
 
 	public void onClickHandler(View v) {
+		boolean isTablet = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+
 		switch (v.getId()) {
 		case R.id.dashboard_teams:
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				Intent teamData = new Intent(getApplicationContext(), TeamGridActivity.class);
+			if (isTablet) {
+				Intent teamData = new Intent(getApplicationContext(), HoneyCombTeamGridActivity.class);
 				teamData.putExtra(INTENT_CALL_FROM_TEAM, true);
 				startActivity(teamData);
-				break;	
 			} else {
-				Intent teamData = new Intent(getApplicationContext(), BaseTeamGridActivity.class);
+				Intent teamData = new Intent(getApplicationContext(), TeamListActivity.class);
 				teamData.putExtra(INTENT_CALL_FROM_TEAM, true);
-				startActivity(teamData);
-				break;
+				startActivity(teamData);				
 			}
-		case R.id.dashboard_match:
-			showDialog(DIALOG_START_MATCH);
 			break;
-		case R.id.dashboard_display:
-			boolean isTablet = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-	        
+		case R.id.dashboard_match:
+			if (isTablet) {
+				showDialog(DIALOG_START_MATCH);
+			} else {
+				Toast.makeText(DashboardActivity.this, "This feature is only supported on tablets.", Toast.LENGTH_SHORT).show();
+			}
+			break;
+		case R.id.dashboard_display:        
 			if (isTablet) {
 				startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
 			} else {
@@ -213,7 +217,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 					showDialog(DIALOG_EXPORT_DATA);
 				}
 			} else {
-				Toast.makeText(DashboardActivity.this, "This device does not support this feature.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, "SD Card not mounted.", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}
@@ -222,70 +226,79 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 	private static final String SCOUTING_MANAGER_DIR = "scouting_manager";
 	private static final String TEAM_SCOUT_DATA_FILE = "team_scouting_data.csv";		
 	private static final String MATCH_SCOUT_DATA_FILE = "match_scouting_data.csv";
-	
-	private int output_team(File root){
-		Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, projectionTeam, null, null, Teams.TEAM_NUM + " ASC");
+
+	private int output_team(File root) {
+		Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI,
+				projectionTeam, null, null, Teams.TEAM_NUM + " ASC");
 		int numCols = teamsCur.getColumnCount();
 		Message msg = new Message();
 		msg.what = MSG_TEAM;
 		msg.arg1 = teamsCur.getCount();
 		handler.sendMessage(msg);
-		try{
-			if(teamsCur != null && teamsCur.moveToFirst()){
-				File dir = new File (root, "/" + SCOUTING_MANAGER_DIR);
+		try {
+			if (teamsCur != null && teamsCur.moveToFirst()) {
+				File dir = new File(root, "/" + SCOUTING_MANAGER_DIR);
 				dir.mkdirs();
 				File out = new File(dir, TEAM_SCOUT_DATA_FILE);
 				FileWriter writer = new FileWriter(out);
 
-				for(int i = 0;i<numCols;i++){
+				for (int i = 0; i < numCols; i++) {
 					writer.append(projectionTeam[i]);
-					if (i+1 != numCols) writer.append(',');
-					else writer.append('\n');
+					if (i + 1 != numCols)
+						writer.append(',');
+					else
+						writer.append('\n');
 				}
 
 				do {
-					for (int i=0; i<numCols; i++) {
+					for (int i = 0; i < numCols; i++) {
 						String s = teamsCur.getString(i);
-						if(s == null || s.equals("-1")){
-							//do nothing
-						}
-						else if(i == teamsCur.getColumnIndex(Teams.TEAM_NAME)){
-					        // sanitize data input
+						if (s == null || s.equals("-1")) {
+							// do nothing
+						} else if (i == teamsCur
+								.getColumnIndex(Teams.TEAM_NAME)) {
+							// sanitize data input
 							s = s.replace("\"", "\"\"");
-					        writer.append("\""+s+"\"");
-						}
-						else if(i == teamsCur.getColumnIndex(Teams.DRIVE_SYSTEM)){
-							writer.append(getResources().getStringArray(R.array.drive_option)[new Integer(s)+1]);
-						}
-						else if(i == teamsCur.getColumnIndex(Teams.WHEELS)){
-							writer.append(getResources().getStringArray(R.array.wheel_option)[new Integer(s)+1]);
-						}
-						else if(i == teamsCur.getColumnIndex(Teams.STRATEGY)){
-							writer.append(getResources().getStringArray(R.array.strategy_option)[new Integer(s)+1]);
-						}
-						else if(i == teamsCur.getColumnIndex(Teams.COMMENTS)){
-					        // sanitize data input
+							writer.append("\"" + s + "\"");
+						} else if (i == teamsCur
+								.getColumnIndex(Teams.DRIVE_SYSTEM)) {
+							writer.append(getResources().getStringArray(
+									R.array.drive_option)[new Integer(s) + 1]);
+						} else if (i == teamsCur.getColumnIndex(Teams.WHEELS)) {
+							writer.append(getResources().getStringArray(
+									R.array.wheel_option)[new Integer(s) + 1]);
+						} else if (i == teamsCur.getColumnIndex(Teams.STRATEGY)) {
+							writer.append(getResources().getStringArray(
+									R.array.strategy_option)[new Integer(s) + 1]);
+						} else if (i == teamsCur.getColumnIndex(Teams.COMMENTS)) {
+							// sanitize data input
 							s = s.replace("\"", "\"\"");
-					        writer.append("\""+s+"\"");
+							writer.append("\"" + s + "\"");
 						}
 
-						else if(i == teamsCur.getColumnIndex(Teams.PREFERRED_START)){
+						else if (i == teamsCur
+								.getColumnIndex(Teams.PREFERRED_START)) {
 
-							if(s.contains("1")){
+							if (s.contains("1")) {
 								writer.append("L");
 							}
-							if(s.contains("2")){
+							if (s.contains("2")) {
 								writer.append("M");
 							}
-							if(s.contains("3")){
+							if (s.contains("3")) {
 								writer.append("R");
 							}
-						}
-						else if(i == teamsCur.getColumnIndex(Teams.HAS_AUTONOMOUS)||i == teamsCur.getColumnIndex(Teams.HAS_KINECT)
-								||i == teamsCur.getColumnIndex(Teams.CAN_CROSS)||i == teamsCur.getColumnIndex(Teams.CAN_PUSH_DOWN_BRIDGE)){
+						} else if (i == teamsCur
+								.getColumnIndex(Teams.HAS_AUTONOMOUS)
+								|| i == teamsCur
+										.getColumnIndex(Teams.HAS_KINECT)
+								|| i == teamsCur
+										.getColumnIndex(Teams.CAN_CROSS)
+								|| i == teamsCur
+										.getColumnIndex(Teams.CAN_PUSH_DOWN_BRIDGE)) {
 							int value = new Integer(s);
 							String st = "No Value";
-							switch(value){
+							switch (value) {
 							case 0:
 								st = "No";
 								break;
@@ -295,26 +308,29 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 							writer.append(st);
 						}
 
-						else{
+						else {
 							writer.append(teamsCur.getString(i));
 						}
 
-						if (i+1 != numCols) writer.append(',');
-						else writer.append('\n');
+						if (i + 1 != numCols)
+							writer.append(',');
+						else
+							writer.append('\n');
 					}
 					handler.sendEmptyMessage(MSG_INC);
-					//Thread.sleep(20);
+					// Thread.sleep(20);
 				} while (teamsCur.moveToNext());
 				teamsCur.close();
 				writer.flush();
-				writer.close();		
-			}
-			else{
+				writer.close();
+			} else {
 				return WRITE_EMPTY;
 			}
-		}catch(Exception e){return WRITE_FAIL;}
+		} catch (Exception e) {
+			return WRITE_FAIL;
+		}
 		return WRITE_SUCCESS;
-	}		
+	}
 
 	private static final String[] cross_option={"No Atmp","Barrier","Bridge","Both"};
 	private static final String[] pick_ball_option={"Feeder","Floor","Both"};
@@ -370,11 +386,11 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			int numCols = cur.getColumnCount();
 			if(cur != null && cur.moveToFirst()){
 
-				
+
 				File dir = new File (root, "/" + SCOUTING_MANAGER_DIR);
 				dir.mkdirs();
 				File out = new File(dir, MATCH_SCOUT_DATA_FILE);
-				
+
 				FileWriter writer = new FileWriter(out);
 				writer.append("match_number,team_number,team_name,");
 				for(int i = 2;i<numCols;i++){//skip match id, team id
@@ -462,10 +478,10 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 				msg.arg1 = WRITE_EMPTY;
 			}
 			//if(teamRes == WRITE_SUCCESS){
-				//msg.arg1 = output_match(root);
+			//msg.arg1 = output_match(root);
 			//}
 			//else{
-				//msg.arg1 = teamRes;
+			//msg.arg1 = teamRes;
 			//}
 		}
 		else{
@@ -528,7 +544,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			}
 		}
 	};
-	
+
 	@Override
 	public Dialog onCreateDialog(int id) {
 		switch (id) {
@@ -678,15 +694,15 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		boolean exportTeamMatches = (teamMatches != null && teams.moveToFirst());
 		teams.close();
 		teamMatches.close();
-		
+
 		final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
 
 		emailIntent.setType("text/csv");
 		emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		
+
 		File dir = new File (Environment.getExternalStorageDirectory(), "/" + SCOUTING_MANAGER_DIR);
 		dir.mkdirs();
-		
+
 		File matchFile = new File(dir, MATCH_SCOUT_DATA_FILE);
 		File teamFile = new File(dir, TEAM_SCOUT_DATA_FILE);
 

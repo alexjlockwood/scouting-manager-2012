@@ -38,9 +38,11 @@
         </activity>
 
         <!-- Team Grid Activities -->
-        <activity android:name="com.cmu.scout.ui.TeamGridActivity" >
+        <activity android:name=".ui.HoneyCombTeamGridActivity" >
         </activity>
-        <activity android:name="com.cmu.scout.ui.BaseTeamGridActivity" >
+        <activity android:name=".ui.TeamGridActivity" >
+        </activity>
+        <activity android:name=".ui.TeamListActivity">
         </activity>
 
         <!-- Match Activity -->

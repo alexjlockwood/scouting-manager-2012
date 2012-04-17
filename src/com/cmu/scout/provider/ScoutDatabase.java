@@ -6,6 +6,7 @@ package com.cmu.scout.provider;
 // TODO: TEST ON RANDOMLY CHOSEN AUTO-INCREMENT IDS TO REDUCE ANY BIAS IN TESTING STAGES!!
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -146,7 +147,7 @@ public class ScoutDatabase extends SQLiteOpenHelper {
 				+ TeamMatches.WHICH_ALLIANCE + " INTEGER DEFAULT -1,"
 				+ TeamMatches.WIN_MATCH + " INTEGER DEFAULT -1,"
 				+ TeamMatches.FINAL_SCORE + " INTEGER"
-				// + TeamMatches.COMMENTS + " TEXT" 
+				+ TeamMatches.COMMENTS + " TEXT" 
 				+ ");");
         
         // fillTestData(db);
@@ -159,14 +160,43 @@ public class ScoutDatabase extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(TAG, "Upgrading database from version " + oldVersion
-				+ " to " + newVersion + ", which will destroy all old data");
+				+ " to " + newVersion + ".");
 		
-		// TODO: IMPLEMENT THE onUpgrade() METHOD BEFORE MARKET RELEASE!!
-		// TODO: UNDERSTAND THE onUpgrade() METHOD!!
-		
-		db.execSQL("DROP TABLE IF EXISTS " + Tables.TEAMS);
-		db.execSQL("DROP TABLE IF EXISTS " + Tables.MATCHES);
-		onCreate(db);
+		if (oldVersion < newVersion) {
+			// Upgrade the database.
+			switch (oldVersion) {
+			
+			case 1:
+				// Upgrade the database from version 1 to 2.
+
+				// SQLite only allows adding one column at a time, so perform
+				//   call "execSQL" three times (once for each new column).
+				try {
+					// Add comments column to TeamMatches table.
+                    db.execSQL("ALTER TABLE " + Tables.TEAM_MATCHES + " ADD COLUMN " + TeamMatches.COMMENTS + " TEXT;");
+                    
+                    // TODO: Add "does anything?" column to TeamMatches table.
+                    
+                    // TODO: Add "shoots from where" column to Teams table.
+                      
+				} catch (SQLException e) {
+                    Log.e(TAG, "Error executing SQL statement: ", e);   
+				}
+				break;
+				
+				// Remove "break" statement when adding new upgrades.
+				// This will allow for the upgrades to "fall-through".
+				
+			default: 
+				Log.w(TAG, "Unknown version: " + oldVersion + ". Creating new database.");
+				db.execSQL("DROP TABLE IF EXISTS " + Tables.TEAMS);
+				db.execSQL("DROP TABLE IF EXISTS " + Tables.MATCHES);
+				db.execSQL("DROP TABLE IF EXISTS " + Tables.TEAM_MATCHES);
+				onCreate(db);	
+			}		
+		} else {
+			// Then downgrade version. We don't need to worry about this.
+		}
 	}
 	
 	/**

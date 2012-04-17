@@ -24,6 +24,25 @@
         <item name="android:background">@null</item>
     </style>
 
+    <!-- Team Input Main Activity (phone) -->
+    
+    <style name="team_input_main_header">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+    	<item name="android:textSize">18sp</item>
+    	<item name="android:layout_marginLeft">10dp</item>
+    	<item name="android:layout_marginTop">10dp</item>
+    	<item name="android:layout_marginBottom">5dp</item>
+    </style>
+    
+    <style name="team_input_main_view">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    	<item name="android:layout_marginLeft">10dp</item>
+    </style>
+    
+    
     <!-- Display layout styles -->
     
     <style name="DisplayHeader" >

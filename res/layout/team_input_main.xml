@@ -2,193 +2,181 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:focusable="true"
-    android:focusableInTouchMode="true"  >
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
 
-    <!-- Nest these Views in RelativeLayout and center them in screen -->
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/Team_Input_Screen"
-        android:layout_width="700dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical" 
-        android:padding="30dp"
-        android:background="@drawable/picture_frame" >
+        android:background="@drawable/picture_frame"
+        android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/IV_Team_Picture"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_alignParentTop="true"
-            android:onClick="onPhotoClick"
-            android:background="@drawable/picture_frame_small"
-            android:src="@drawable/ic_contact_picture"
-            android:text="@string/team_name" 
-            android:scaleType="fitXY"
-            android:layout_alignParentLeft="true"/>
-
-      <EditText
-            android:id="@+id/ET_Team_Rank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"     
-            android:layout_alignBottom="@id/IV_Team_Picture"
-            android:layout_marginLeft="200dp"
-            android:layout_toRightOf="@id/IV_Team_Picture"
-            android:maxLength="4"
-            android:inputType="number"
-            android:maxLines="1"
-            android:hint="@string/rank" 
-            android:textSize="18sp" />
-        
-        <EditText
-            android:id="@+id/ET_Team_Name"
-            android:layout_width="200dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/ET_Team_Rank"
-            android:layout_above="@id/ET_Team_Rank"
-            android:hint="@string/team_name"
-            android:textSize="20sp" 
-            android:inputType="text|textCapSentences"/>
-        
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/IV_Team_Picture"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:onClick="onPhotoClick"
+				android:layout_marginBottom="5dp"
+                android:scaleType="fitXY"
+                android:background="@drawable/picture_frame_small"
+                android:src="@drawable/ic_contact_picture"
+                android:text="@string/team_name" />
+
+            <!-- android:background="@drawable/picture_frame_small" -->
+			
+			<EditText
+                android:id="@+id/ET_Team_Rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/IV_Team_Picture"
+                android:layout_alignBottom="@id/IV_Team_Picture"
+            	android:hint="@string/rank"
+                android:inputType="number"
+                android:maxLength="4"
+                android:maxLines="1"
+                android:textSize="18sp" />
+            
+            <EditText
+                android:id="@+id/ET_Team_Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/ET_Team_Rank"
+                android:layout_alignLeft="@id/ET_Team_Rank"
+                android:hint="@string/team_name"
+                android:inputType="text|textCapSentences"
+                android:maxLines="1"
+                android:textSize="20sp" />   
+                           
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/TV_Drive"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/IV_Team_Picture"
-            android:layout_marginTop="26dp"
+           	style="@style/team_input_main_header"
             android:text="@string/drive" />
 
         <Spinner
             android:id="@+id/SP_Drive"
-            style="@style/team_scouting_spinner"
-            android:layout_alignBaseline="@id/TV_Drive"
-            android:layout_alignLeft="@id/ET_Team_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            	style="@style/team_input_main_view"
             android:entries="@array/drive_option" />
 
         <TextView
             android:id="@+id/TV_Wheel"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Drive"
-            android:layout_marginTop="26dp"
+            style="@style/team_input_main_header"
             android:text="@string/wheel" />
 
         <Spinner
             android:id="@+id/SP_Wheel"
-            style="@style/team_scouting_spinner"
-            android:layout_alignBaseline="@id/TV_Wheel"
-            android:layout_alignLeft="@id/ET_Team_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            	style="@style/team_input_main_view"
             android:entries="@array/wheel_option" />
 
         <TextView
             android:id="@+id/TV_Team_Auto"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Wheel"
-            android:layout_marginTop="26dp"
+            style="@style/team_input_main_header"
             android:text="@string/play_auto" />
 
         <ToggleButton
             android:id="@+id/TBT_Team_Auto"
-            style="@style/team_scouting_togglebutton"
-            android:layout_alignBaseline="@id/TV_Team_Auto"
-            android:layout_alignLeft="@id/ET_Team_Name" />
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" 
+            style="@style/team_input_main_view"/>
 
         <TextView
             android:id="@+id/TV_Position"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Team_Auto"
-            android:layout_marginTop="26dp"
+            style="@style/team_input_main_header"
             android:text="@string/prefer_position" />
 
-        <CheckBox
-            android:id="@+id/CB_Left"
-            style="@style/team_scouting_checkbox"
-            android:layout_alignBottom="@id/TV_Position"
-            android:layout_alignTop="@id/TV_Position"
-            android:layout_alignLeft="@id/TBT_Team_Auto"
-            android:text="@string/left" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:layout_marginLeft="10dp">
+            
+            <CheckBox
+                android:id="@+id/CB_Left"     
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/left" />
 
-        <CheckBox
-            android:id="@+id/CB_Middle"
-            style="@style/team_scouting_checkbox"
-            android:layout_alignBottom="@id/TV_Position"
-            android:layout_alignTop="@id/TV_Position"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@id/CB_Left"
-            android:text="@string/middle" />
+            <CheckBox
+                android:id="@+id/CB_Middle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/middle" />
 
-        <CheckBox
-            android:id="@+id/CB_Right"
-            style="@style/team_scouting_checkbox"
-            android:layout_alignBottom="@id/TV_Position"
-            android:layout_alignTop="@id/TV_Position"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@id/CB_Middle"
-            android:text="@string/right" />
-
+            <CheckBox
+                android:id="@+id/CB_Right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/right" />
+        
+		</LinearLayout>
+        
         <TextView
             android:id="@+id/TV_Team_Kinect"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Position"
-            android:layout_marginTop="26dp"
+            style="@style/team_input_main_header"
             android:text="@string/STR_Kinect" />
 
         <ToggleButton
             android:id="@+id/TBT_Team_Kinect"
-            style="@style/team_scouting_togglebutton"
-            android:layout_alignBaseline="@id/TV_Team_Kinect"
-            android:layout_alignLeft="@id/ET_Team_Name" />
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" 
+            	style="@style/team_input_main_view"/>
 
         <TextView
             android:id="@+id/TV_Team_Barrier"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Team_Kinect"
-            android:layout_marginTop="26dp"
+            style="@style/team_input_main_header"
             android:text="@string/team_barrier" />
 
         <ToggleButton
             android:id="@+id/TBT_Team_Barrier"
-            style="@style/team_scouting_togglebutton"
-            android:layout_alignBaseline="@id/TV_Team_Barrier"
-            android:layout_alignLeft="@id/ET_Team_Name" />
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" 
+            	style="@style/team_input_main_view"/>
 
         <TextView
             android:id="@+id/TV_Team_Bridge"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Team_Barrier"
-            android:layout_marginTop="26dp"
+            style="@style/team_input_main_header"
             android:text="@string/team_bridge" />
 
         <ToggleButton
             android:id="@+id/TBT_Team_Bridge"
-            style="@style/team_scouting_togglebutton"
-            android:layout_alignBaseline="@id/TV_Team_Bridge"
-            android:layout_alignLeft="@id/ET_Team_Name" />
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" 
+            style="@style/team_input_main_view"/>
 
         <TextView
             android:id="@+id/TV_Team_Strategy"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Team_Bridge"
-            android:layout_marginTop="26dp"
+            style="@style/team_input_main_header"
             android:text="@string/strategy" />
 
         <Spinner
             android:id="@+id/SP_Strategy"
-            style="@style/team_scouting_spinner"
-            android:layout_alignBaseline="@id/TV_Team_Strategy"
-            android:layout_alignLeft="@id/ET_Team_Name"
-            android:entries="@array/strategy_option" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/strategy_option" 
+            	style="@style/team_input_main_view"/>
 
         <EditText
             android:id="@+id/ET_Team_Comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/TV_Team_Strategy"
-            android:layout_alignLeft="@id/TV_Team_Strategy"
-            android:scrollHorizontally="false"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="6dp"
             android:hint="@string/comment"
-            android:inputType="text|textCapSentences" />
-    </RelativeLayout>
-
+            android:inputType="text|textCapSentences"
+            android:scrollHorizontally="false" 
+            />
+    </LinearLayout>
 
 </ScrollView>

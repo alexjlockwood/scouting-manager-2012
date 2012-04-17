@@ -248,6 +248,7 @@ public class ScoutProvider extends ContentProvider {
         final Cursor cur = qb.query(mOpenHelper.getReadableDatabase(), projection, 
         		where, whereArgs, null, null, sortOrder);
         cur.setNotificationUri(getContext().getContentResolver(), uri);
+        Log.v(TAG, ""+cur.getCount());
         return cur;
 	}
 

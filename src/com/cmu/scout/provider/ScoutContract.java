@@ -490,7 +490,7 @@ public final class ScoutContract {
 		 *
 		 * <P>Type: TEXT</P>
 		 */
-		// String COMMENTS = "comments";
+		String COMMENTS = "comments";
 	}
 
     public static final String AUTHORITY = "com.cmu.scout.provider.Scout";

@@ -25,7 +25,7 @@
     	
     <!-- Camera -->
     <string name="album_name">ScoutingManager</string>
-   	<string name="menu_take_picture">Take picture</string>
+   	<string name="menu_take_picture">Take photo</string>
     
     <!-- ActionBar Titles -->
     <string name="team_scouting_title">Team-scout</string>
@@ -38,8 +38,8 @@
     <string name="confirm_exit_message">Are you sure you want to exit? Any unsaved changes will be lost.</string>
     <string name="confirm_delete_team">Delete team?</string>
     <string name="confirm_delete_team_message">Delete all data for this team? This cannot be undone.</string>
-    <string name="confirm_delete_picture">Delete team picture?</string>
-    <string name="confirm_delete_picture_message">Delete this team\'s picture? This cannot be undone.</string>
+    <string name="confirm_delete_picture">Delete team photo?</string>
+    <string name="confirm_delete_picture_message">Delete this team\'s photo? This cannot be undone.</string>
     
     <string name="confirm_export_title">Export data?</string>
     <string name="confirm_export_message">Are you sure you want to write data to external storage?</string>
@@ -58,7 +58,7 @@
     <!-- Team Grid Activity -->
     <string name="menu_add_team">Add Team</string>
     <string name="menu_delete_team">Delete team</string>
-    <string name="menu_view_picture">Show in Gallery</string>
+    <string name="menu_view_picture">Show photo in Gallery</string>
     <string name="menu_delete_match">Delete match</string>
     <string name="duplicate_team_number">Team already exists.</string>
     
@@ -222,9 +222,9 @@
         <item>Offense</item>
         <item>Defense</item>
     </string-array>
-        <string name="take_photo">Take picture</string>
-        <string name="choose_gallary">Select from gallary</string> 
-        <string name="delete_team_picture">Delete picture</string>
+        <string name="take_photo">Take photo</string>
+        <string name="choose_gallary">Select photo from Gallery</string> 
+        <string name="delete_team_picture">Delete photo</string>
     
     <string name="match_number">Enter match:</string>
     <string name="team_number">Enter team:</string>

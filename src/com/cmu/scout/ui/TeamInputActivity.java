@@ -168,12 +168,12 @@ public class TeamInputActivity extends BaseCameraActivity
 		case android.R.id.home:
             // app icon in action bar clicked; go home
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				Intent intent = new Intent(this, TeamGridActivity.class);
+				Intent intent = new Intent(this, HoneyCombTeamGridActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 				return true;
 			} else {
-				Intent intent = new Intent(this, BaseTeamGridActivity.class);
+				Intent intent = new Intent(this, TeamGridActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 				return true;

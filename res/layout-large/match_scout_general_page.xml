@@ -338,7 +338,6 @@
         <TextView
             android:id="@+id/TV_final_score"
             style="@style/match_general_row"
-            
             android:layout_below="@id/TV_win_match"
             android:text="@string/final_score" />
 
