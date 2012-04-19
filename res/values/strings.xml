@@ -262,4 +262,8 @@
     <string name="error_writing_data">Error writing data.</string>
     <string name="share_scouting_data">Share scouting data…</string>
     
+    <string name="writing_data">Writing data…</string>
+    <string name="export_data_dialog">Export data</string>
+    
+    
 </resources>

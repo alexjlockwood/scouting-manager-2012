@@ -29,6 +29,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -266,22 +267,31 @@ public class OldTeamListActivity extends BaseCameraActivity
 
 			LayoutInflater factory = LayoutInflater.from(getActivity());
 			final View edit = factory.inflate(R.layout.add_team_edit_text, null);
-			return new AlertDialog.Builder(getActivity())
-					.setTitle(R.string.add_team_dialog_title)
-					.setView(edit)
-					.setPositiveButton(R.string.ok,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								String teamName = ((EditText) edit).getText().toString();
-								((OldTeamListActivity) getActivity()).doPositiveClick(teamName);
-							}
-						})
-					.setNegativeButton(R.string.cancel,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								((OldTeamListActivity) getActivity()).doNegativeClick();
-							}
-						}).create();
+			final Dialog dialog = new AlertDialog.Builder(getActivity())
+			.setTitle(R.string.add_team_dialog_title)
+			.setView(edit)
+			.setPositiveButton(R.string.ok,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String teamName = ((EditText) edit).getText().toString();
+						((OldTeamListActivity) getActivity()).doPositiveClick(teamName);
+					}
+				})
+			.setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						((OldTeamListActivity) getActivity()).doNegativeClick();
+					}
+				}).create();
+	edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+	    @Override
+	    public void onFocusChange(View v, boolean hasFocus) {
+	        if (hasFocus) {
+	            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+	        }
+	    }
+	});
+	return dialog;
 		}
 	}
 

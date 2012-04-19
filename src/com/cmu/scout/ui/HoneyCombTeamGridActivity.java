@@ -275,7 +275,6 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 
 			LayoutInflater factory = LayoutInflater.from(getActivity());
 			final View edit = factory.inflate(R.layout.add_team_edit_text, null);
-			// TODO: Make sure to put this stuff in "values/strings.xml"
 			return new AlertDialog.Builder(getActivity())
 					.setTitle(R.string.add_team_dialog_title)
 					.setView(edit)

@@ -279,6 +279,7 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 
 			LayoutInflater factory = LayoutInflater.from(getActivity());
 			final View edit = factory.inflate(R.layout.add_team_edit_text, null);
+			edit.requestFocus();
 			return new AlertDialog.Builder(getActivity())
 					.setTitle(R.string.add_team_dialog_title)
 					.setView(edit)

@@ -4,7 +4,7 @@
     android:versionCode="6"
     android:versionName="1.1" xmlns:tools="http://schemas.android.com/tools" tools:ignore="HardcodedDebugMode">
 
-    <uses-sdk android:minSdkVersion="8" 
+    <uses-sdk android:minSdkVersion="7" 
         android:targetSdkVersion="15" />
 
     <uses-feature

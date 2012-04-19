@@ -149,14 +149,14 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
 				Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, new String[] { Teams._ID }, null, null, null);
 				if (teamsCur == null || !teamsCur.moveToFirst()) {
-					Toast.makeText(DashboardActivity.this, "No data to share.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(DashboardActivity.this, R.string.no_data_to_share, Toast.LENGTH_SHORT).show();
 				} else {
 					teamsCur.close();
 
 					pd = new ProgressDialog(this);
 					pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-					pd.setTitle("Export data");
-					pd.setMessage("Writing data...");
+					pd.setTitle(getString(R.string.export_data_dialog));
+					pd.setMessage(getString(R.string.writing_data));
 					pd.setCancelable(false);
 					pd.show();
 
@@ -164,7 +164,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 					thread.start();
 				}
 			} else {
-				Toast.makeText(DashboardActivity.this, "This device does not support this feature.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, R.string.sd_card_not_mounted, Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		}
@@ -199,14 +199,14 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			}
 			break;
 		case R.id.dashboard_match:
-			if (isTablet) {
+			if (isTablet && isHoneyComb) {
 				showDialog(DIALOG_START_MATCH);
 			} else {
 				Toast.makeText(DashboardActivity.this, R.string.only_on_tablets, Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case R.id.dashboard_display:        
-			if (isTablet) {
+			if (isTablet && isHoneyComb) {
 				startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
 			} else {
 				Toast.makeText(DashboardActivity.this, R.string.only_on_tablets, Toast.LENGTH_SHORT).show();
@@ -632,8 +632,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			}).create();
 		case DIALOG_EXPORT_DATA:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setCancelable(false)
-			.setTitle(R.string.confirm_export_title)
+			builder.setTitle(R.string.confirm_export_title)
 			.setMessage(R.string.confirm_export_message)
 			.setIcon(R.drawable.ic_dialog_alert_holo_light)
 			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -654,9 +653,9 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 					dialog.cancel();
 				}
 			});
-			AlertDialog alert = builder.create();
-			alert.show();
-			break;
+			return builder.create();
+			//return alert.show();
+			//break;
 		}
 		return null;
 	}

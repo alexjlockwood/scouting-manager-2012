@@ -38,19 +38,12 @@ public class DisplayPagerActivity extends SherlockFragmentActivity
 		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
 		setContentView(R.layout.display_teams_pager);
 		
-		if (DEBUG) {
-			//FragmentManager.enableDebugLogging(true);
+	    // enable "up" navigation
+		final ActionBar actionBar = getSupportActionBar();	 
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle(R.string.display_title);
 		}
-		
-	    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-	    	// enable "up" navigation
-			final ActionBar actionBar = getSupportActionBar();
-	   
-			if (actionBar != null) {
-				actionBar.setDisplayHomeAsUpEnabled(true);
-				actionBar.setTitle(R.string.display_title);
-			}
-	    //}
 		
 		mAdapter = new DisplayFragmentAdapter(getSupportFragmentManager());
 
