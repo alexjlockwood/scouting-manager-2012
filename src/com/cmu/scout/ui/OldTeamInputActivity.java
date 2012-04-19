@@ -19,11 +19,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -35,8 +36,8 @@ import com.cmu.scout.R;
 import com.cmu.scout.camera.BaseCameraActivity;
 import com.cmu.scout.provider.ScoutContract.Teams;
 
-public class HoneyCombTeamInputActivity extends BaseCameraActivity 
-		implements PopupMenu.OnMenuItemClickListener {
+public class OldTeamInputActivity extends BaseCameraActivity 
+		/*implements PopupMenu.OnMenuItemClickListener*/ {
 
 	private static final String TAG = "TeamInputActivity";
 	private static final boolean DEBUG = true;
@@ -133,6 +134,9 @@ public class HoneyCombTeamInputActivity extends BaseCameraActivity
 		mCheckFender = (CheckBox) parent.findViewById(R.id.CB_Fender);
 		mCheckKey = (CheckBox) parent.findViewById(R.id.CB_Key);
 		mCheckAnywhere = (CheckBox) parent.findViewById(R.id.CB_Anywhere);
+		
+		// register mContact ImageView for a context menu
+		registerForContextMenu(mContact);
 	}
 	
 	private void loadInfo(Uri teamUri) {	
@@ -198,19 +202,10 @@ public class HoneyCombTeamInputActivity extends BaseCameraActivity
 			return true;
 		case android.R.id.home:
             // app icon in action bar clicked; go home
-			boolean isTablet = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-			
-			if (isTablet) {
-				Intent intent = new Intent(this, HoneyCombTeamGridActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				return true;
-			} else {
-				Intent intent = new Intent(this, HoneyCombTeamListActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				return true;
-			}
+			Intent intent = new Intent(this, OldTeamListActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			return true;
 			
 		//case R.id.bt_cancel:
 			//showConfirmExitDialog();
@@ -300,10 +295,10 @@ public class HoneyCombTeamInputActivity extends BaseCameraActivity
 	
 	// popup menu for take photo
     public void onPhotoClick(View view){
-    	Log.v(TAG, "onPhotoClick()");
+    	//Log.v(TAG, "onPhotoClick()");
     	
     	//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-    		PopupMenu popup = new PopupMenu(this, view);		
+    		/*PopupMenu popup = new PopupMenu(this, view);		
     	
     		final boolean cameraAvailable = isCameraAvailable(this, CAMERA_ACTION)
     				&& isIntentAvailable(this, "android.media.action.IMAGE_CAPTURE");
@@ -313,12 +308,26 @@ public class HoneyCombTeamInputActivity extends BaseCameraActivity
     		// add only if the device has the camera application installed
     		popup.setOnMenuItemClickListener(this);
     		popup.getMenu().findItem(R.id.team_take_photo).setEnabled(cameraAvailable);
-    		popup.show();
+    		popup.show();*/
     	//}
     }
     
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		
+		final boolean cameraAvailable = isCameraAvailable(this, CAMERA_ACTION)
+				&& isIntentAvailable(this, "android.media.action.IMAGE_CAPTURE");
+	
+		getMenuInflater().inflate(R.menu.team_photo_popup_menu, menu);
+		
+		// add only if the device has the camera application installed
+		menu.findItem(R.id.team_take_photo).setEnabled(cameraAvailable);
+	}
+    
+    
     @Override
-    public boolean onMenuItemClick(android.view.MenuItem item) {   
+    public boolean onContextItemSelected(android.view.MenuItem item) {   
     	Log.v(TAG, "onMenuItemClick()");
     	switch (item.getItemId()) {
     	case R.id.team_take_photo:
@@ -508,8 +517,8 @@ public class HoneyCombTeamInputActivity extends BaseCameraActivity
 	           .setIcon(R.drawable.ic_dialog_alert_holo_light)
 	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 	        	   public void onClick(DialogInterface dialog, int id) {
-	        		   HoneyCombTeamInputActivity.this.setResult(Activity.RESULT_CANCELED);
-	        		   HoneyCombTeamInputActivity.this.finish();
+	        		   OldTeamInputActivity.this.setResult(Activity.RESULT_CANCELED);
+	        		   OldTeamInputActivity.this.finish();
 	        	   }
 	           })
 	           .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

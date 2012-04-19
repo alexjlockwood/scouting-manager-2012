@@ -27,7 +27,7 @@
                 android:layout_height="120dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/picture_frame_small"
-                
+                android:onClick="onPhotoClick"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_contact_picture"
                 android:text="@string/team_name" />

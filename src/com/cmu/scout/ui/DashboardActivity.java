@@ -207,7 +207,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			if (isTablet) {
 				startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
 			} else {
-				Toast.makeText(DashboardActivity.this, "This feature is currently only available on tablets.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, "This feature is only available on tablets.", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case R.id.dashboard_transfer:
