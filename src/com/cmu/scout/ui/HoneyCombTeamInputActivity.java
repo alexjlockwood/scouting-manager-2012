@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -35,8 +36,8 @@ import com.cmu.scout.R;
 import com.cmu.scout.camera.BaseCameraActivity;
 import com.cmu.scout.provider.ScoutContract.Teams;
 
-public class TeamInputActivity extends BaseCameraActivity 
-		/*implements PopupMenu.OnMenuItemClickListener*/ {
+public class HoneyCombTeamInputActivity extends BaseCameraActivity 
+		implements PopupMenu.OnMenuItemClickListener {
 
 	private static final String TAG = "TeamInputActivity";
 	private static final boolean DEBUG = true;
@@ -74,10 +75,14 @@ public class TeamInputActivity extends BaseCameraActivity
 	private CheckBox mCheckMiddle;
 	private CheckBox mCheckRight;
 	
+	private CheckBox mCheckFender;
+	private CheckBox mCheckKey;
+	private CheckBox mCheckAnywhere;
+	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putString(PHOTO_PATH_STORAGE_KEY, mCurrentPhotoPath);
-		outState.putLong(TEAM_ID_STORAGE_KEY, mTeamId);
+		outState.putInt(TEAM_ID_STORAGE_KEY, mTeamId);
 		outState.putInt(TEAM_NUM_STORAGE_KEY, mTeamNum);
 		super.onSaveInstanceState(outState);
 	}
@@ -102,11 +107,33 @@ public class TeamInputActivity extends BaseCameraActivity
 		//}
 		
 		findViews();
+	}
+	
+	private void findViews(){
+		final View parent = findViewById(R.id.Team_Input_Screen);
 		
-		final Intent intent = getIntent();
-		if (intent != null) {
-			loadInfo(intent.getData());
-		}	
+		mContact = (ImageView) parent.findViewById(R.id.IV_Team_Picture);
+		
+		mDrive = (Spinner) parent.findViewById(R.id.SP_Drive);
+		mWheel = (Spinner) parent.findViewById(R.id.SP_Wheel);
+		mStrategy = (Spinner) parent.findViewById(R.id.SP_Strategy);
+		
+		mTeamName = (EditText) parent.findViewById(R.id.ET_Team_Name);
+		mComment = (EditText) parent.findViewById(R.id.ET_Team_Comment);
+		mRank = (EditText) parent.findViewById(R.id.ET_Team_Rank);
+		
+		mToggleAuto = (ToggleButton) parent.findViewById(R.id.TBT_Team_Auto);
+		mToggleKinect = (ToggleButton) parent.findViewById(R.id.TBT_Team_Kinect);
+		mToggleBarrier = (ToggleButton) parent.findViewById(R.id.TBT_Team_Barrier);
+		mToggleBridge = (ToggleButton) parent.findViewById(R.id.TBT_Team_Bridge);
+		
+		mCheckLeft = (CheckBox) parent.findViewById(R.id.CB_Left);
+		mCheckMiddle = (CheckBox) parent.findViewById(R.id.CB_Middle);
+		mCheckRight = (CheckBox) parent.findViewById(R.id.CB_Right);
+		
+		mCheckFender = (CheckBox) parent.findViewById(R.id.CB_Fender);
+		mCheckKey = (CheckBox) parent.findViewById(R.id.CB_Key);
+		mCheckAnywhere = (CheckBox) parent.findViewById(R.id.CB_Anywhere);
 	}
 	
 	private void loadInfo(Uri teamUri) {	
@@ -139,6 +166,11 @@ public class TeamInputActivity extends BaseCameraActivity
 			mCheckLeft.setChecked(s.charAt(0) == '1');
 			mCheckMiddle.setChecked(s.contains("2"));
 			mCheckRight.setChecked(s.contains("3"));
+			
+			String shoot = "" + cur.getInt(cur.getColumnIndex(Teams.SHOOT_FROM_WHERE));
+			mCheckFender.setChecked(shoot.charAt(0) == '1');
+			mCheckKey.setChecked(shoot.contains("2"));
+			mCheckAnywhere.setChecked(shoot.contains("3"));
 		
 			int rank = cur.getInt(cur.getColumnIndex(Teams.FRIDAY_RANK));
 			if(rank > 0){
@@ -167,13 +199,15 @@ public class TeamInputActivity extends BaseCameraActivity
 			return true;
 		case android.R.id.home:
             // app icon in action bar clicked; go home
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			boolean isTablet = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+			
+			if (isTablet) {
 				Intent intent = new Intent(this, HoneyCombTeamGridActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 				return true;
 			} else {
-				Intent intent = new Intent(this, TeamGridActivity.class);
+				Intent intent = new Intent(this, HoneyCombTeamListActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 				return true;
@@ -190,28 +224,7 @@ public class TeamInputActivity extends BaseCameraActivity
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private void findViews(){
-		final View parent = findViewById(R.id.Team_Input_Screen);
-		
-		mContact = (ImageView) parent.findViewById(R.id.IV_Team_Picture);
-		
-		mDrive = (Spinner) parent.findViewById(R.id.SP_Drive);
-		mWheel = (Spinner) parent.findViewById(R.id.SP_Wheel);
-		mStrategy = (Spinner) parent.findViewById(R.id.SP_Strategy);
-		
-		mTeamName = (EditText) parent.findViewById(R.id.ET_Team_Name);
-		mComment = (EditText) parent.findViewById(R.id.ET_Team_Comment);
-		mRank = (EditText) parent.findViewById(R.id.ET_Team_Rank);
-		
-		mToggleAuto = (ToggleButton) parent.findViewById(R.id.TBT_Team_Auto);
-		mToggleKinect = (ToggleButton) parent.findViewById(R.id.TBT_Team_Kinect);
-		mToggleBarrier = (ToggleButton) parent.findViewById(R.id.TBT_Team_Barrier);
-		mToggleBridge = (ToggleButton) parent.findViewById(R.id.TBT_Team_Bridge);
-		
-		mCheckLeft = (CheckBox) parent.findViewById(R.id.CB_Left);
-		mCheckMiddle = (CheckBox) parent.findViewById(R.id.CB_Middle);
-		mCheckRight = (CheckBox) parent.findViewById(R.id.CB_Right);
-	}
+
 
 	private void saveData(){	
 		int drive_n = mDrive.getSelectedItemPosition()-1;
@@ -224,11 +237,19 @@ public class TeamInputActivity extends BaseCameraActivity
 		
 		String rank_s = mRank.getText().toString();
 		int rank = (rank_s == null || rank_s.length() == 0) ? -1 : new Integer(rank_s);
+		
 		String position = "";
 		if (mCheckLeft.isChecked()) position += "1";
 		if (mCheckMiddle.isChecked()) position += "2";
 		if (mCheckRight.isChecked()) position += "3";
 		int p_n = (position == null || position.length() == 0) ? 0 : new Integer(position);
+		
+		String shoot = "";
+		if (mCheckFender.isChecked()) shoot += "1";
+		if (mCheckKey.isChecked()) shoot += "2";
+		if (mCheckAnywhere.isChecked()) shoot += "3";
+		int s_n = (shoot == null || shoot.length() == 0) ? 0 : new Integer(shoot);
+		
 		
 		final Uri uri = Teams.buildTeamIdUri(""+mTeamId);
 		
@@ -246,6 +267,8 @@ public class TeamInputActivity extends BaseCameraActivity
 		values.put(Teams.PREFERRED_START, p_n);
 		values.put(Teams.FRIDAY_RANK, rank);
 		
+		values.put(Teams.SHOOT_FROM_WHERE, s_n);
+		
 		// update the existing record
 		// should always have data in database at this point
 		getContentResolver().update(uri, values, null, null);
@@ -261,6 +284,9 @@ public class TeamInputActivity extends BaseCameraActivity
 		mCheckLeft.setChecked(false);
 		mCheckMiddle.setChecked(false);
 		mCheckRight.setChecked(false);
+		mCheckFender.setChecked(false);
+		mCheckKey.setChecked(false);
+		mCheckAnywhere.setChecked(false);
 		mDrive.setSelection(0);
 		mWheel.setSelection(0);
 		mStrategy.setSelection(0);
@@ -278,7 +304,7 @@ public class TeamInputActivity extends BaseCameraActivity
     	Log.v(TAG, "onPhotoClick()");
     	
     	//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-    		/*PopupMenu popup = new PopupMenu(this, view);		
+    		PopupMenu popup = new PopupMenu(this, view);		
     	
     		final boolean cameraAvailable = isCameraAvailable(this, CAMERA_ACTION)
     				&& isIntentAvailable(this, "android.media.action.IMAGE_CAPTURE");
@@ -288,12 +314,12 @@ public class TeamInputActivity extends BaseCameraActivity
     		// add only if the device has the camera application installed
     		popup.setOnMenuItemClickListener(this);
     		popup.getMenu().findItem(R.id.team_take_photo).setEnabled(cameraAvailable);
-    		popup.show();*/
+    		popup.show();
     	//}
     }
-   /* 
+    
     @Override
-    public boolean onMenuItemClick(MenuItem item) {   
+    public boolean onMenuItemClick(android.view.MenuItem item) {   
     	Log.v(TAG, "onMenuItemClick()");
     	switch (item.getItemId()) {
     	case R.id.team_take_photo:
@@ -313,7 +339,7 @@ public class TeamInputActivity extends BaseCameraActivity
     	}
     	return false;
     }
-    */
+    
 	private void dispatchTakePictureIntent(int actionCode, int teamId) {
 		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
 
@@ -483,8 +509,8 @@ public class TeamInputActivity extends BaseCameraActivity
 	           .setIcon(R.drawable.ic_dialog_alert_holo_light)
 	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 	        	   public void onClick(DialogInterface dialog, int id) {
-	        		   TeamInputActivity.this.setResult(Activity.RESULT_CANCELED);
-	        		   TeamInputActivity.this.finish();
+	        		   HoneyCombTeamInputActivity.this.setResult(Activity.RESULT_CANCELED);
+	        		   HoneyCombTeamInputActivity.this.finish();
 	        	   }
 	           })
 	           .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

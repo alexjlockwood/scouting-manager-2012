@@ -14,7 +14,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <application
+    <application 
+        android:debuggable="true"
         android:icon="@drawable/ic_launcher_girlsofsteel"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
@@ -32,17 +33,25 @@
 
         <!-- Team Scout Activity -->
         <activity
-            android:name=".ui.TeamInputActivity"
-            android:configChanges="orientation"
+            android:name=".ui.OldTeamInputActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+        <activity
+            android:name=".ui.HoneyCombTeamInputActivity"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
 
         <!-- Team Grid Activities -->
         <activity android:name=".ui.HoneyCombTeamGridActivity" >
         </activity>
-        <activity android:name=".ui.TeamGridActivity" >
+        <activity android:name=".ui.HoneyCombTeamListActivity">
+            
         </activity>
-        <activity android:name=".ui.TeamListActivity">
+        <activity android:name=".ui.OldTeamGridActivity" >
+        </activity>
+        <activity android:name=".ui.OldTeamListActivity">
         </activity>
 
         <!-- Match Activity -->

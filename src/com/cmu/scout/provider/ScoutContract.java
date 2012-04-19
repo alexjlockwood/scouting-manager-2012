@@ -122,10 +122,33 @@ public final class ScoutContract {
 		 * 3: Right<br>
 		 * 12: Left/Middle<br>
 		 * 23: Middle/Right<br>
+		 * 13: Left/Right
 		 * 123: Left/Middle/Right<br>
 		 * </P>
 		 */
 		String PREFERRED_START = "preferred_start_position";
+		
+		/**
+		 * Where does this robot shoot from?
+		 * 
+		 * <P>
+		 * Type: INTEGER (multi-select)<br>
+		 * Default: -1
+		 * </P>
+		 * 
+		 * <P>
+		 * Possible values:<br>
+		 * 0: None<br>
+		 * 1: Fender<br>
+		 * 2: Key<br>
+		 * 3: Anywhere<br>
+		 * 12: Fender/Key<br>
+		 * 23: Key/Anywhere<br>
+		 * 13: Fender/Anywhere
+		 * 123: Fender/Key/Anywhere<br>
+		 * </P>
+		 */
+		String SHOOT_FROM_WHERE = "shoot_from_where";
 		
 		/**
 		 * Does team have Kinect?
@@ -491,6 +514,20 @@ public final class ScoutContract {
 		 * <P>Type: TEXT</P>
 		 */
 		String COMMENTS = "comments";
+		
+		/** 
+		 * Did the robot "do nothing"?
+		 * <P>
+		 * Type: INTEGER<br>
+		 * Default: -1<br>
+		 * </P>
+		 * <P>
+		 * Possible values:<br>
+		 * 0: No<br>
+		 * 1: Yes<br>
+		 * -1: No value<br>
+		 **/
+		String DID_NOTHING = "did_nothing";		
 	}
 
     public static final String AUTHORITY = "com.cmu.scout.provider.Scout";

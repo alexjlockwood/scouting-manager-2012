@@ -85,6 +85,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		Teams.WHEELS,
 		Teams.HAS_AUTONOMOUS,
 		Teams.PREFERRED_START,
+		Teams.SHOOT_FROM_WHERE,
 		Teams.HAS_KINECT,
 		Teams.CAN_CROSS,
 		Teams.CAN_PUSH_DOWN_BRIDGE,
@@ -126,7 +127,8 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		TeamMatches.WHICH_ALLIANCE,
 		TeamMatches.FINAL_SCORE,
 		TeamMatches.WIN_MATCH,
-		TeamMatches.COMMENTS
+		TeamMatches.COMMENTS,
+		TeamMatches.DID_NOTHING
 	};
 
 	private ProgressDialog pd;
@@ -176,15 +178,20 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 
 	public void onClickHandler(View v) {
 		boolean isTablet = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-
+		boolean isHoneyComb = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+		
 		switch (v.getId()) {
 		case R.id.dashboard_teams:
-			if (isTablet) {
+			if (isTablet && isHoneyComb) {
 				Intent teamData = new Intent(getApplicationContext(), HoneyCombTeamGridActivity.class);
 				teamData.putExtra(INTENT_CALL_FROM_TEAM, true);
 				startActivity(teamData);
+			} else if (!isTablet && isHoneyComb){
+				Intent teamData = new Intent(getApplicationContext(), HoneyCombTeamListActivity.class);
+				teamData.putExtra(INTENT_CALL_FROM_TEAM, true);
+				startActivity(teamData);	
 			} else {
-				Intent teamData = new Intent(getApplicationContext(), TeamListActivity.class);
+				Intent teamData = new Intent(getApplicationContext(), OldTeamListActivity.class);
 				teamData.putExtra(INTENT_CALL_FROM_TEAM, true);
 				startActivity(teamData);				
 			}
@@ -193,18 +200,18 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			if (isTablet) {
 				showDialog(DIALOG_START_MATCH);
 			} else {
-				Toast.makeText(DashboardActivity.this, "This feature is only supported on tablets.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, "This feature is only available on tablets.", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case R.id.dashboard_display:        
 			if (isTablet) {
 				startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
 			} else {
-				Toast.makeText(DashboardActivity.this, "This feature is currently only supported on tablets.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, "This feature is currently only available on tablets.", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case R.id.dashboard_transfer:
-			Toast.makeText(this,"Coming soon!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Coming soon!", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.dashboard_manage:			
 			shareCall = false;
@@ -275,7 +282,6 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 							s = s.replace("\"", "\"\"");
 							writer.append("\"" + s + "\"");
 						}
-
 						else if (i == teamsCur
 								.getColumnIndex(Teams.PREFERRED_START)) {
 
@@ -287,6 +293,18 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 							}
 							if (s.contains("3")) {
 								writer.append("R");
+							}
+						} else if (i == teamsCur
+								.getColumnIndex(Teams.SHOOT_FROM_WHERE)) {
+
+							if (s.contains("1")) {
+								writer.append("Fender ");
+							}
+							if (s.contains("2")) {
+								writer.append("Key ");
+							}
+							if (s.contains("3")) {
+								writer.append("Anywhere");
 							}
 						} else if (i == teamsCur
 								.getColumnIndex(Teams.HAS_AUTONOMOUS)
@@ -439,6 +457,19 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 						else if(i == cur.getColumnIndex(TeamMatches.WIN_MATCH)){
 							String result = (new Integer(s)==0)?"Lost":"Win";
 							writer.append(result);
+						}
+						else if(i == cur.getColumnIndex(TeamMatches.DID_NOTHING)){
+							int value = new Integer(s);
+							String st = "No Value";
+							switch (value) {
+							case 0:
+								st = "No";
+								break;
+							case 1:
+								st = "Yes";
+								break;
+							}
+							writer.append(st);
 						}
 						else{
 							writer.append(s);

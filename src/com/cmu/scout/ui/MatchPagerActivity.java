@@ -223,6 +223,9 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 		case R.id.TBT_Balance:
 			pos = MatchFragmentAdapter.POSITION_GENERAL;
 			break;
+		case R.id.TBT_did_nothing:
+			pos = MatchFragmentAdapter.POSITION_GENERAL;
+			break;
 		}
 		
 		frag = mAdapter.getFragment(pos);

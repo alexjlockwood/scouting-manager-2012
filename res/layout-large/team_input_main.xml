@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:id="@+id/Team_Input_Screen"
-        android:layout_width="700dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical" 
         android:padding="30dp"
@@ -79,23 +79,12 @@
             android:layout_alignLeft="@id/ET_Team_Name"
             android:entries="@array/wheel_option" />
 
-        <TextView
-            android:id="@+id/TV_Team_Auto"
-            style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Wheel"
-            android:layout_marginTop="26dp"
-            android:text="@string/play_auto" />
 
-        <ToggleButton
-            android:id="@+id/TBT_Team_Auto"
-            style="@style/team_scouting_togglebutton"
-            android:layout_alignBaseline="@id/TV_Team_Auto"
-            android:layout_alignLeft="@id/ET_Team_Name" />
 
         <TextView
             android:id="@+id/TV_Position"
             style="@style/team_scouting_row"
-            android:layout_below="@id/TV_Team_Auto"
+            android:layout_below="@id/TV_Wheel"
             android:layout_marginTop="26dp"
             android:text="@string/prefer_position" />
 
@@ -104,7 +93,7 @@
             style="@style/team_scouting_checkbox"
             android:layout_alignBottom="@id/TV_Position"
             android:layout_alignTop="@id/TV_Position"
-            android:layout_alignLeft="@id/TBT_Team_Auto"
+            android:layout_alignLeft="@id/SP_Wheel"
             android:text="@string/left" />
 
         <CheckBox
@@ -112,7 +101,7 @@
             style="@style/team_scouting_checkbox"
             android:layout_alignBottom="@id/TV_Position"
             android:layout_alignTop="@id/TV_Position"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="12dp"
             android:layout_toRightOf="@id/CB_Left"
             android:text="@string/middle" />
 
@@ -121,14 +110,60 @@
             style="@style/team_scouting_checkbox"
             android:layout_alignBottom="@id/TV_Position"
             android:layout_alignTop="@id/TV_Position"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="12dp"
             android:layout_toRightOf="@id/CB_Middle"
             android:text="@string/right" />
 
         <TextView
-            android:id="@+id/TV_Team_Kinect"
+            android:id="@+id/TV_Shoot_From_Where"
             style="@style/team_scouting_row"
             android:layout_below="@id/TV_Position"
+            android:layout_marginTop="26dp"
+            android:text="Shoot from where?" />
+        
+        <CheckBox
+            android:id="@+id/CB_Fender"
+            style="@style/team_scouting_checkbox"
+            android:layout_alignBottom="@id/TV_Shoot_From_Where"
+            android:layout_alignTop="@id/TV_Shoot_From_Where"
+            android:layout_alignLeft="@id/TBT_Team_Auto"
+            android:text="Fender" />
+
+        <CheckBox
+            android:id="@+id/CB_Key"
+            style="@style/team_scouting_checkbox"
+            android:layout_alignBottom="@id/TV_Shoot_From_Where"
+            android:layout_alignTop="@id/TV_Shoot_From_Where"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@id/CB_Fender"
+            android:text="Key" />
+
+        <CheckBox
+            android:id="@+id/CB_Anywhere"
+            style="@style/team_scouting_checkbox"
+            android:layout_alignBottom="@id/TV_Shoot_From_Where"
+            android:layout_alignTop="@id/TV_Shoot_From_Where"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@id/CB_Key"
+            android:text="Anywhere" />
+        
+        <TextView
+            android:id="@+id/TV_Team_Auto"
+            style="@style/team_scouting_row"
+            android:layout_below="@id/TV_Shoot_From_Where"
+            android:layout_marginTop="26dp"
+            android:text="@string/play_auto" />
+
+        <ToggleButton
+            android:id="@+id/TBT_Team_Auto"
+            style="@style/team_scouting_togglebutton"
+            android:layout_alignBaseline="@id/TV_Team_Auto"
+            android:layout_alignLeft="@id/ET_Team_Name" />
+        
+        <TextView
+            android:id="@+id/TV_Team_Kinect"
+            style="@style/team_scouting_row"
+            android:layout_below="@id/TV_Team_Auto"
             android:layout_marginTop="26dp"
             android:text="@string/STR_Kinect" />
 
@@ -180,12 +215,12 @@
 
         <EditText
             android:id="@+id/ET_Team_Comment"
-            android:layout_width="match_parent"
+            android:layout_width="625dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/TV_Team_Strategy"
             android:layout_alignLeft="@id/TV_Team_Strategy"
             android:scrollHorizontally="false"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="25dp"
             android:hint="@string/comment"
             android:inputType="text|textCapSentences" />
     </RelativeLayout>

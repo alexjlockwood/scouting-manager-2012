@@ -27,6 +27,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	private static final boolean DEBUG = true;
 		
 	private ToggleButton mToggleBalance;
+	private ToggleButton mDidNothing;
 	
 	private RadioButton mRadioButtonBalance1;
 	private RadioButton mRadioButtonBalance2;
@@ -42,7 +43,9 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	
 	private RadioGroup mRadioAlliance;
 	private RadioGroup mRadioWinMatch;
+	
 	private EditText mFinalScore;
+	private EditText mComment;
 	
 	// provides a mapping of View IDs to integer values 
 	private static HashMap<Integer, Integer> mViewIdMap;
@@ -93,7 +96,9 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		TeamMatches.PENALTY_RISK,
 		TeamMatches.WHICH_ALLIANCE,
 		TeamMatches.WIN_MATCH,
-		TeamMatches.FINAL_SCORE
+		TeamMatches.FINAL_SCORE,
+		TeamMatches.COMMENTS,
+		TeamMatches.DID_NOTHING
 	};
 	
 	private static final String GENERAL_WIN_STORAGE_KEY = "general_win";
@@ -136,7 +141,11 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		
 		mRadioAlliance = (RadioGroup) parent.findViewById(R.id.RBG_which_alliance);
 		mRadioWinMatch = (RadioGroup) parent.findViewById(R.id.RBG_win_match);
+		
 		mFinalScore = (EditText) parent.findViewById(R.id.ET_final_score);
+		
+		mComment = (EditText) parent.findViewById(R.id.ET_Match_Comment);
+		mDidNothing = (ToggleButton) parent.findViewById(R.id.TBT_did_nothing);
 		
 		return parent;
 	}
@@ -162,6 +171,9 @@ public class MatchInputGeneralFragment extends MatchFragment {
 			mRadioButtonBalance2.setEnabled(isToggleChecked);
 			mRadioButtonBalance3.setEnabled(isToggleChecked);
 			break;
+		case R.id.TBT_did_nothing:
+			// Do nothing (no pun intended)
+			break;
 		}
 	}
 	
@@ -180,6 +192,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		int matchId = ((MatchPagerActivity)getActivity()).getMatchId();
 		
 		Integer numBalanced = (mToggleBalance.isChecked()) ? mRadioBalance.getCheckedRadioButtonId() : -1;
+		Integer didNothing  = (mDidNothing.isChecked()) ? 1 : 0;
 		Integer howCross    = mRadioCross.getCheckedRadioButtonId();
 		Integer pickUpBalls = mRadioPickBalls.getCheckedRadioButtonId();
 		Integer speed       = mRadioSpeed.getCheckedRadioButtonId();
@@ -190,6 +203,8 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		Integer winMatch    = mRadioWinMatch.getCheckedRadioButtonId();		
 		String scoreText    = mFinalScore.getText().toString();
 		Integer finalScore  = (scoreText == null || scoreText.length() == 0) ? 0 : Integer.valueOf(mFinalScore.getText().toString());
+		String comments      = mComment.getText().toString();
+		
 		
 		int summaryTotalScore = finalScore - mGeneralScoreInit;
 		
@@ -243,6 +258,8 @@ public class MatchInputGeneralFragment extends MatchFragment {
 		teamMatchValues.put(TeamMatches.WHICH_ALLIANCE, mViewIdMap.get(alliance));
 		teamMatchValues.put(TeamMatches.WIN_MATCH,      mViewIdMap.get(winMatch));		
 		teamMatchValues.put(TeamMatches.FINAL_SCORE,    finalScore);
+		teamMatchValues.put(TeamMatches.COMMENTS,       comments);
+		teamMatchValues.put(TeamMatches.DID_NOTHING,    didNothing);
 		
 		// add summary data
 		summaryValues.put(Teams.SUMMARY_NUM_WINS, summaryNumWins);
@@ -278,6 +295,8 @@ public class MatchInputGeneralFragment extends MatchFragment {
 			int whichAlliance  = cur.getInt(cur.getColumnIndex(TeamMatches.WHICH_ALLIANCE));
 			int winMatch  = cur.getInt(cur.getColumnIndex(TeamMatches.WIN_MATCH));
 			int finalScore  = cur.getInt(cur.getColumnIndex(TeamMatches.FINAL_SCORE));
+			int didNothing = cur.getInt(cur.getColumnIndex(TeamMatches.DID_NOTHING));
+			String comments = cur.getString(cur.getColumnIndex(TeamMatches.COMMENTS));
 
 			cur.close();
 
@@ -365,6 +384,10 @@ public class MatchInputGeneralFragment extends MatchFragment {
 
 			mFinalScore.setText(""+finalScore);
 			mGeneralScoreInit = finalScore;
+			
+			mComment.setText(comments);
+			
+			mDidNothing.setChecked((didNothing == 1) ? true : false);
 		}
 	}
 
@@ -388,6 +411,9 @@ public class MatchInputGeneralFragment extends MatchFragment {
     	mRadioAlliance.clearCheck();
     	mRadioWinMatch.clearCheck();
     	mFinalScore.setText("");
+    	
+    	mComment.setText("");
+    	mDidNothing.setChecked(false);
 	}
 	
 	@Override 

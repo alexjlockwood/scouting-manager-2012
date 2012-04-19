@@ -133,7 +133,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	}
 
 	public void onTeamSelected(int id) {
-		final Intent data = new Intent(this, TeamInputActivity.class);
+		final Intent data = new Intent(this, HoneyCombTeamInputActivity.class);
 		final Uri uri = Teams.buildTeamIdUri("" + id);
 		data.setData(uri);
 		startActivity(data);
@@ -305,13 +305,13 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
 								String teamName = ((EditText) edit).getText().toString();
-								((TeamGridActivity) getActivity()).doPositiveClick(teamName);
+								((HoneyCombTeamGridActivity) getActivity()).doPositiveClick(teamName);
 							}
 						})
 					.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
-								((TeamGridActivity) getActivity()).doNegativeClick();
+								((HoneyCombTeamGridActivity) getActivity()).doNegativeClick();
 							}
 						}).create();
 		}

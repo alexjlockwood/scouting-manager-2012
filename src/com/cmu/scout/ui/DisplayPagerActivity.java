@@ -75,7 +75,7 @@ public class DisplayPagerActivity extends SherlockFragmentActivity
 	}
 	
 	public void onTeamEdit(Uri uri) {
-		final Intent data = new Intent(this, TeamInputActivity.class);
+		final Intent data = new Intent(this, HoneyCombTeamInputActivity.class);
 		data.setData(uri);
 		startActivity(data);
 	}

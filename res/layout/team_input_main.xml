@@ -10,7 +10,10 @@
         android:id="@+id/Team_Input_Screen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/picture_frame"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:focusable="true"
+    	android:focusableInTouchMode="true"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -22,51 +25,51 @@
                 android:id="@+id/IV_Team_Picture"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:onClick="onPhotoClick"
-				android:layout_marginBottom="5dp"
-                android:scaleType="fitXY"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/picture_frame_small"
+                
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_contact_picture"
                 android:text="@string/team_name" />
 
             <!-- android:background="@drawable/picture_frame_small" -->
-			
-			<EditText
+
+            <EditText
                 android:id="@+id/ET_Team_Rank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-				android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/IV_Team_Picture"
                 android:layout_alignBottom="@id/IV_Team_Picture"
-            	android:hint="@string/rank"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/IV_Team_Picture"
+                android:hint="@string/rank"
                 android:inputType="number"
                 android:maxLength="4"
                 android:maxLines="1"
                 android:textSize="18sp" />
-            
+
             <EditText
                 android:id="@+id/ET_Team_Name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/ET_Team_Rank"
+                
                 android:layout_alignLeft="@id/ET_Team_Rank"
                 android:hint="@string/team_name"
                 android:inputType="text|textCapSentences"
                 android:maxLines="1"
-                android:textSize="20sp" />   
-                           
+                android:textSize="20sp" />
         </RelativeLayout>
 
         <TextView
             android:id="@+id/TV_Drive"
-           	style="@style/team_input_main_header"
+            style="@style/team_input_main_header"
             android:text="@string/drive" />
 
         <Spinner
             android:id="@+id/SP_Drive"
+            style="@style/team_input_main_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            	style="@style/team_input_main_view"
             android:entries="@array/drive_option" />
 
         <TextView
@@ -76,21 +79,12 @@
 
         <Spinner
             android:id="@+id/SP_Wheel"
+            style="@style/team_input_main_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            	style="@style/team_input_main_view"
             android:entries="@array/wheel_option" />
 
-        <TextView
-            android:id="@+id/TV_Team_Auto"
-            style="@style/team_input_main_header"
-            android:text="@string/play_auto" />
 
-        <ToggleButton
-            android:id="@+id/TBT_Team_Auto"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" 
-            style="@style/team_input_main_view"/>
 
         <TextView
             android:id="@+id/TV_Position"
@@ -100,11 +94,11 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" 
-            android:layout_marginLeft="10dp">
-            
+            style="@style/team_input_main_view"
+            android:orientation="horizontal" >
+
             <CheckBox
-                android:id="@+id/CB_Left"     
+                android:id="@+id/CB_Left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/left" />
@@ -120,8 +114,48 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/right" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/TV_Shoot_From_Where"
+            style="@style/team_input_main_header"
+            android:text="Shoot from where?" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/team_input_main_view"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/CB_Fender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fender" />
+
+            <CheckBox
+                android:id="@+id/CB_Key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Key" />
+
+            <CheckBox
+                android:id="@+id/CB_Anywhere"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Anywhere" />
+        </LinearLayout>
         
-		</LinearLayout>
+        <TextView
+            android:id="@+id/TV_Team_Auto"
+            style="@style/team_input_main_header"
+            android:text="@string/play_auto" />
+
+        <ToggleButton
+            android:id="@+id/TBT_Team_Auto"
+            style="@style/team_input_main_view"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
         
         <TextView
             android:id="@+id/TV_Team_Kinect"
@@ -130,9 +164,9 @@
 
         <ToggleButton
             android:id="@+id/TBT_Team_Kinect"
+            style="@style/team_input_main_view"
             android:layout_width="100dp"
-            android:layout_height="wrap_content" 
-            	style="@style/team_input_main_view"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/TV_Team_Barrier"
@@ -141,9 +175,9 @@
 
         <ToggleButton
             android:id="@+id/TBT_Team_Barrier"
+            style="@style/team_input_main_view"
             android:layout_width="100dp"
-            android:layout_height="wrap_content" 
-            	style="@style/team_input_main_view"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/TV_Team_Bridge"
@@ -152,9 +186,9 @@
 
         <ToggleButton
             android:id="@+id/TBT_Team_Bridge"
+            style="@style/team_input_main_view"
             android:layout_width="100dp"
-            android:layout_height="wrap_content" 
-            style="@style/team_input_main_view"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/TV_Team_Strategy"
@@ -163,20 +197,25 @@
 
         <Spinner
             android:id="@+id/SP_Strategy"
+            style="@style/team_input_main_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/strategy_option" 
-            	style="@style/team_input_main_view"/>
+            android:entries="@array/strategy_option" />
 
+        <TextView
+            android:id="@+id/TV_Team_Comments"
+            style="@style/team_input_main_header"
+            android:text="@string/comment" />
+        
         <EditText
             android:id="@+id/ET_Team_Comment"
+            style="@style/team_input_main_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            
             android:hint="@string/comment"
             android:inputType="text|textCapSentences"
-            android:scrollHorizontally="false" 
-            />
+            android:scrollHorizontally="false" />
     </LinearLayout>
 
 </ScrollView>

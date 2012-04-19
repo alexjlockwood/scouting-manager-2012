@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/team_take_photo" android:title="@string/take_photo"></item>
-    <item android:id="@+id/team_choose_from_gallary" android:title="@string/choose_gallary"></item>
-	<item android:id="@+id/team_delete_picture" android:title="@string/delete_team_picture"></item>
-</menu>

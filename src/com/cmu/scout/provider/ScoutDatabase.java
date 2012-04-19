@@ -24,7 +24,7 @@ public class ScoutDatabase extends SQLiteOpenHelper {
     private static final String TAG = "ScoutDatabase";
 
     private static final String DATABASE_NAME = "scout.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 	
     // TODO: figure out whether I should be using "default -1" or just "null"
     
@@ -66,6 +66,7 @@ public class ScoutDatabase extends SQLiteOpenHelper {
                 + Teams.WHEELS + " INTEGER DEFAULT -1,"
                 + Teams.HAS_AUTONOMOUS + " INTEGER DEFAULT -1,"
                 + Teams.PREFERRED_START + " INTEGER DEFAULT -1,"
+                + Teams.SHOOT_FROM_WHERE + " INTEGER DEFAULT -1,"
                 + Teams.HAS_KINECT + " INTEGER DEFAULT -1,"
                 + Teams.CAN_CROSS + " INTEGER DEFAULT -1,"
                 + Teams.CAN_PUSH_DOWN_BRIDGE + " INTEGER DEFAULT -1,"
@@ -146,11 +147,9 @@ public class ScoutDatabase extends SQLiteOpenHelper {
 				+ TeamMatches.PENALTY_RISK + " TEXT,"
 				+ TeamMatches.WHICH_ALLIANCE + " INTEGER DEFAULT -1,"
 				+ TeamMatches.WIN_MATCH + " INTEGER DEFAULT -1,"
-				+ TeamMatches.FINAL_SCORE + " INTEGER"
-				+ TeamMatches.COMMENTS + " TEXT" 
-				+ ");");
-        
-        // fillTestData(db);
+				+ TeamMatches.FINAL_SCORE + " INTEGER,"
+				+ TeamMatches.COMMENTS + " TEXT,"
+				+ TeamMatches.DID_NOTHING + " INTEGER DEFAULT -1" + ");");
 	}
 
     /**
@@ -175,16 +174,17 @@ public class ScoutDatabase extends SQLiteOpenHelper {
 					// Add comments column to TeamMatches table.
                     db.execSQL("ALTER TABLE " + Tables.TEAM_MATCHES + " ADD COLUMN " + TeamMatches.COMMENTS + " TEXT;");
                     
-                    // TODO: Add "does anything?" column to TeamMatches table.
+                    // TODO: Add "did nothing?" column to TeamMatches table.
+                    db.execSQL("ALTER TABLE " + Tables.TEAM_MATCHES + " ADD COLUMN " + TeamMatches.DID_NOTHING + " INTEGER DEFAULT -1;");
                     
                     // TODO: Add "shoots from where" column to Teams table.
-                      
+                    db.execSQL("ALTER TABLE " + Tables.TEAMS + " ADD COLUMN " + Teams.SHOOT_FROM_WHERE + " INTEGER DEFAULT -1;");  
 				} catch (SQLException e) {
                     Log.e(TAG, "Error executing SQL statement: ", e);   
 				}
 				break;
 				
-				// Remove "break" statement when adding new upgrades.
+				// Remove this "break" statement when adding new upgrades.
 				// This will allow for the upgrades to "fall-through".
 				
 			default: 
