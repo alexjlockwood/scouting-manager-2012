@@ -11,7 +11,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,7 +41,6 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.cmu.scout.R;
@@ -53,24 +51,21 @@ import com.cmu.scout.provider.ScoutContract.Teams;
 public class HoneyCombTeamListActivity extends BaseCameraActivity
 		implements OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-	private static final String TAG = "TeamListActivity";
+	private static final String TAG = "HoneyCombTeamListActivity";
 	private static final boolean DEBUG = true;
 	
 	private static final int TEAM_LIST_LOADER = 0x01;
 	
 	// camera intent request code
 	private static final int ACTION_TAKE_PHOTO_CODE = 1;
-	// match suggest request code
-	private static final int SUGGEST_MATCH_ID_CODE = 2;
-	
-	// intent used to restore suggested match id
-	public static final String INTENT_SUGGEST_MATCH_ID = "suggest_match_id";
-		
-	private int mSuggestMatchId = 1;
 	 
 	private static final String PHOTO_PATH_STORAGE_KEY = "CurrentPhotoPath";
 	private static final String TEAM_ID_STORAGE_KEY = "CurrentTeamId";
+	
 	private static final String CAMERA_ACTION = "android.hardware.camera";
+	private static final String IMAGE_CAPTURE = "android.media.action.IMAGE_CAPTURE";
+	private static final String MEDIA_SCANNER = "android.intent.action.MEDIA_SCANNER_SCAN_FILE";
+	
 	private String mCurrentPhotoPath;
 	private String mCurrentPhotoName;
 	private long mCurrentTeamId;
@@ -86,16 +81,11 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.team_list_view);
 		
-		if (DEBUG) {
-			Log.v(TAG, "+++ ON CREATE +++");
-			//FragmentManager.enableDebugLogging(true);
-		}
+		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
 		
 		// enable "up" navigation
-			ActionBar actionBar = getSupportActionBar();
-	    	actionBar.setDisplayHomeAsUpEnabled(true);
-	    	Resources res = getResources();
-			setActionBarTitle(res.getString(R.string.team_scouting_title));
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setActionBarTitle(getResources().getString(R.string.team_scouting_title));
 
 		getSupportLoaderManager().initLoader(TEAM_LIST_LOADER, null, this);
 
@@ -117,7 +107,6 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putString(PHOTO_PATH_STORAGE_KEY, mCurrentPhotoPath);
 		outState.putLong(TEAM_ID_STORAGE_KEY, mCurrentTeamId);
-		outState.putInt(INTENT_SUGGEST_MATCH_ID, mSuggestMatchId);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -126,7 +115,6 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 		super.onRestoreInstanceState(savedInstanceState);
 		mCurrentPhotoPath = savedInstanceState.getString(PHOTO_PATH_STORAGE_KEY);
 		mCurrentTeamId = savedInstanceState.getLong(TEAM_ID_STORAGE_KEY);
-		mSuggestMatchId = savedInstanceState.getInt(INTENT_SUGGEST_MATCH_ID);
 	}
 
 	public void onTeamSelected(int id) {
@@ -144,7 +132,7 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.team_grid_options_menu, menu);
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			SearchView search = (SearchView) menu.findItem(R.id.search).getActionView();
 			search.setOnQueryTextListener(this);
 		}
@@ -173,7 +161,7 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 		super.onCreateContextMenu(menu, v, menuInfo);
 		
 		final boolean cameraAvailable = isCameraAvailable(this, CAMERA_ACTION)
-				&& isIntentAvailable(this, "android.media.action.IMAGE_CAPTURE");
+				&& isIntentAvailable(this, IMAGE_CAPTURE);
 		
 		getMenuInflater().inflate(R.menu.team_grid_context_menu, menu);
 		
@@ -224,23 +212,17 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 	
 	private void setActionBarTitle(String title) {
 		if (DEBUG) Log.v(TAG, "setActionBarTitle()");
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			if (title != null) {
-				final ActionBar actionBar = getSupportActionBar();
-				actionBar.setTitle(title);
-			}
-		//}
+		if (title != null) {
+			getSupportActionBar().setTitle(title);
+		}
 	}
 
 	@SuppressWarnings("unused")
 	private void setActionBarSubtitle(String subtitle) {
 		if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			if (subtitle != null) {
-				final ActionBar actionBar = getSupportActionBar();
-				actionBar.setSubtitle(subtitle);
-			}
-		//}
+		if (subtitle != null) {
+			getSupportActionBar().setSubtitle(subtitle);
+		}
 	}
 
 	/**
@@ -297,9 +279,8 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 
 			LayoutInflater factory = LayoutInflater.from(getActivity());
 			final View edit = factory.inflate(R.layout.add_team_edit_text, null);
-			// TODO: Make sure to put this stuff in "values/strings.xml"
 			return new AlertDialog.Builder(getActivity())
-					.setTitle("New team:")
+					.setTitle(R.string.add_team_dialog_title)
 					.setView(edit)
 					.setPositiveButton(R.string.ok,
 						new DialogInterface.OnClickListener() {
@@ -358,38 +339,8 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.swapCursor(null);
 	}
-
-	/**
-	 * Custom adapter that displays each team as a button
-	 */
-	/*private class ButtonAdapter extends ResourceCursorAdapter {
-		
-		public ButtonAdapter(Context context, int layout, Cursor cur, int flags) {
-			super(context, layout, cur, flags);
-		}
-
-		@Override
-		public void bindView(View view, Context context, Cursor cur) {
-			if (DEBUG) Log.v("ButtonAdapter", "bindView()");
-			
-			ImageView img = (ImageView) view.findViewById(R.id.team_grid_button);
-			TextView caption = (TextView) view.findViewById(R.id.caption);
-			//Button button = (Button) view.findViewById(R.id.team_grid_button);
-			caption.setText(cur.getString(cur.getColumnIndex(Teams.TEAM_NUM)));
-			
-			String uri = cur.getString(cur.getColumnIndex(Teams.TEAM_PHOTO));	
-			
-			if (!TextUtils.isEmpty(uri)) {
-				long photoId = Long.parseLong(Uri.parse(uri).getLastPathSegment());
-				Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(getContentResolver(), photoId, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-				img.setImageBitmap(bitmap);
-			} else {
-				img.setImageDrawable(getResources().getDrawable(R.drawable.ic_contact_picture));
-			}
-		}
-	}*/
 	
-		private static class TeamListAdapter extends ResourceCursorAdapter {
+	private static class TeamListAdapter extends ResourceCursorAdapter {
 		
 		private static final String TAG = "TeamListAdapter";
 		private static final boolean DEBUG = false;
@@ -440,9 +391,8 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
+    	if (DEBUG) Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
     	switch (requestCode) {
-    	case SUGGEST_MATCH_ID_CODE:
     	case ACTION_TAKE_PHOTO_CODE:
     		if (resultCode == RESULT_OK) {
     			handleBigCameraPhoto();
@@ -502,8 +452,8 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 	private void galleryAddPic() {
 		if (DEBUG) Log.v(TAG, "galleryAddPic()");
 
-		if (isIntentAvailable(this, "android.intent.action.MEDIA_SCANNER_SCAN_FILE")) {
-			Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");		
+		if (isIntentAvailable(this, MEDIA_SCANNER)) {
+			Intent mediaScanIntent = new Intent(MEDIA_SCANNER);		
 			File f = new File(mCurrentPhotoPath);
 			Uri contentUri = Uri.fromFile(f);
 			mediaScanIntent.setData(contentUri);
@@ -565,8 +515,7 @@ public class HoneyCombTeamListActivity extends BaseCameraActivity
 
 	public void showConfirmDeleteDialog(final long teamId) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setCancelable(false)
-	           .setTitle(R.string.confirm_delete_team)
+	    builder.setTitle(R.string.confirm_delete_team)
 	           .setMessage(R.string.confirm_delete_team_message)
 	           .setIcon(R.drawable.ic_dialog_alert_holo_light)
 	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

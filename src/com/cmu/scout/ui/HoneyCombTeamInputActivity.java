@@ -38,7 +38,7 @@ import com.cmu.scout.provider.ScoutContract.Teams;
 public class HoneyCombTeamInputActivity extends BaseCameraActivity 
 		implements PopupMenu.OnMenuItemClickListener {
 
-	private static final String TAG = "TeamInputActivity";
+	private static final String TAG = "HoneyCombTeamInputActivity";
 	private static final boolean DEBUG = true;
 	
 	private static final int ACTION_TAKE_PHOTO_CODE = 1;
@@ -100,10 +100,7 @@ public class HoneyCombTeamInputActivity extends BaseCameraActivity
 		setContentView(R.layout.team_input_main);
 		
 		// enable "up" navigation
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		//}
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		findViews();
 	}
@@ -141,13 +138,11 @@ public class HoneyCombTeamInputActivity extends BaseCameraActivity
 			mTeamId = cur.getInt(cur.getColumnIndex(Teams._ID));
 			mTeamNum = cur.getInt(cur.getColumnIndex(Teams.TEAM_NUM));
 			
-			//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				final ActionBar actionBar = getSupportActionBar();
-				if (actionBar != null) {
-					actionBar.setTitle(R.string.team_scouting_title);
-					actionBar.setSubtitle("Team " + mTeamNum);
-				}
-			//}
+			final ActionBar actionBar = getSupportActionBar();
+			if (actionBar != null) {
+				actionBar.setTitle(R.string.team_scouting_title);
+				actionBar.setSubtitle("Team " + mTeamNum);
+			}
 	
 			loadContactPicture();
 		
@@ -211,14 +206,6 @@ public class HoneyCombTeamInputActivity extends BaseCameraActivity
 				startActivity(intent);
 				return true;
 			}
-			
-		//case R.id.bt_cancel:
-			//showConfirmExitDialog();
-			//return true;
-		//case R.id.bt_save:
-			//saveData();
-			//finish();
-			//return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

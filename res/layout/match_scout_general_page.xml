@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    xmlns:tools="http://schemas.android.com/tools" 
+    tools:ignore="UselessParent" >
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -286,7 +288,7 @@
                 android:id="@+id/TV_did_nothing"
                 style="@style/match_general_row"
                 android:layout_below="@id/TV_can_balance"
-                android:text="Did nothing?" />
+                android:text="@string/did_nothing" />
 
             <ToggleButton
                 android:id="@+id/TBT_did_nothing"

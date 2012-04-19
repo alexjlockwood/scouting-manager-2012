@@ -26,7 +26,8 @@
             android:src="@drawable/ic_contact_picture"
             android:text="@string/team_name" 
             android:scaleType="fitXY"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true" 
+            android:contentDescription="@string/team_photo_content_description"/>
 
       <EditText
             android:id="@+id/ET_Team_Rank"
@@ -119,7 +120,7 @@
             style="@style/team_scouting_row"
             android:layout_below="@id/TV_Position"
             android:layout_marginTop="26dp"
-            android:text="Shoot from where?" />
+            android:text="@string/shoot_from_where" />
         
         <CheckBox
             android:id="@+id/CB_Fender"
@@ -127,7 +128,7 @@
             android:layout_alignBottom="@id/TV_Shoot_From_Where"
             android:layout_alignTop="@id/TV_Shoot_From_Where"
             android:layout_alignLeft="@id/TBT_Team_Auto"
-            android:text="Fender" />
+            android:text="@string/fender" />
 
         <CheckBox
             android:id="@+id/CB_Key"
@@ -136,7 +137,7 @@
             android:layout_alignTop="@id/TV_Shoot_From_Where"
             android:layout_marginLeft="12dp"
             android:layout_toRightOf="@id/CB_Fender"
-            android:text="Key" />
+            android:text="@string/key" />
 
         <CheckBox
             android:id="@+id/CB_Anywhere"
@@ -145,7 +146,7 @@
             android:layout_alignTop="@id/TV_Shoot_From_Where"
             android:layout_marginLeft="12dp"
             android:layout_toRightOf="@id/CB_Key"
-            android:text="Anywhere" />
+            android:text="@string/anywhere" />
         
         <TextView
             android:id="@+id/TV_Team_Auto"

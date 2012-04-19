@@ -36,8 +36,7 @@ import com.cmu.scout.R;
 import com.cmu.scout.camera.BaseCameraActivity;
 import com.cmu.scout.provider.ScoutContract.Teams;
 
-public class OldTeamInputActivity extends BaseCameraActivity 
-		/*implements PopupMenu.OnMenuItemClickListener*/ {
+public class OldTeamInputActivity extends BaseCameraActivity {
 
 	private static final String TAG = "TeamInputActivity";
 	private static final boolean DEBUG = true;
@@ -48,8 +47,10 @@ public class OldTeamInputActivity extends BaseCameraActivity
 	private static final String TEAM_ID_STORAGE_KEY = "CurrentTeamId";
 	private static final String TEAM_NUM_STORAGE_KEY = "CurrentTeamNum";
 	private static final String CAMERA_ACTION = "android.hardware.camera";
+	
 	private String mCurrentPhotoPath;
 	private String mCurrentPhotoName;
+	
 	private static final String JPEG_FILE_PREFIX = "IMG_";
 	private static final String JPEG_FILE_SUFFIX = ".jpg";
 	
@@ -101,11 +102,8 @@ public class OldTeamInputActivity extends BaseCameraActivity
 		setContentView(R.layout.team_input_main);
 		
 		// enable "up" navigation
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		//}
-		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 		findViews();
 	}
 	
@@ -145,13 +143,9 @@ public class OldTeamInputActivity extends BaseCameraActivity
 			mTeamId = cur.getInt(cur.getColumnIndex(Teams._ID));
 			mTeamNum = cur.getInt(cur.getColumnIndex(Teams.TEAM_NUM));
 			
-			//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				final ActionBar actionBar = getSupportActionBar();
-				if (actionBar != null) {
-					actionBar.setTitle(R.string.team_scouting_title);
-					actionBar.setSubtitle("Team " + mTeamNum);
-				}
-			//}
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setTitle(R.string.team_scouting_title);
+			actionBar.setSubtitle("Team " + mTeamNum);
 	
 			loadContactPicture();
 		
@@ -206,14 +200,6 @@ public class OldTeamInputActivity extends BaseCameraActivity
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;
-			
-		//case R.id.bt_cancel:
-			//showConfirmExitDialog();
-			//return true;
-		//case R.id.bt_save:
-			//saveData();
-			//finish();
-			//return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -295,21 +281,7 @@ public class OldTeamInputActivity extends BaseCameraActivity
 	
 	// popup menu for take photo
     public void onPhotoClick(View view){
-    	//Log.v(TAG, "onPhotoClick()");
-    	
-    	//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-    		/*PopupMenu popup = new PopupMenu(this, view);		
-    	
-    		final boolean cameraAvailable = isCameraAvailable(this, CAMERA_ACTION)
-    				&& isIntentAvailable(this, "android.media.action.IMAGE_CAPTURE");
-		
-    		popup.getMenuInflater().inflate(R.menu.team_photo_popup_menu, popup.getMenu());
-		
-    		// add only if the device has the camera application installed
-    		popup.setOnMenuItemClickListener(this);
-    		popup.getMenu().findItem(R.id.team_take_photo).setEnabled(cameraAvailable);
-    		popup.show();*/
-    	//}
+    	// Do nothing
     }
     
 	@Override
@@ -342,7 +314,7 @@ public class OldTeamInputActivity extends BaseCameraActivity
     	case R.id.team_delete_picture:
     		ContentValues updateValues = new ContentValues();
     		updateValues.put(Teams.TEAM_PHOTO, "");
-    		showConfirmDeletePictureDialog(updateValues, (long)mTeamId);
+    		showConfirmDeletePictureDialog(updateValues, (long) mTeamId);
     		break;
     	}
     	return false;
@@ -504,11 +476,6 @@ public class OldTeamInputActivity extends BaseCameraActivity
     	
     	
     }
-    /*
-	@Override
-	public void onBackPressed() {
-		showConfirmExitDialog();
-	}*/
 	
 	public void showConfirmExitDialog() {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);

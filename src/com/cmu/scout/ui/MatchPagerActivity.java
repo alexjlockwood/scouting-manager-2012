@@ -229,7 +229,8 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 		}
 		
 		frag = mAdapter.getFragment(pos);
-		frag.updateDisplay(viewId);
+		if (frag != null) frag.updateDisplay(viewId);
+		else Log.e(TAG, "ERROR: ViewPager Fragment is null!!");
 	}
 	
 	public static class MatchFragmentAdapter extends FragmentPagerAdapter 
@@ -304,29 +305,4 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 		value = Math.max(0, value);
 		et.setText(""+value);
 	}
-	/*
-	@Override
-	public void onBackPressed() {
-		showConfirmExitDialog();
-	}
-	
-	public void showConfirmExitDialog() {
-	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setTitle(R.string.confirm_exit)
-	           .setMessage(R.string.confirm_exit_message)
-	           .setIcon(R.drawable.ic_dialog_alert_holo_light)
-	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-	        	   public void onClick(DialogInterface dialog, int id) {
-	        		   MatchPagerActivity.this.setResult(Activity.RESULT_CANCELED);
-	        		   MatchPagerActivity.this.finish();
-	        	   }
-	           })
-	           .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialog, int id) {
-	                    dialog.cancel();
-	               }
-	           });
-	    AlertDialog alert = builder.create();
-	    alert.show();
-	}*/
 }

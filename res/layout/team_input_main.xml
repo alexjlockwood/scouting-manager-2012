@@ -30,7 +30,7 @@
                 android:onClick="onPhotoClick"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_contact_picture"
-                android:text="@string/team_name" />
+                android:contentDescription="@string/team_photo_content_description"/>
 
             <!-- android:background="@drawable/picture_frame_small" -->
 
@@ -119,7 +119,7 @@
         <TextView
             android:id="@+id/TV_Shoot_From_Where"
             style="@style/team_input_main_header"
-            android:text="Shoot from where?" />
+            android:text="@string/shoot_from_where" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -131,19 +131,19 @@
                 android:id="@+id/CB_Fender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fender" />
+                android:text="@string/fender" />
 
             <CheckBox
                 android:id="@+id/CB_Key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Key" />
+                android:text="@string/key" />
 
             <CheckBox
                 android:id="@+id/CB_Anywhere"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Anywhere" />
+                android:text="@string/anywhere" />
         </LinearLayout>
         
         <TextView

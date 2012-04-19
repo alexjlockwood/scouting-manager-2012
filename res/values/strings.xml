@@ -108,6 +108,7 @@
 	<string name="loss">Loss</string>
 	<string name="draw">Draw</string>
 	<string name="final_score">Final score</string>
+	<string name="did_nothing">Did nothing?</string>
 	
 	<string name="blue">Blue</string>
 	<string name="red">Red</string>
@@ -222,9 +223,15 @@
         <item>Offense</item>
         <item>Defense</item>
     </string-array>
-        <string name="take_photo">Take photo</string>
-        <string name="choose_gallary">Select photo from Gallery</string> 
-        <string name="delete_team_picture">Delete photo</string>
+    
+    <string name="shoot_from_where">Shoot from where?</string>
+    <string name="fender">Fender</string>
+    <string name="key">Key</string>
+    <string name="anywhere">Anywhere</string>
+    
+    <string name="take_photo">Take photo</string>
+    <string name="choose_gallary">Select photo from Gallery</string> 
+    <string name="delete_team_picture">Delete photo</string>
     
     <string name="match_number">Enter match:</string>
     <string name="team_number">Enter team:</string>
@@ -235,5 +242,24 @@
     
     <string name="rank">Rank</string>
     <string name="friday_rank">Friday Rank</string>
-        
+    
+    
+    <string name="team_photo_content_description">Team photo</string>
+    
+    <string name="add_team_dialog_title">Add team:</string>
+    
+    <!-- Toasts -->
+    <string name="only_on_tablets">This feature is only available on tablets.</string>
+    <string name="coming_soon">Coming soon!</string>
+    <string name="no_data_to_export">No data to export.</string>
+    <string name="sd_card_not_mounted">SD card not mounted.</string>
+    <string name="no_data_to_share">No data to share.</string>
+    
+    <!-- Export Data -->
+    <string name="writing_match_data">Writing match-scout data…</string>
+    <string name="writing_team_data">Writing team-scout data…</string>
+    <string name="written_to_storage">Data written to external storage.</string>
+    <string name="error_writing_data">Error writing data.</string>
+    <string name="share_scouting_data">Share scouting data…</string>
+    
 </resources>

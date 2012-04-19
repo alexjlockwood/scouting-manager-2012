@@ -13,6 +13,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -176,6 +177,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		setContentView(R.layout.dashboard_layout);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void onClickHandler(View v) {
 		boolean isTablet = (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
 		boolean isHoneyComb = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
@@ -200,31 +202,31 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			if (isTablet) {
 				showDialog(DIALOG_START_MATCH);
 			} else {
-				Toast.makeText(DashboardActivity.this, "This feature is only available on tablets.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, R.string.only_on_tablets, Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case R.id.dashboard_display:        
 			if (isTablet) {
 				startActivity(new Intent(getApplicationContext(), DisplayPagerActivity.class));
 			} else {
-				Toast.makeText(DashboardActivity.this, "This feature is only available on tablets.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, R.string.only_on_tablets, Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case R.id.dashboard_transfer:
-			Toast.makeText(this, "Coming soon!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.dashboard_manage:			
 			shareCall = false;
 			if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
 				Cursor teamsCur = getContentResolver().query(Teams.CONTENT_URI, new String[] { Teams._ID }, null, null, null);
 				if (teamsCur == null || !teamsCur.moveToFirst()) {
-					Toast.makeText(DashboardActivity.this, "No data to export.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(DashboardActivity.this, R.string.no_data_to_export, Toast.LENGTH_SHORT).show();
 				} else {
 					teamsCur.close();
 					showDialog(DIALOG_EXPORT_DATA);
 				}
 			} else {
-				Toast.makeText(DashboardActivity.this, "SD Card not mounted.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DashboardActivity.this, R.string.sd_card_not_mounted, Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}
@@ -258,33 +260,24 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 				}
 
 				do {
+					Resources res = getResources();
+					
 					for (int i = 0; i < numCols; i++) {
 						String s = teamsCur.getString(i);
 						if (s == null || s.equals("-1")) {
 							// do nothing
-						} else if (i == teamsCur
-								.getColumnIndex(Teams.TEAM_NAME)) {
+						} else if (i == teamsCur.getColumnIndex(Teams.TEAM_NAME)) {
 							// sanitize data input
 							s = s.replace("\"", "\"\"");
 							writer.append("\"" + s + "\"");
-						} else if (i == teamsCur
-								.getColumnIndex(Teams.DRIVE_SYSTEM)) {
-							writer.append(getResources().getStringArray(
-									R.array.drive_option)[new Integer(s) + 1]);
+						} else if (i == teamsCur.getColumnIndex(Teams.DRIVE_SYSTEM)) {
+							writer.append(res.getStringArray(R.array.drive_option)[Integer.valueOf(s) + 1]);
 						} else if (i == teamsCur.getColumnIndex(Teams.WHEELS)) {
-							writer.append(getResources().getStringArray(
-									R.array.wheel_option)[new Integer(s) + 1]);
+							writer.append(res.getStringArray(R.array.wheel_option)[Integer.valueOf(s) + 1]);
 						} else if (i == teamsCur.getColumnIndex(Teams.STRATEGY)) {
-							writer.append(getResources().getStringArray(
-									R.array.strategy_option)[new Integer(s) + 1]);
-						} else if (i == teamsCur.getColumnIndex(Teams.COMMENTS)) {
-							// sanitize data input
-							s = s.replace("\"", "\"\"");
-							writer.append("\"" + s + "\"");
-						}
-						else if (i == teamsCur
-								.getColumnIndex(Teams.PREFERRED_START)) {
-
+							writer.append(res.getStringArray(R.array.strategy_option)[Integer.valueOf(s) + 1]);
+						} 
+						else if (i == teamsCur.getColumnIndex(Teams.PREFERRED_START)) {
 							if (s.contains("1")) {
 								writer.append("L");
 							}
@@ -294,8 +287,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 							if (s.contains("3")) {
 								writer.append("R");
 							}
-						} else if (i == teamsCur
-								.getColumnIndex(Teams.SHOOT_FROM_WHERE)) {
+						} else if (i == teamsCur.getColumnIndex(Teams.SHOOT_FROM_WHERE)) {
 
 							if (s.contains("1")) {
 								writer.append("Fender ");
@@ -306,17 +298,12 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 							if (s.contains("3")) {
 								writer.append("Anywhere");
 							}
-						} else if (i == teamsCur
-								.getColumnIndex(Teams.HAS_AUTONOMOUS)
-								|| i == teamsCur
-										.getColumnIndex(Teams.HAS_KINECT)
-								|| i == teamsCur
-										.getColumnIndex(Teams.CAN_CROSS)
-								|| i == teamsCur
-										.getColumnIndex(Teams.CAN_PUSH_DOWN_BRIDGE)) {
-							int value = new Integer(s);
+						} else if (i == teamsCur.getColumnIndex(Teams.HAS_AUTONOMOUS)
+								|| i == teamsCur.getColumnIndex(Teams.HAS_KINECT)
+								|| i == teamsCur.getColumnIndex(Teams.CAN_CROSS)
+								|| i == teamsCur.getColumnIndex(Teams.CAN_PUSH_DOWN_BRIDGE)) {
 							String st = "No Value";
-							switch (value) {
+							switch (Integer.valueOf(s)) {
 							case 0:
 								st = "No";
 								break;
@@ -325,7 +312,11 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 							}
 							writer.append(st);
 						}
-
+						else if (i == teamsCur.getColumnIndex(Teams.COMMENTS)) {
+							// sanitize data input
+							s = s.replace("\"", "\"\"");
+							writer.append("\"" + s + "\"");
+						}
 						else {
 							writer.append(teamsCur.getString(i));
 						}
@@ -338,6 +329,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 					handler.sendEmptyMessage(MSG_INC);
 					// Thread.sleep(20);
 				} while (teamsCur.moveToNext());
+				
 				teamsCur.close();
 				writer.flush();
 				writer.close();
@@ -350,11 +342,11 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		return WRITE_SUCCESS;
 	}
 
-	private static final String[] cross_option={"No Atmp","Barrier","Bridge","Both"};
-	private static final String[] pick_ball_option={"Feeder","Floor","Both"};
-	private static final String[] rate_option={"Poor","Fair","Good","Great"};
-	private static final String[] strategy_option={"Offense","Defense","Neutual"};
-	private static final String[] risk_option={"Low","Medium","High"};
+	private static final String[] cross_option = { "No Atmp", "Barrier", "Bridge", "Both" };
+	private static final String[] pick_ball_option = { "Feeder", "Floor", "Both" };
+	private static final String[] rate_option = { "Poor", "Fair", "Good", "Great" };
+	private static final String[] strategy_option = { "Offense", "Defense", "Neutual" };
+	private static final String[] risk_option = { "Low", "Medium", "High" };
 
 	private int output_match(File root){
 		// map "_id"s to "team_num"s
@@ -384,7 +376,6 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		}
 
 
-
 		// map "_id"s to "match_num"s
 		// (this is necessary because the team_matches table references the match's "_id" in the matches table, 
 		// but we need the match's number)
@@ -403,7 +394,6 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		try{
 			int numCols = cur.getColumnCount();
 			if(cur != null && cur.moveToFirst()){
-
 
 				File dir = new File (root, "/" + SCOUTING_MANAGER_DIR);
 				dir.mkdirs();
@@ -424,44 +414,48 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 							//do nothing
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.MATCH_ID)){
-							writer.append(matchIds.get(new Integer(s))+"");
+							writer.append(matchIds.get(Integer.valueOf(s))+"");
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.TEAM_ID)){
-							writer.append(teamIds.get(new Integer(s))+",");
-							writer.append(teamNames.get(new Integer(s))+"");
+							writer.append(teamIds.get(Integer.valueOf(s))+",");
+							writer.append(teamNames.get(Integer.valueOf(s))+"");
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.NUM_BALANCED)){
 							if(s.equals("0")) writer.append("No Atmp");
 							else writer.append(s);
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.HOW_CROSS)){
-							writer.append(cross_option[new Integer(s)]);
+							writer.append(cross_option[Integer.valueOf(s)]);
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.PICK_UP_BALLS)){
-							writer.append(pick_ball_option[new Integer(s)]);
+							writer.append(pick_ball_option[Integer.valueOf(s)]);
 						}
-						else if(i == cur.getColumnIndex(TeamMatches.AGILITY)
-								||i == cur.getColumnIndex(TeamMatches.SPEED)){
-							writer.append(rate_option[new Integer(s)]);
+						else if(i == cur.getColumnIndex(TeamMatches.AGILITY) 
+								|| i == cur.getColumnIndex(TeamMatches.SPEED)){
+							writer.append(rate_option[Integer.valueOf(s)]);
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.STRATEGY)){
-							writer.append(strategy_option[new Integer(s)]);
+							writer.append(strategy_option[Integer.valueOf(s)]);
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.PENALTY_RISK)){
-							writer.append(risk_option[new Integer(s)]);
+							writer.append(risk_option[Integer.valueOf(s)]);
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.WHICH_ALLIANCE)){
-							String color = (new Integer(s)==0)?"Blue":"Red";
+							String color = (Integer.valueOf(s) == 0) ? "Blue" : "Red";
 							writer.append(color);
 						}
 						else if(i == cur.getColumnIndex(TeamMatches.WIN_MATCH)){
-							String result = (new Integer(s)==0)?"Lost":"Win";
+							String result = (Integer.valueOf(s) == 0) ? "Lost" : "Win";
 							writer.append(result);
 						}
+						else if (i == cur.getColumnIndex(TeamMatches.COMMENTS)) {
+							// sanitize data input
+							s = s.replace("\"", "\"\"");
+							writer.append("\"" + s + "\"");
+						}
 						else if(i == cur.getColumnIndex(TeamMatches.DID_NOTHING)){
-							int value = new Integer(s);
 							String st = "No Value";
-							switch (value) {
+							switch (Integer.valueOf(s)) {
 							case 0:
 								st = "No";
 								break;
@@ -474,12 +468,11 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 						else{
 							writer.append(s);
 						}
-
 						if (i+1 != numCols) writer.append(',');
 						else writer.append('\n');
 					}
 					handler.sendEmptyMessage(MSG_INC);
-				}while(cur.moveToNext());
+				} while(cur.moveToNext());
 				cur.close();
 				writer.flush();
 				writer.close();
@@ -487,7 +480,9 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			else{
 				return WRITE_EMPTY;
 			}
-		}catch(Exception e){return WRITE_FAIL;}
+		} catch(Exception e){
+			return WRITE_FAIL;
+		}
 
 		return WRITE_SUCCESS;
 	}
@@ -508,14 +503,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			} else {
 				msg.arg1 = WRITE_EMPTY;
 			}
-			//if(teamRes == WRITE_SUCCESS){
-			//msg.arg1 = output_match(root);
-			//}
-			//else{
-			//msg.arg1 = teamRes;
-			//}
-		}
-		else{
+		} else{
 			msg.arg1 = WRITE_NO_ACCESS;
 		}
 		handler.sendMessage(msg);
@@ -526,13 +514,12 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 		public void handleMessage(Message msg) {
 			switch(msg.what){
 			case MSG_TEAM:
-				pd.setMessage("Writing team-scout data...");
+				pd.setMessage(getApplicationContext().getString(R.string.writing_team_data));
 				pd.setMax(msg.arg1);
 				pd.setProgress(0);
 				break;
-
 			case MSG_MATCH:
-				pd.setMessage("Writing match-scout data...");
+				pd.setMessage(getApplicationContext().getString(R.string.writing_match_data));
 				pd.setMax(msg.arg1);
 				pd.setProgress(0);
 				break;
@@ -547,14 +534,14 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 					shareCall = false;
 					switch(msg.arg1){
 					case WRITE_SUCCESS:
-						Toast.makeText(DashboardActivity.this, "Data written to external storage.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(DashboardActivity.this, R.string.written_to_storage, Toast.LENGTH_SHORT).show();
 						callChooser();
 						break;
 					case WRITE_EMPTY:
 						//Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
 						break;
 					case WRITE_FAIL:
-						Toast.makeText(DashboardActivity.this, "Error writing data.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(DashboardActivity.this, R.string.error_writing_data, Toast.LENGTH_SHORT).show();
 						break;
 					}
 					return;
@@ -562,13 +549,13 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 
 				switch(msg.arg1){
 				case WRITE_SUCCESS:
-					Toast.makeText(DashboardActivity.this, "Data written to external storage.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(DashboardActivity.this, R.string.written_to_storage, Toast.LENGTH_SHORT).show();
 					break;
 				case WRITE_EMPTY:
 					//Toast.makeText(DashboardActivity.this, "No data to write.", Toast.LENGTH_SHORT).show();
 					break;
 				case WRITE_FAIL:
-					Toast.makeText(DashboardActivity.this, "Error writing data.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(DashboardActivity.this, R.string.error_writing_data, Toast.LENGTH_SHORT).show();
 					break;
 				}
 
@@ -585,7 +572,6 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			final EditText matchBox = (EditText) textEntryView.findViewById(R.id.ET_match_number); 
 			final EditText teamBox = (EditText) textEntryView.findViewById(R.id.ET_team_number); 
 			return new AlertDialog.Builder(DashboardActivity.this)
-			/*.setIconAttribute(android.R.attr.alertDialogIcon)*/
 			.setTitle(R.string.start_match_scout_title)
 			.setView(textEntryView)
 			.setPositiveButton(R.string.ok,
@@ -596,13 +582,11 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 
 					if (TextUtils.isEmpty(matchText) || Integer.valueOf(matchText) <= 0) {
 						Toast.makeText(DashboardActivity.this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
-						//matchBox.requestFocus();
 						return;
 					}
 
 					if (TextUtils.isEmpty(teamText) || Integer.valueOf(teamText) <= 0) {
 						Toast.makeText(DashboardActivity.this, R.string.invalid_user_input, Toast.LENGTH_SHORT).show();
-						//teamBox.requestFocus();
 						return;
 					}
 
@@ -643,7 +627,6 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			.setNegativeButton(R.string.cancel,
 					new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-
 					/* User clicked cancel so do some stuff */
 				}
 			}).create();
@@ -673,6 +656,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			});
 			AlertDialog alert = builder.create();
 			alert.show();
+			break;
 		}
 		return null;
 	}
@@ -749,88 +733,9 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "See attachments...");
 			emailIntent.putParcelableArrayListExtra(android.content.Intent.EXTRA_STREAM, csvUris);
 
-			startActivity(Intent.createChooser(emailIntent, "Share scouting data..."));
+			startActivity(Intent.createChooser(emailIntent, getString(R.string.share_scouting_data)));
 		} else {
-			Toast.makeText(this, "No data to share.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_data_to_share, Toast.LENGTH_SHORT).show();
 		}
 	}
-	/*
-	private class ExportDataTask extends AsyncTask<String, String, String> {
-
-		@Override
-		protected String doInBackground(String... urls) {
-			try {
-				File root = Environment.getExternalStorageDirectory();
-				if (root.canWrite()){
-
-					// map "_id"s to "team_num"s
-					// (this is necessary because the team_matches table references the team's "_id" in the teams table, 
-					// but we need the team's number)
-					Map<Integer,Integer> teamIds = new HashMap<Integer, Integer>();
-					// TODO: include a projection as the second argument... we don't need all of the columns!
-					Cursor teams = getContentResolver().query(Teams.CONTENT_URI, null, null, null, Teams.TEAM_NUM + " ASC");
-
-					if (teams != null && teams.moveToFirst()) {
-						do {
-							teamIds.put(teams.getInt(teams.getColumnIndex(Teams._ID)), 
-									teams.getInt(teams.getColumnIndex(Teams.TEAM_NUM)));
-						} while (teams.moveToNext());
-					} else {
-						return "No teams to export!";
-					}
-
-					// map "_id"s to "match_num"s
-					// (this is necessary because the team_matches table references the match's "_id" in the matches table, 
-					// but we need the match's number)
-					Map<Integer,Integer> matchIds = new HashMap<Integer, Integer>();
-					Cursor matches = getContentResolver().query(Matches.CONTENT_URI, null, null, null, Matches.MATCH_NUM + " ASC");
-
-					if (matches != null && matches.moveToFirst()) {
-						do {
-							matchIds.put(matches.getInt(matches.getColumnIndex(Matches._ID)), 
-									matches.getInt(matches.getColumnIndex(Matches.MATCH_NUM)));
-						} while (matches.moveToNext());		
-					} else {
-						return "No matches to export!";
-					}
-
-					// TODO: include a projection as the second argument... we don't need all of the columns!
-					Cursor teamMatches = getContentResolver().query(TeamMatches.CONTENT_URI, null, null, null, TeamMatches.MATCH_ID + " ASC");
-					int numCols = teamMatches.getColumnCount();
-
-					if (teamMatches != null && teamMatches.moveToFirst()) {
-						File path = new File(root, "scouting_data.csv");
-						FileWriter writer = new FileWriter(path);
-
-						// TODO: write header columns to the top of the file
-
-						// TODO: write data to file similar to how the girls manage their excel spreadsheet
-
-						// TODO: need some sort of mapping of int values to strings for almost 
-						// all of the columns (i.e. drive, wheels, etc.)
-
-						do {
-							for (int i=0; i<numCols; i++) {				
-								writer.append(teamMatches.getString(i));
-								if (i+1 != numCols) writer.append(',');
-								else writer.append('\n');
-							}
-						} while (teamMatches.moveToNext());
-
-						writer.flush();
-						writer.close();
-					}
-				}
-			} catch (IOException e) {
-				Log.e("DashboardActivity", "Could not write file " + e.getMessage());
-				e.printStackTrace();
-			}
-			return "Export successful";
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			Toast.makeText(DashboardActivity.this, result, Toast.LENGTH_SHORT).show();
-		}
-	}*/
 }

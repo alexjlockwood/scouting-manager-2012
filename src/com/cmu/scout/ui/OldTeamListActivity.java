@@ -11,7 +11,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,7 +38,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.cmu.scout.R;
@@ -57,20 +55,15 @@ public class OldTeamListActivity extends BaseCameraActivity
 	
 	// camera intent request code
 	private static final int ACTION_TAKE_PHOTO_CODE = 1;
-	// match suggest request code
-	private static final int SUGGEST_MATCH_ID_CODE = 2;
-	
-	// intent used to restore suggested match id
-	public static final String INTENT_SUGGEST_MATCH_ID = "suggest_match_id";
-		
-	private int mSuggestMatchId = 1;
 	 
 	private static final String PHOTO_PATH_STORAGE_KEY = "CurrentPhotoPath";
 	private static final String TEAM_ID_STORAGE_KEY = "CurrentTeamId";
 	private static final String CAMERA_ACTION = "android.hardware.camera";
+	
 	private String mCurrentPhotoPath;
 	private String mCurrentPhotoName;
 	private long mCurrentTeamId;
+	
 	private static final String JPEG_FILE_PREFIX = "IMG_";
 	private static final String JPEG_FILE_SUFFIX = ".jpg";
 
@@ -83,16 +76,11 @@ public class OldTeamListActivity extends BaseCameraActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.team_list_view);
 		
-		if (DEBUG) {
-			Log.v(TAG, "+++ ON CREATE +++");
-			//FragmentManager.enableDebugLogging(true);
-		}
+		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
 		
 		// enable "up" navigation
-			ActionBar actionBar = getSupportActionBar();
-	    	actionBar.setDisplayHomeAsUpEnabled(true);
-	    	Resources res = getResources();
-			setActionBarTitle(res.getString(R.string.team_scouting_title));
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setActionBarTitle(getResources().getString(R.string.team_scouting_title));
 
 		getSupportLoaderManager().initLoader(TEAM_LIST_LOADER, null, this);
 
@@ -114,7 +102,6 @@ public class OldTeamListActivity extends BaseCameraActivity
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putString(PHOTO_PATH_STORAGE_KEY, mCurrentPhotoPath);
 		outState.putLong(TEAM_ID_STORAGE_KEY, mCurrentTeamId);
-		outState.putInt(INTENT_SUGGEST_MATCH_ID, mSuggestMatchId);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -123,7 +110,6 @@ public class OldTeamListActivity extends BaseCameraActivity
 		super.onRestoreInstanceState(savedInstanceState);
 		mCurrentPhotoPath = savedInstanceState.getString(PHOTO_PATH_STORAGE_KEY);
 		mCurrentTeamId = savedInstanceState.getLong(TEAM_ID_STORAGE_KEY);
-		mSuggestMatchId = savedInstanceState.getInt(INTENT_SUGGEST_MATCH_ID);
 	}
 
 	public void onTeamSelected(int id) {
@@ -213,23 +199,17 @@ public class OldTeamListActivity extends BaseCameraActivity
 	
 	private void setActionBarTitle(String title) {
 		if (DEBUG) Log.v(TAG, "setActionBarTitle()");
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			if (title != null) {
-				final ActionBar actionBar = getSupportActionBar();
-				actionBar.setTitle(title);
-			}
-		//}
+		if (title != null) {
+			getSupportActionBar().setTitle(title);
+		}
 	}
 
 	@SuppressWarnings("unused")
 	private void setActionBarSubtitle(String subtitle) {
 		if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			if (subtitle != null) {
-				final ActionBar actionBar = getSupportActionBar();
-				actionBar.setSubtitle(subtitle);
-			}
-		//}
+		if (subtitle != null) {
+			getSupportActionBar().setSubtitle(subtitle);
+		}
 	}
 
 	/**
@@ -286,9 +266,8 @@ public class OldTeamListActivity extends BaseCameraActivity
 
 			LayoutInflater factory = LayoutInflater.from(getActivity());
 			final View edit = factory.inflate(R.layout.add_team_edit_text, null);
-			// TODO: Make sure to put this stuff in "values/strings.xml"
 			return new AlertDialog.Builder(getActivity())
-					.setTitle("New team:")
+					.setTitle(R.string.add_team_dialog_title)
 					.setView(edit)
 					.setPositiveButton(R.string.ok,
 						new DialogInterface.OnClickListener() {
@@ -413,9 +392,8 @@ public class OldTeamListActivity extends BaseCameraActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
+    	if (DEBUG) Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
     	switch (requestCode) {
-    	case SUGGEST_MATCH_ID_CODE:
     	case ACTION_TAKE_PHOTO_CODE:
     		if (resultCode == RESULT_OK) {
     			handleBigCameraPhoto();
@@ -538,8 +516,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 
 	public void showConfirmDeleteDialog(final long teamId) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setCancelable(false)
-	           .setTitle(R.string.confirm_delete_team)
+	    builder.setTitle(R.string.confirm_delete_team)
 	           .setMessage(R.string.confirm_delete_team_message)
 	           .setIcon(R.drawable.ic_dialog_alert_holo_light)
 	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

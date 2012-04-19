@@ -11,7 +11,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,7 +41,6 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.cmu.scout.R;
@@ -53,27 +51,22 @@ import com.cmu.scout.provider.ScoutContract.Teams;
 public class HoneyCombTeamGridActivity extends BaseCameraActivity 
 		implements OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-	private static final String TAG = "TeamGridActivity";
+	private static final String TAG = "HoneyCombTeamGridActivity";
 	private static final boolean DEBUG = true;
 	
 	private static final int TEAM_GRID_LOADER = 0x01;
 	
 	// camera intent request code
 	private static final int ACTION_TAKE_PHOTO_CODE = 1;
-	// match suggest request code
-	private static final int SUGGEST_MATCH_ID_CODE = 2;
-	
-	// intent used to restore suggested match id
-	public static final String INTENT_SUGGEST_MATCH_ID = "suggest_match_id";
-		
-	private int mSuggestMatchId = 1;
 	 
 	private static final String PHOTO_PATH_STORAGE_KEY = "CurrentPhotoPath";
 	private static final String TEAM_ID_STORAGE_KEY = "CurrentTeamId";
 	private static final String CAMERA_ACTION = "android.hardware.camera";
+	
 	private String mCurrentPhotoPath;
 	private String mCurrentPhotoName;
 	private long mCurrentTeamId;
+	
 	private static final String JPEG_FILE_PREFIX = "IMG_";
 	private static final String JPEG_FILE_SUFFIX = ".jpg";
 
@@ -86,18 +79,11 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.team_grid_view);
 		
-		if (DEBUG) {
-			Log.v(TAG, "+++ ON CREATE +++");
-			//FragmentManager.enableDebugLogging(true);
-		}
+		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
 		
 		// enable "up" navigation
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			ActionBar actionBar = getSupportActionBar();
-	    	actionBar.setDisplayHomeAsUpEnabled(true);
-	    	Resources res = getResources();
-			setActionBarTitle(res.getString(R.string.team_scouting_title));
-	    //}
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setActionBarTitle(getResources().getString(R.string.team_scouting_title));
 
 		getSupportLoaderManager().initLoader(TEAM_GRID_LOADER, null, this);
 
@@ -120,7 +106,6 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putString(PHOTO_PATH_STORAGE_KEY, mCurrentPhotoPath);
 		outState.putLong(TEAM_ID_STORAGE_KEY, mCurrentTeamId);
-		outState.putInt(INTENT_SUGGEST_MATCH_ID, mSuggestMatchId);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -129,7 +114,6 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 		super.onRestoreInstanceState(savedInstanceState);
 		mCurrentPhotoPath = savedInstanceState.getString(PHOTO_PATH_STORAGE_KEY);
 		mCurrentTeamId = savedInstanceState.getLong(TEAM_ID_STORAGE_KEY);
-		mSuggestMatchId = savedInstanceState.getInt(INTENT_SUGGEST_MATCH_ID);
 	}
 
 	public void onTeamSelected(int id) {
@@ -224,23 +208,17 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	
 	private void setActionBarTitle(String title) {
 		if (DEBUG) Log.v(TAG, "setActionBarTitle()");
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			if (title != null) {
-				final ActionBar actionBar = getSupportActionBar();
-				actionBar.setTitle(title);
-			}
-		//}
+		if (title != null) {
+			getSupportActionBar().setTitle(title);
+		}
 	}
 
 	@SuppressWarnings("unused")
 	private void setActionBarSubtitle(String subtitle) {
 		if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
-		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			if (subtitle != null) {
-				final ActionBar actionBar = getSupportActionBar();
-				actionBar.setSubtitle(subtitle);
-			}
-		//}
+		if (subtitle != null) {
+			getSupportActionBar().setSubtitle(subtitle);
+		}
 	}
 
 	/**
@@ -299,7 +277,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 			final View edit = factory.inflate(R.layout.add_team_edit_text, null);
 			// TODO: Make sure to put this stuff in "values/strings.xml"
 			return new AlertDialog.Builder(getActivity())
-					.setTitle("New team:")
+					.setTitle(R.string.add_team_dialog_title)
 					.setView(edit)
 					.setPositiveButton(R.string.ok,
 						new DialogInterface.OnClickListener() {
@@ -396,19 +374,8 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
+    	if (DEBUG) Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
     	switch (requestCode) {
-    	case SUGGEST_MATCH_ID_CODE:
-    		//if (resultCode == RESULT_OK) {
-    			//if (DEBUG) Log.v(TAG, "mSuggestMatchId before: " + mSuggestMatchId);
-    			//mSuggestMatchId = data.getIntExtra(INTENT_MATCH_ID, 0) + 1;
-    			//if (DEBUG) Log.v(TAG, "mSuggestMatchId after: " + mSuggestMatchId);
-    			//break;
-    		//} else {
-    			//Log.v(TAG, "activity result canceled. suggest id = 1");
-    			//mSuggestMatchId = 1;
-    			//break;
-    		//}
     	case ACTION_TAKE_PHOTO_CODE:
     		if (resultCode == RESULT_OK) {
     			handleBigCameraPhoto();
@@ -528,76 +495,10 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 			galleryAddPic();
 		}
 	}
-	/*
-	public static class MatchPickerDialog extends DialogFragment {
-		private static final String TAG = "EnterMatchDialog";
-		private static final boolean DEBUG = true;
-		
-		public static final String ARG_TEAM_ID = "arg_team_id";
-		public static final String ARG_MATCH_ID_SUGGEST = "arg_match_id_suggest";
-		
-		private int mTeamId = -1;
-		private int mSuggestedMatch = 1;
-		
-		public static MatchPickerDialog newInstance(int teamId, int suggestMatch) {
-			MatchPickerDialog myFragment = new MatchPickerDialog();
-			
-			Bundle args = new Bundle();
-			args.putInt(ARG_TEAM_ID, teamId);
-			args.putInt(ARG_MATCH_ID_SUGGEST, suggestMatch);
-			myFragment.setArguments(args);
-			
-			return myFragment;
-		}
-		
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			
-			mTeamId = getArguments().getInt(ARG_TEAM_ID, -1);
-			mSuggestedMatch = getArguments().getInt(ARG_MATCH_ID_SUGGEST, 1);
-		}
-		
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			if (DEBUG) Log.v(TAG, "onCreateDialog");
 
-			LayoutInflater factory = LayoutInflater.from(getActivity());
-			
-			final NumberPicker matchPicker = (NumberPicker) factory.inflate(R.layout.match_scout_number_picker, null);
-			matchPicker.setMinValue(1);
-			// TODO: is 500 max matches OK?
-			matchPicker.setMaxValue(500);
-			matchPicker.setValue(mSuggestedMatch);
-			matchPicker.setWrapSelectorWheel(false);
-			matchPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-			
-			return new AlertDialog.Builder(getActivity())
-				.setTitle("Match number:")
-				.setView(matchPicker)
-				.setPositiveButton(R.string.set,
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							final Intent data = new Intent(getActivity(), MatchPagerActivity.class);
-							// pass teamId and matchId to the next Activity
-							data.putExtra(INTENT_TEAM_ID, mTeamId);
-							data.putExtra(INTENT_MATCH_ID, matchPicker.getValue());
-							getActivity().startActivityForResult(data, SUGGEST_MATCH_ID_CODE);
-						}
-					})
-				.create();
-		}
-	}
-	
-	public void showMatchPickerDialog(int teamId, int suggestMatch) {
-		if (DEBUG) Log.v(TAG, "showDialog()");
-		MatchPickerDialog.newInstance(teamId, suggestMatch).show(getSupportFragmentManager(), MatchPickerDialog.TAG);
-	}
-	*/
 	public void showConfirmDeleteDialog(final long teamId) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setCancelable(false)
-	           .setTitle(R.string.confirm_delete_team)
+	    builder.setTitle(R.string.confirm_delete_team)
 	           .setMessage(R.string.confirm_delete_team_message)
 	           .setIcon(R.drawable.ic_dialog_alert_holo_light)
 	           .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
