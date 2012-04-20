@@ -246,7 +246,7 @@
     
     <string name="team_photo_content_description">Team photo</string>
     
-    <string name="add_team_dialog_title">Add team:</string>
+    <string name="add_team_dialog_title">Add team #:</string>
     
     <!-- Toasts -->
     <string name="only_on_tablets">This feature is only available on tablets.</string>
