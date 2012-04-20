@@ -42,7 +42,7 @@
     <string name="confirm_delete_picture_message">Delete this team\'s photo? This cannot be undone.</string>
     
     <string name="confirm_export_title">Export data?</string>
-    <string name="confirm_export_message">Are you sure you want to write data to external storage?</string>
+    <string name="confirm_export_message">Are you sure you want to write data to external storage?\n\nExported scouting data can be found in the \"scouting_manager\" folder on your Android device\'s SD card.</string>
     
     <string name="start_match_scout_title">Begin match-scout</string>
     <string name="start_match_scout_team_number">Team #</string>
