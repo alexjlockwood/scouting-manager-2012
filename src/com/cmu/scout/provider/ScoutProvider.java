@@ -27,8 +27,9 @@ import com.cmu.scout.provider.ScoutDatabase.Tables;
  * The client must perform such actions on their own.
  */
 public class ScoutProvider extends ContentProvider {
+	
 	private static final String TAG = "ScoutProvider";
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	private ScoutDatabase mOpenHelper;
 	
@@ -139,7 +140,6 @@ public class ScoutProvider extends ContentProvider {
 			if (!TextUtils.isEmpty(where)) {
 				finalWhere = finalWhere + " AND " + where;
 			}
-			Log.v(TAG, finalWhere);
 			rowsAffected = db.delete(Tables.TEAM_MATCHES, finalWhere, whereArgs);
 			break;
 		default:

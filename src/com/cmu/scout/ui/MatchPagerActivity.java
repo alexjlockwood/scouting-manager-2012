@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -32,8 +31,8 @@ import com.viewpagerindicator.TitleProvider;
 
 public class MatchPagerActivity extends SherlockFragmentActivity {
 	
-	private static final String TAG = "MatchPagerActivity";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "MatchPagerActivity";
+//	private static final boolean DEBUG = true;
 		
 	private int mTeamId = -1;	
 	private int mMatchId = -1;
@@ -48,7 +47,7 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
+//		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
 		setContentView(R.layout.match_scout_pager);
 
 		final Intent data = getIntent();
@@ -111,23 +110,20 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 	}
 
     private void setActionBarTitle(String title) {
-    	if (DEBUG) Log.v(TAG, "setActionBarTitle()");
-    	//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-    		if (title != null) {
-    			final ActionBar actionBar = getSupportActionBar();
-    			actionBar.setTitle(title);
-    		}
-    	//}
+//    	if (DEBUG) Log.v(TAG, "setActionBarTitle()");
+    	if (title != null) {
+    		final ActionBar actionBar = getSupportActionBar();
+    		actionBar.setTitle(title);
+    	}
     }
 
     private void setActionBarSubtitle(String subtitle) {
-    	if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
-    	//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-    		if (subtitle != null) {
-    			final ActionBar actionBar = getSupportActionBar();
-    			actionBar.setSubtitle(subtitle);
-    		}
-    	//}
+//    	if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
+    	
+    	if (subtitle != null) {
+    		final ActionBar actionBar = getSupportActionBar();
+    		actionBar.setSubtitle(subtitle);
+    	}
     }
     
     public int getTeamId() {
@@ -146,7 +142,7 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (DEBUG) Log.v(TAG, "onOptionsItemSelected");
+//		if (DEBUG) Log.v(TAG, "onOptionsItemSelected");
 		switch (item.getItemId()) {
 		case android.R.id.home:
             // go to home screen when app icon in action bar is clicked
@@ -162,7 +158,7 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 	}
 	
 	public void clearScreen() {
-		if (DEBUG) Log.v(TAG, "clearScreen()");
+//		if (DEBUG) Log.v(TAG, "clearScreen()");
 		
 		MatchFragment fragAuto = ((MatchInputAutoFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_AUTO));
 		MatchFragment fragTeleOp = ((MatchInputTeleOpFragment) mAdapter.getFragment(MatchFragmentAdapter.POSITION_TELEOP));
@@ -177,7 +173,7 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 	
 	// handles clicks from this activity's attached fragments
 	public void onClickHandler(View v) {
-		if (DEBUG) Log.v(TAG, "onClickHandler()");
+//		if (DEBUG) Log.v(TAG, "onClickHandler()");
 		
 		MatchFragment frag = null;
 		final int viewId = v.getId();
@@ -230,14 +226,13 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 		
 		frag = mAdapter.getFragment(pos);
 		if (frag != null) frag.updateDisplay(viewId);
-		else Log.e(TAG, "ERROR: ViewPager Fragment is null!!");
 	}
 	
 	public static class MatchFragmentAdapter extends FragmentPagerAdapter 
 			implements TitleProvider {
 		
-		private static final String TAG = "MatchFragmentAdapter";
-		private static final boolean DEBUG = false;
+//		private static final String TAG = "MatchFragmentAdapter";
+//		private static final boolean DEBUG = false;
 		
 		public static final int POSITION_AUTO = 0;
 		public static final int POSITION_TELEOP = 1;
@@ -256,7 +251,7 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 
 		@Override
 		public Fragment getItem(int position) {
-			if (DEBUG) Log.v(TAG, "getItem()");
+//			if (DEBUG) Log.v(TAG, "getItem()");
 			
 			MatchFragment result = null;
 			
@@ -283,13 +278,13 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 
 		@Override
 		public int getCount() {
-			if (DEBUG) Log.v(TAG, "getCount()");
+//			if (DEBUG) Log.v(TAG, "getCount()");
 			return NUM_TITLES;
 		}
 		
 		@Override
 		public String getTitle(int position) {
-			if (DEBUG) Log.v(TAG, "getTitle()");
+//			if (DEBUG) Log.v(TAG, "getTitle()");
 			return TITLES[position % NUM_TITLES].toUpperCase();
 		}
 		
@@ -301,7 +296,7 @@ public class MatchPagerActivity extends SherlockFragmentActivity {
 	
 	public void decCounter(View v){
 		EditText et = (EditText)(v);
-		int value = new Integer(et.getText().toString())-1;
+		int value = Integer.valueOf(et.getText().toString())-1;
 		value = Math.max(0, value);
 		et.setText(""+value);
 	}

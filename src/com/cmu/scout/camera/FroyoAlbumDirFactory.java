@@ -2,8 +2,10 @@ package com.cmu.scout.camera;
 
 import java.io.File;
 
+import android.annotation.TargetApi;
 import android.os.Environment;
 
+@TargetApi(8)
 public final class FroyoAlbumDirFactory extends AlbumStorageDirFactory {
 
 	@Override

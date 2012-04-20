@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -25,7 +26,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -48,11 +48,12 @@ import com.cmu.scout.camera.BaseCameraActivity;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.Teams;
 
+@TargetApi(11)
 public class HoneyCombTeamGridActivity extends BaseCameraActivity 
 		implements OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-	private static final String TAG = "HoneyCombTeamGridActivity";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "HoneyCombTeamGridActivity";
+//	private static final boolean DEBUG = true;
 	
 	private static final int TEAM_GRID_LOADER = 0x01;
 	
@@ -79,7 +80,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.team_grid_view);
 		
-		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
+//		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
 		
 		// enable "up" navigation
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -207,7 +208,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	}
 	
 	private void setActionBarTitle(String title) {
-		if (DEBUG) Log.v(TAG, "setActionBarTitle()");
+//		if (DEBUG) Log.v(TAG, "setActionBarTitle()");
 		if (title != null) {
 			getSupportActionBar().setTitle(title);
 		}
@@ -215,7 +216,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 
 	@SuppressWarnings("unused")
 	private void setActionBarSubtitle(String subtitle) {
-		if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
+//		if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
 		if (subtitle != null) {
 			getSupportActionBar().setSubtitle(subtitle);
 		}
@@ -226,12 +227,12 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	 */
 
 	public void showDialog() {
-		if (DEBUG) Log.v(TAG, "showDialog()");
+//		if (DEBUG) Log.v(TAG, "showDialog()");
 		AddTeamDialog.newInstance().show(getSupportFragmentManager(), AddTeamDialog.TAG);
 	}
 
 	public void doPositiveClick(String teamName) {
-		if (DEBUG) Log.v(TAG, "doPositiveClick()");
+//		if (DEBUG) Log.v(TAG, "doPositiveClick()");
 		
 		if (TextUtils.isEmpty(teamName)) {
 			Toast.makeText(this, "Invalid team number.", Toast.LENGTH_SHORT).show();
@@ -256,22 +257,22 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	}
 	
 	public void doNegativeClick() {
-		if (DEBUG) Log.v(TAG, "doNegativeClick()");
+//		if (DEBUG) Log.v(TAG, "doNegativeClick()");
 		/* Do nothing */
 	}
 
 	public static class AddTeamDialog extends DialogFragment {
 		private static final String TAG = "AddTeamDialog";
-		private static final boolean DEBUG = true;
+//		private static final boolean DEBUG = true;
 		
 		public static AddTeamDialog newInstance() {
-			if (DEBUG) Log.v(TAG, "newInstance()");
+//			if (DEBUG) Log.v(TAG, "newInstance()");
 			return new AddTeamDialog();
 		}
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			if (DEBUG) Log.v(TAG, "onCreateDialog");
+//			if (DEBUG) Log.v(TAG, "onCreateDialog");
 
 			LayoutInflater factory = LayoutInflater.from(getActivity());
 			final View edit = factory.inflate(R.layout.add_team_edit_text, null);
@@ -331,7 +332,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 
 		@Override
 		public void bindView(View view, Context context, Cursor cur) {
-			if (DEBUG) Log.v("ButtonAdapter", "bindView()");
+//			if (DEBUG) Log.v("ButtonAdapter", "bindView()");
 			
 			ImageView img = (ImageView) view.findViewById(R.id.team_grid_button);
 			TextView caption = (TextView) view.findViewById(R.id.caption);
@@ -373,7 +374,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if (DEBUG) Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
+//    	if (DEBUG) Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
     	switch (requestCode) {
     	case ACTION_TAKE_PHOTO_CODE:
     		if (resultCode == RESULT_OK) {
@@ -384,7 +385,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
     }
     
 	  private void dispatchTakePictureIntent(int actionCode, long teamId) {
-		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
+//		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
 
 		final Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -412,7 +413,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	}
 	
 	private File createImageFile() throws IOException {
-		if (DEBUG) Log.v(TAG, "createImageFile()");
+//		if (DEBUG) Log.v(TAG, "createImageFile()");
 
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -424,7 +425,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	}
 	
 	private void handleBigCameraPhoto() {
-		if (DEBUG) Log.v(TAG, "handleBigCameraPhoto()");
+//		if (DEBUG) Log.v(TAG, "handleBigCameraPhoto()");
 
 		if (mCurrentPhotoPath != null) {
 			scaleBitmap();
@@ -432,7 +433,7 @@ public class HoneyCombTeamGridActivity extends BaseCameraActivity
 	}
 
 	private void galleryAddPic() {
-		if (DEBUG) Log.v(TAG, "galleryAddPic()");
+//		if (DEBUG) Log.v(TAG, "galleryAddPic()");
 
 		if (isIntentAvailable(this, "android.intent.action.MEDIA_SCANNER_SCAN_FILE")) {
 			Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");		

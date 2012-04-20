@@ -8,7 +8,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -25,8 +24,8 @@ import com.cmu.scout.ui.DisplayPagerMatchesActivity;
 public class DisplayMatchesGeneralFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 	
-	private static final String TAG = "DisplayMatchesgeneralFragment";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "DisplayMatchesgeneralFragment";
+//	private static final boolean DEBUG = true;
 	
 	private static final String TEAM_MATCHES_URI_STORAGE_KEY = "CurrentTeamMatchesUri";
 	
@@ -41,7 +40,7 @@ public class DisplayMatchesGeneralFragment extends SherlockListFragment implemen
 	private Bundle mArgs;
 	
 	public static DisplayMatchesGeneralFragment newInstance(Uri teamMatchesUri) {
-		if (DEBUG) Log.v(TAG, "newInstance()");
+//		if (DEBUG) Log.v(TAG, "newInstance()");
         DisplayMatchesGeneralFragment f = new  DisplayMatchesGeneralFragment();
 
         Bundle args = new Bundle();
@@ -53,14 +52,14 @@ public class DisplayMatchesGeneralFragment extends SherlockListFragment implemen
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
+//		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
 		return inflater.inflate(R.layout.display_team_matches_general_layout, container, false);
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
+//		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
 		
 		mArgs = getArguments();
 		//mTeamId = Integer.valueOf(Uri.parse(args.getString(TEAM_MATCHES_URI_STORAGE_KEY)).getLastPathSegment());
@@ -128,8 +127,8 @@ public class DisplayMatchesGeneralFragment extends SherlockListFragment implemen
 	
 	private static class AutoAdapter extends CursorAdapter {
 		
-		private static final String TAG = "AutoAdapter";
-		private static final boolean DEBUG = false;
+//		private static final String TAG = "AutoAdapter";
+//		private static final boolean DEBUG = false;
 
 		private static final int[] ROW_COLOR_IDS = new int[] { 
 			R.color.listview_gray, 
@@ -151,7 +150,7 @@ public class DisplayMatchesGeneralFragment extends SherlockListFragment implemen
 		
 		@Override
 		public void bindView(View view, Context ctx, Cursor cur) {
-			if (DEBUG) Log.v(TAG, "bindView()");			
+//			if (DEBUG) Log.v(TAG, "bindView()");			
 			
 			// alternate row colors
 			final int colorIdPos = cur.getPosition() % ROW_COLOR_IDS.length;

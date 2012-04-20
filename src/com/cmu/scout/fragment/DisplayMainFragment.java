@@ -10,7 +10,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -30,8 +29,8 @@ import com.cmu.scout.ui.OnTeamSelectedListener;
 public class DisplayMainFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 	
-	private static final String TAG = "DisplayMainFragment";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "DisplayMainFragment";
+//	private static final boolean DEBUG = true;
 	
 	private static final int DISPLAY_MAIN_LOADER = 0x01;
 	
@@ -47,13 +46,13 @@ public class DisplayMainFragment extends SherlockListFragment implements
 	private OnTeamSelectedListener teamSelectedListener;
 	
 	public static DisplayMainFragment newInstance() {
-		if (DEBUG) Log.v(TAG, "newInstance()");
+//		if (DEBUG) Log.v(TAG, "newInstance()");
 		return new DisplayMainFragment();
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
+//		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
 
 		View root = inflater.inflate(R.layout.display_teams_main_layout, container, false);
 	
@@ -98,7 +97,7 @@ public class DisplayMainFragment extends SherlockListFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
+//		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
 				
 		getLoaderManager().initLoader(DISPLAY_MAIN_LOADER, null, this);	
 		mAdapter = new MainAdapter(getActivity(), null, 0);
@@ -110,7 +109,7 @@ public class DisplayMainFragment extends SherlockListFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		if (DEBUG) Log.v(TAG, "+ ON ATTACH +");
+//		if (DEBUG) Log.v(TAG, "+ ON ATTACH +");
 		try {
 			teamSelectedListener = (OnTeamSelectedListener) activity;
 		} catch (ClassCastException e) {
@@ -154,7 +153,7 @@ public class DisplayMainFragment extends SherlockListFragment implements
 	
 	// called from the Activity
 	public void sortContent(int viewId) {
-		if (DEBUG) Log.v(TAG, "onClickHandler");
+//		if (DEBUG) Log.v(TAG, "onClickHandler");
 		String col = null;
 		
 		switch(viewId) {
@@ -182,9 +181,7 @@ public class DisplayMainFragment extends SherlockListFragment implements
 			mSortColumn = col;
 			mSortOrder = SORT_ASC;
 		}
-		
-		if (DEBUG) Log.v(TAG, "sorting: " + mSort + " --> " + (mSortColumn+mSortOrder));
-		
+				
 		mSort = mSortColumn + mSortOrder;
 		getLoaderManager().restartLoader(DISPLAY_MAIN_LOADER, null, this);
 	}
@@ -207,8 +204,8 @@ public class DisplayMainFragment extends SherlockListFragment implements
 	
 	private static class MainAdapter extends CursorAdapter {
 		
-		private static final String TAG = "MainAdapter";
-		private static final boolean DEBUG = false;
+//		private static final String TAG = "MainAdapter";
+//		private static final boolean DEBUG = false;
 		
 		private static final int[] ROW_COLOR_IDS = new int[] { 
 			R.color.listview_gray, 
@@ -229,7 +226,7 @@ public class DisplayMainFragment extends SherlockListFragment implements
 		
 		@Override
 		public void bindView(View view, Context ctx, Cursor cur) {
-			if (DEBUG) Log.v(TAG, "bindView()");			
+//			if (DEBUG) Log.v(TAG, "bindView()");			
 
 			// alternate row colors
 			final int colorIdPos = cur.getPosition() % ROW_COLOR_IDS.length;

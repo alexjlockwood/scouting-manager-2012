@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,8 @@ import com.cmu.scout.ui.MatchPagerActivity;
 
 public class MatchInputAutoFragment extends MatchFragment {
 	
-	private static final String TAG = "MatchInputAutoFragment";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "MatchInputAutoFragment";
+//	private static final boolean DEBUG = true;
 	
 	public static final int EDIT_TEXT_NONE = 0;
 	public static final int EDIT_TEXT_HIGH = 1;
@@ -68,13 +67,13 @@ public class MatchInputAutoFragment extends MatchFragment {
 	};
 
 	public static MatchInputAutoFragment newInstance() {
-		if (DEBUG) Log.v(TAG, "newInstance()");
+//		if (DEBUG) Log.v(TAG, "newInstance()");
 		return new MatchInputAutoFragment();
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
+//		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
 		/*
 		if (savedInstanceState != null) {	
 			mAutoHighMadeInit = savedInstanceState.getInt(AUTO_HIGH_MADE_STORAGE_KEY);
@@ -121,7 +120,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 */
 	@Override
 	public void updateDisplay(int viewId) {
-		if (DEBUG) Log.v(TAG, "updateDisplay()");
+//		if (DEBUG) Log.v(TAG, "updateDisplay()");
 		
 		switch(viewId) {
 		case R.id.BT_Auto_Shots_Hit_High:
@@ -153,7 +152,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 	
 	@Override
 	public void saveData() {
-		if (DEBUG) Log.v(TAG, "saveData()");
+//		if (DEBUG) Log.v(TAG, "saveData()");
 		
 		int teamId = ((MatchPagerActivity)getActivity()).getTeamId();
 		int matchId = ((MatchPagerActivity)getActivity()).getMatchId();
@@ -214,7 +213,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 	
 	@Override
 	public void loadData() {
-		if (DEBUG) Log.v(TAG, "loadData()");
+//		if (DEBUG) Log.v(TAG, "loadData()");
 		
 		int teamId = ((MatchPagerActivity)getActivity()).getTeamId();
 		int matchId = ((MatchPagerActivity)getActivity()).getMatchId();
@@ -242,7 +241,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 
 	@Override
 	public void clearScreen() {
-		if (DEBUG) Log.v(TAG, "clearScreen()");
+//		if (DEBUG) Log.v(TAG, "clearScreen()");
 		
 		mAutoHighCounter.setText(R.string.zero);
 		mAutoHighMissCounter.setText(R.string.zero);
@@ -254,7 +253,7 @@ public class MatchInputAutoFragment extends MatchFragment {
 	
     public void incCount(EditText et){
     	String scoreStr = et.getText().toString();
-		int score = (scoreStr == null || scoreStr.length() == 0) ? 0 : new Integer(scoreStr);
+		int score = (scoreStr == null || scoreStr.length() == 0) ? 0 : Integer.valueOf(scoreStr);
 		score = Math.min(score+1, MatchPagerActivity.MAX_SCORE);
 		et.setText("" + score);
     }

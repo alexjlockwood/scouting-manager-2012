@@ -24,7 +24,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -49,8 +48,8 @@ import com.cmu.scout.provider.ScoutContract.Teams;
 public class OldTeamListActivity extends BaseCameraActivity
 		implements LoaderManager.LoaderCallbacks<Cursor> {
 
-	private static final String TAG = "TeamListActivity";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "TeamListActivity";
+//	private static final boolean DEBUG = true;
 	
 	private static final int TEAM_LIST_LOADER = 0x01;
 	
@@ -77,7 +76,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.team_list_view);
 		
-		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
+//		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
 		
 		// enable "up" navigation
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -199,7 +198,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 	}
 	
 	private void setActionBarTitle(String title) {
-		if (DEBUG) Log.v(TAG, "setActionBarTitle()");
+//		if (DEBUG) Log.v(TAG, "setActionBarTitle()");
 		if (title != null) {
 			getSupportActionBar().setTitle(title);
 		}
@@ -207,7 +206,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 
 	@SuppressWarnings("unused")
 	private void setActionBarSubtitle(String subtitle) {
-		if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
+//		if (DEBUG) Log.v(TAG, "setActionBarSubtitle()");
 		if (subtitle != null) {
 			getSupportActionBar().setSubtitle(subtitle);
 		}
@@ -218,12 +217,12 @@ public class OldTeamListActivity extends BaseCameraActivity
 	 */
 
 	public void showDialog() {
-		if (DEBUG) Log.v(TAG, "showDialog()");
+//		if (DEBUG) Log.v(TAG, "showDialog()");
 		AddTeamDialog.newInstance().show(getSupportFragmentManager(), AddTeamDialog.TAG);
 	}
 
 	public void doPositiveClick(String teamName) {
-		if (DEBUG) Log.v(TAG, "doPositiveClick()");
+//		if (DEBUG) Log.v(TAG, "doPositiveClick()");
 		
 		if (TextUtils.isEmpty(teamName)) {
 			Toast.makeText(this, "Invalid team number.", Toast.LENGTH_SHORT).show();
@@ -248,50 +247,58 @@ public class OldTeamListActivity extends BaseCameraActivity
 	}
 	
 	public void doNegativeClick() {
-		if (DEBUG) Log.v(TAG, "doNegativeClick()");
+//		if (DEBUG) Log.v(TAG, "doNegativeClick()");
 		/* Do nothing */
 	}
 
 	public static class AddTeamDialog extends DialogFragment {
 		private static final String TAG = "AddTeamDialog";
-		private static final boolean DEBUG = true;
+//		private static final boolean DEBUG = true;
 		
 		public static AddTeamDialog newInstance() {
-			if (DEBUG) Log.v(TAG, "newInstance()");
+//			if (DEBUG) Log.v(TAG, "newInstance()");
 			return new AddTeamDialog();
 		}
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			if (DEBUG) Log.v(TAG, "onCreateDialog");
+			// if (DEBUG) Log.v(TAG, "onCreateDialog");
 
 			LayoutInflater factory = LayoutInflater.from(getActivity());
-			final View edit = factory.inflate(R.layout.add_team_edit_text, null);
+			final View edit = factory
+					.inflate(R.layout.add_team_edit_text, null);
 			final Dialog dialog = new AlertDialog.Builder(getActivity())
-			.setTitle(R.string.add_team_dialog_title)
-			.setView(edit)
-			.setPositiveButton(R.string.ok,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String teamName = ((EditText) edit).getText().toString();
-						((OldTeamListActivity) getActivity()).doPositiveClick(teamName);
+					.setTitle(R.string.add_team_dialog_title)
+					.setView(edit)
+					.setPositiveButton(R.string.ok,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									String teamName = ((EditText) edit)
+											.getText().toString();
+									((OldTeamListActivity) getActivity())
+											.doPositiveClick(teamName);
+								}
+							})
+					.setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									((OldTeamListActivity) getActivity())
+											.doNegativeClick();
+								}
+							}).create();
+			edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					if (hasFocus) {
+						dialog.getWindow()
+								.setSoftInputMode(
+										WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 					}
-				})
-			.setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						((OldTeamListActivity) getActivity()).doNegativeClick();
-					}
-				}).create();
-	edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-	    @Override
-	    public void onFocusChange(View v, boolean hasFocus) {
-	        if (hasFocus) {
-	            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-	        }
-	    }
-	});
-	return dialog;
+				}
+			});
+			return dialog;
 		}
 	}
 
@@ -304,11 +311,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		//if(mSelection == null){
-			return new CursorLoader(this, Teams.CONTENT_URI, PROJECTION, null, null, Teams.TEAM_NUM + DEFAULT_SORT);
-		//}
-		
-		//return new CursorLoader(this, Teams.CONTENT_URI, PROJECTION, Teams.TEAM_NUM + " LIKE ?", new String[]{ mSelection + "%"}, Teams.TEAM_NUM + DEFAULT_SORT);
+		return new CursorLoader(this, Teams.CONTENT_URI, PROJECTION, null, null, Teams.TEAM_NUM + DEFAULT_SORT);
 	}
 
 	@Override
@@ -321,40 +324,11 @@ public class OldTeamListActivity extends BaseCameraActivity
 		mAdapter.swapCursor(null);
 	}
 
-	/**
-	 * Custom adapter that displays each team as a button
-	 */
-	/*private class ButtonAdapter extends ResourceCursorAdapter {
-		
-		public ButtonAdapter(Context context, int layout, Cursor cur, int flags) {
-			super(context, layout, cur, flags);
-		}
 
-		@Override
-		public void bindView(View view, Context context, Cursor cur) {
-			if (DEBUG) Log.v("ButtonAdapter", "bindView()");
-			
-			ImageView img = (ImageView) view.findViewById(R.id.team_grid_button);
-			TextView caption = (TextView) view.findViewById(R.id.caption);
-			//Button button = (Button) view.findViewById(R.id.team_grid_button);
-			caption.setText(cur.getString(cur.getColumnIndex(Teams.TEAM_NUM)));
-			
-			String uri = cur.getString(cur.getColumnIndex(Teams.TEAM_PHOTO));	
-			
-			if (!TextUtils.isEmpty(uri)) {
-				long photoId = Long.parseLong(Uri.parse(uri).getLastPathSegment());
-				Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(getContentResolver(), photoId, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-				img.setImageBitmap(bitmap);
-			} else {
-				img.setImageDrawable(getResources().getDrawable(R.drawable.ic_contact_picture));
-			}
-		}
-	}*/
-	
-		private static class TeamListAdapter extends ResourceCursorAdapter {
+	private static class TeamListAdapter extends ResourceCursorAdapter {
 		
-		private static final String TAG = "TeamListAdapter";
-		private static final boolean DEBUG = false;
+//		private static final String TAG = "TeamListAdapter";
+//		private static final boolean DEBUG = false;
 		
 		public TeamListAdapter(Context context, int layout, Cursor cur, int flags) {
 			super(context, layout, cur, flags);
@@ -362,7 +336,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 		
 		@Override
 		public void bindView(View view, Context ctx, Cursor cur) {
-			if (DEBUG) Log.v(TAG, "bindView()");			
+//			if (DEBUG) Log.v(TAG, "bindView()");			
 
 			// use ViewHolder pattern to reduce number of times we search the
 			// View hierarchy with "findViewById"
@@ -402,7 +376,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if (DEBUG) Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
+//    	if (DEBUG) Log.v(TAG, "ON ACTIVITY RESULT: " + requestCode + " " + resultCode);
     	switch (requestCode) {
     	case ACTION_TAKE_PHOTO_CODE:
     		if (resultCode == RESULT_OK) {
@@ -413,7 +387,7 @@ public class OldTeamListActivity extends BaseCameraActivity
     }
     
 	  private void dispatchTakePictureIntent(int actionCode, long teamId) {
-		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
+//		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
 
 		final Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -441,7 +415,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 	}
 	
 	private File createImageFile() throws IOException {
-		if (DEBUG) Log.v(TAG, "createImageFile()");
+//		if (DEBUG) Log.v(TAG, "createImageFile()");
 
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -453,7 +427,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 	}
 	
 	private void handleBigCameraPhoto() {
-		if (DEBUG) Log.v(TAG, "handleBigCameraPhoto()");
+//		if (DEBUG) Log.v(TAG, "handleBigCameraPhoto()");
 
 		if (mCurrentPhotoPath != null) {
 			scaleBitmap();
@@ -461,7 +435,7 @@ public class OldTeamListActivity extends BaseCameraActivity
 	}
 
 	private void galleryAddPic() {
-		if (DEBUG) Log.v(TAG, "galleryAddPic()");
+//		if (DEBUG) Log.v(TAG, "galleryAddPic()");
 
 		if (isIntentAvailable(this, "android.intent.action.MEDIA_SCANNER_SCAN_FILE")) {
 			Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");		

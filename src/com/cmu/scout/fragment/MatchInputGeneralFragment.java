@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,8 @@ import com.cmu.scout.ui.MatchPagerActivity;
 
 public class MatchInputGeneralFragment extends MatchFragment {
 	
-	private static final String TAG = "MatchInputGeneralFragment";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "MatchInputGeneralFragment";
+//	private static final boolean DEBUG = true;
 		
 	private ToggleButton mToggleBalance;
 	private ToggleButton mDidNothing;
@@ -110,13 +109,13 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	private int mGeneralScoreInit;
 	
 	public static MatchInputGeneralFragment newInstance() {
-		if (DEBUG) Log.v(TAG, "newInstance()");
+//		if (DEBUG) Log.v(TAG, "newInstance()");
 		return new MatchInputGeneralFragment(); 
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
+//		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");
 		
 		if (savedInstanceState != null) {		
 			mGeneralWinInit = savedInstanceState.getBoolean(GENERAL_WIN_STORAGE_KEY);
@@ -153,7 +152,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (DEBUG) Log.v(TAG, "ON SAVE INSTANCE STATE");
+//		if (DEBUG) Log.v(TAG, "ON SAVE INSTANCE STATE");
 		
 		outState.putBoolean(GENERAL_WIN_STORAGE_KEY, mGeneralWinInit);
 		outState.putBoolean(GENERAL_LOSS_STORAGE_KEY, mGeneralLossInit);
@@ -162,7 +161,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	
 	@Override
 	public void updateDisplay(int viewId) {
-		if (DEBUG) Log.v(TAG, "updateDisplay()");
+//		if (DEBUG) Log.v(TAG, "updateDisplay()");
 
 		switch(viewId) {
 		case R.id.TBT_Balance:
@@ -185,7 +184,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	
 	@Override
 	public void saveData() {
-		if (DEBUG) Log.v(TAG, "saveData()");
+//		if (DEBUG) Log.v(TAG, "saveData()");
 		
 		// get ids
 		int teamId = ((MatchPagerActivity)getActivity()).getTeamId();
@@ -272,7 +271,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 	
 	@Override
 	public void loadData() {
-		if (DEBUG) Log.v(TAG, "loadData()");
+//		if (DEBUG) Log.v(TAG, "loadData()");
 		
 		int teamId = ((MatchPagerActivity)getActivity()).getTeamId();
 		int matchId = ((MatchPagerActivity)getActivity()).getMatchId();
@@ -393,7 +392,7 @@ public class MatchInputGeneralFragment extends MatchFragment {
 
 	@Override
 	public void clearScreen() {
-		if (DEBUG) Log.v(TAG, "clearScreen()");
+//		if (DEBUG) Log.v(TAG, "clearScreen()");
 
     	mToggleBalance.setChecked(false);
     	mRadioButtonBalance1.setEnabled(false);

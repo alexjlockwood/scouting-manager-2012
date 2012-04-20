@@ -31,8 +31,8 @@ import com.cmu.scout.ui.OnTeamSelectedListener;
 public class DisplayTeleOpFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 	
-	private static final String TAG = "DisplayTeleOpFragment";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "DisplayTeleOpFragment";
+//	private static final boolean DEBUG = true;
 	
 	private static final int DISPLAY_TELEOP_LOADER = 0x01;
 	
@@ -48,13 +48,13 @@ public class DisplayTeleOpFragment extends SherlockListFragment implements
 	private OnTeamSelectedListener teamSelectedListener;
 	
 	public static DisplayTeleOpFragment newInstance() {
-		if (DEBUG) Log.v(TAG, "newInstance()");
+//		if (DEBUG) Log.v(TAG, "newInstance()");
 		return new DisplayTeleOpFragment();
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
+//		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
 
 		View root = inflater.inflate(R.layout.display_teams_teleop_layout, container, false);
 	
@@ -92,7 +92,7 @@ public class DisplayTeleOpFragment extends SherlockListFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
+//		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
 				
 		getLoaderManager().initLoader(DISPLAY_TELEOP_LOADER, null, this);	
 		mAdapter = new TeleOpAdapter(getActivity(), null, 0);
@@ -104,7 +104,7 @@ public class DisplayTeleOpFragment extends SherlockListFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		if (DEBUG) Log.v(TAG, "+ ON ATTACH +");
+//		if (DEBUG) Log.v(TAG, "+ ON ATTACH +");
 		try {
 			teamSelectedListener = (OnTeamSelectedListener) activity;
 		} catch (ClassCastException e) {
@@ -147,7 +147,7 @@ public class DisplayTeleOpFragment extends SherlockListFragment implements
 	
 	// called from the Activity
 	public void sortContent(int viewId) {
-		if (DEBUG) Log.v(TAG, "onClickHandler");
+//		if (DEBUG) Log.v(TAG, "onClickHandler");
 		
 		String col = "";
 		
@@ -174,9 +174,7 @@ public class DisplayTeleOpFragment extends SherlockListFragment implements
 			mSortColumn = col;
 			mSortOrder = SORT_ASC;
 		}
-		
-		if (DEBUG) Log.v(TAG, "sorting: " + mSort + " --> " + (mSortColumn+mSortOrder));
-		
+				
 		mSort = mSortColumn + mSortOrder;
 		getLoaderManager().restartLoader(DISPLAY_TELEOP_LOADER, null, this);
 	}

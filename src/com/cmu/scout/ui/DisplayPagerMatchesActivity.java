@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -27,8 +26,8 @@ import com.viewpagerindicator.TitleProvider;
 
 public class DisplayPagerMatchesActivity extends SherlockFragmentActivity {
 	
-	private static final String TAG = "DisplayPagerMatchesActivity";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "DisplayPagerMatchesActivity";
+//	private static final boolean DEBUG = true;
 	
 	private static final String TEAM_ID_STORAGE_KEY = "CurrentTeamId";
 	private static final String TEAM_NUM_STORAGE_KEY = "CurrentTeamNum";
@@ -192,12 +191,8 @@ public class DisplayPagerMatchesActivity extends SherlockFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
-		setContentView(R.layout.display_teams_pager);
-		
-		if (DEBUG) {
-			FragmentManager.enableDebugLogging(true);
-		}
+//		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
+		setContentView(R.layout.display_teams_pager);		
 		
 		mMatchesUri = getIntent().getData();
 		
@@ -246,8 +241,8 @@ public class DisplayPagerMatchesActivity extends SherlockFragmentActivity {
 	public static class DisplayFragmentAdapter extends FragmentPagerAdapter 
 			implements TitleProvider {
 		
-		private static final String TAG = "DisplayFragmentAdapter";
-		private static final boolean DEBUG = false;
+//		private static final String TAG = "DisplayFragmentAdapter";
+//		private static final boolean DEBUG = false;
 		
 		public static final int POSITION_AUTO = 0;
 		public static final int POSITION_TELEOP = 1;
@@ -263,12 +258,12 @@ public class DisplayPagerMatchesActivity extends SherlockFragmentActivity {
 
 		public DisplayFragmentAdapter(FragmentManager fm) {		
 			super(fm);
-			if (DEBUG) Log.v(TAG, "DisplayFragmentAdapter()");
+//			if (DEBUG) Log.v(TAG, "DisplayFragmentAdapter()");
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			if (DEBUG) Log.v(TAG, "getItem()");
+//			if (DEBUG) Log.v(TAG, "getItem()");
 			switch (position) {
 			case POSITION_AUTO: return DisplayMatchesAutoFragment.newInstance(mMatchesUri);
 			case POSITION_TELEOP: return DisplayMatchesTeleOpFragment.newInstance(mMatchesUri);
@@ -279,13 +274,13 @@ public class DisplayPagerMatchesActivity extends SherlockFragmentActivity {
 
 		@Override
 		public int getCount() {
-			if (DEBUG) Log.v(TAG, "getCount()");
+//			if (DEBUG) Log.v(TAG, "getCount()");
 			return mCount;
 		}
 		
 		@Override
 		public String getTitle(int position) {
-			if (DEBUG) Log.v(TAG, "getTitle()");
+//			if (DEBUG) Log.v(TAG, "getTitle()");
 			return TITLES[position % TITLES.length].toUpperCase();
 		}
 	}	

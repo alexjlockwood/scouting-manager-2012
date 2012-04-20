@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:padding="5dp" >
+    android:padding="5dp" 
+    xmlns:tools="http://schemas.android.com/tools" 
+    tools:ignore="TextFields">
 
     <!-- Nest these Views in RelativeLayout and center them in screen -->
 

@@ -2,7 +2,6 @@ package com.cmu.scout.fragment;
 
 import java.text.DecimalFormat;
 
-import com.cmu.scout.R;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,7 +11,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -23,6 +21,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.cmu.scout.R;
 import com.cmu.scout.provider.ScoutContract.Matches;
 import com.cmu.scout.provider.ScoutContract.Teams;
 import com.cmu.scout.ui.DisplayPagerActivity;
@@ -31,8 +30,8 @@ import com.cmu.scout.ui.OnTeamSelectedListener;
 public class DisplayAutoFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 	
-	private static final String TAG = "DisplayAutoFragment";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "DisplayAutoFragment";
+//	private static final boolean DEBUG = true;
 	
 	private static final int DISPLAY_AUTO_LOADER = 0x01;
 	
@@ -48,13 +47,13 @@ public class DisplayAutoFragment extends SherlockListFragment implements
 	private OnTeamSelectedListener teamSelectedListener;
 	
 	public static DisplayAutoFragment newInstance() {
-		if (DEBUG) Log.v(TAG, "newInstance()");
+//		if (DEBUG) Log.v(TAG, "newInstance()");
 		return new DisplayAutoFragment();
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
+//		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
 
 		View root = inflater.inflate(R.layout.display_teams_auto_layout, container, false);
 	
@@ -92,7 +91,7 @@ public class DisplayAutoFragment extends SherlockListFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
+//		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
 				
 		getLoaderManager().initLoader(DISPLAY_AUTO_LOADER, null, this);	
 		mAdapter = new AutoAdapter(getActivity(), null, 0);
@@ -104,7 +103,7 @@ public class DisplayAutoFragment extends SherlockListFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		if (DEBUG) Log.v(TAG, "+ ON ATTACH +");
+//		if (DEBUG) Log.v(TAG, "+ ON ATTACH +");
 		try {
 			teamSelectedListener = (OnTeamSelectedListener) activity;
 		} catch (ClassCastException e) {
@@ -147,7 +146,7 @@ public class DisplayAutoFragment extends SherlockListFragment implements
 	
 	// called from the Activity
 	public void sortContent(int viewId) {
-		if (DEBUG) Log.v(TAG, "onClickHandler");
+//		if (DEBUG) Log.v(TAG, "onClickHandler");
 		
 		String col = "";
 		
@@ -174,9 +173,7 @@ public class DisplayAutoFragment extends SherlockListFragment implements
 			mSortColumn = col;
 			mSortOrder = SORT_ASC;
 		}
-		
-		if (DEBUG) Log.v(TAG, "sorting: " + mSort + " --> " + (mSortColumn+mSortOrder));
-		
+				
 		mSort = mSortColumn + mSortOrder;
 		getLoaderManager().restartLoader(DISPLAY_AUTO_LOADER, null, this);
 	}
@@ -199,8 +196,8 @@ public class DisplayAutoFragment extends SherlockListFragment implements
 	
 	private static class AutoAdapter extends CursorAdapter {
 		
-		private static final String TAG = "AutoAdapter";
-		private static final boolean DEBUG = false;
+//		private static final String TAG = "AutoAdapter";
+//		private static final boolean DEBUG = false;
 
 		private static final int[] ROW_COLOR_IDS = new int[] { 
 			R.color.listview_gray, 
@@ -225,7 +222,7 @@ public class DisplayAutoFragment extends SherlockListFragment implements
 		
 		@Override
 		public void bindView(View view, Context ctx, Cursor cur) {
-			if (DEBUG) Log.v(TAG, "bindView()");			
+//			if (DEBUG) Log.v(TAG, "bindView()");			
 			
 			// alternate row colors
 			final int colorIdPos = cur.getPosition() % ROW_COLOR_IDS.length;

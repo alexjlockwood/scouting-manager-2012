@@ -18,14 +18,15 @@ import com.cmu.scout.R;
 public class BaseCameraActivity extends SherlockFragmentActivity {
 	
 	private static final String TAG = "BaseCameraActivity";
-	private static final boolean DEBUG = true;
+	//private static final boolean DEBUG = true;
 	
 	public AlbumStorageDirFactory mAlbumStorageDirFactory = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
+//		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
+		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 			mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
 		} else {
@@ -48,13 +49,13 @@ public class BaseCameraActivity extends SherlockFragmentActivity {
 	}
 	
 	public String getAlbumName() {
-		if (DEBUG) Log.v(TAG, "getAlbumName()");
+//		if (DEBUG) Log.v(TAG, "getAlbumName()");
 
 		return getString(R.string.album_name);
 	}
 	
 	public File getAlbumDir() {
-		if (DEBUG) Log.v(TAG, "getAlbumDir()");
+//		if (DEBUG) Log.v(TAG, "getAlbumDir()");
 
 		File storageDir = null;
 
@@ -64,20 +65,16 @@ public class BaseCameraActivity extends SherlockFragmentActivity {
 			storageDir = mAlbumStorageDirFactory
 					.getAlbumStorageDir(getAlbumName());
 
-			Log.d(TAG, storageDir.getPath());
-
 			if (storageDir != null) {
 				if (!storageDir.mkdirs()) {
 					if (!storageDir.exists()) {
-						Log.e(TAG,
-								"failed to create directory");
+						Log.e(TAG, "Failed to create directory.");
 						return null;
 					}
 				}
 			}
 		} else {
-			Log.v(getString(R.string.app_name),
-					"External storage is not mounted READ/WRITE.");
+			Log.e(TAG, "External storage is not mounted READ/WRITE.");
 		}
 
 		return storageDir;

@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -25,8 +24,8 @@ import com.viewpagerindicator.TitleProvider;
 public class DisplayPagerActivity extends SherlockFragmentActivity 
 		implements OnTeamSelectedListener {
 	
-	private static final String TAG = "DisplayPagerActivity";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "DisplayPagerActivity";
+//	private static final boolean DEBUG = true;
 		
 	private DisplayFragmentAdapter mAdapter;
 	private ViewPager mPager;
@@ -35,7 +34,7 @@ public class DisplayPagerActivity extends SherlockFragmentActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
+//		if (DEBUG) Log.v(TAG, "+++ ON CREATE +++");
 		setContentView(R.layout.display_teams_pager);
 		
 	    // enable "up" navigation
@@ -83,8 +82,8 @@ public class DisplayPagerActivity extends SherlockFragmentActivity
 	public static class DisplayFragmentAdapter extends FragmentPagerAdapter 
 			implements TitleProvider {
 		
-		private static final String TAG = "DisplayFragmentAdapter";
-		private static final boolean DEBUG = false;
+//		private static final String TAG = "DisplayFragmentAdapter";
+//		private static final boolean DEBUG = false;
 		
 		public static final int POSITION_MAIN = 0;
 		public static final int POSITION_AUTO = 1;
@@ -104,12 +103,12 @@ public class DisplayPagerActivity extends SherlockFragmentActivity
 
 		public DisplayFragmentAdapter(FragmentManager fm) {		
 			super(fm);
-			if (DEBUG) Log.v(TAG, "DisplayFragmentAdapter()");
+//			if (DEBUG) Log.v(TAG, "DisplayFragmentAdapter()");
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			if (DEBUG) Log.v(TAG, "getItem()");
+//			if (DEBUG) Log.v(TAG, "getItem()");
 			switch (position) {
 			case POSITION_MAIN: return DisplayMainFragment.newInstance();
 			case POSITION_AUTO: return DisplayAutoFragment.newInstance();
@@ -122,13 +121,13 @@ public class DisplayPagerActivity extends SherlockFragmentActivity
 
 		@Override
 		public int getCount() {
-			if (DEBUG) Log.v(TAG, "getCount()");
+//			if (DEBUG) Log.v(TAG, "getCount()");
 			return mCount;
 		}
 		
 		@Override
 		public String getTitle(int position) {
-			if (DEBUG) Log.v(TAG, "getTitle()");
+//			if (DEBUG) Log.v(TAG, "getTitle()");
 			return TITLES[position % TITLES.length].toUpperCase();
 		}
 	}	

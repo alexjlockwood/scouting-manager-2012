@@ -1,6 +1,5 @@
 package com.cmu.scout.fragment;
 
-import com.cmu.scout.R;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,7 +8,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -19,14 +17,15 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.cmu.scout.R;
 import com.cmu.scout.provider.ScoutContract.TeamMatches;
 import com.cmu.scout.ui.DisplayPagerMatchesActivity;
 
 public class DisplayMatchesTeleOpFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 	
-	private static final String TAG = "DisplayMatchesTeleopFragment";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "DisplayMatchesTeleopFragment";
+//	private static final boolean DEBUG = true;
 	
 	private static final String TEAM_MATCHES_URI_STORAGE_KEY = "CurrentTeamMatchesUri";
 	
@@ -41,7 +40,7 @@ public class DisplayMatchesTeleOpFragment extends SherlockListFragment implement
 	private Bundle mArgs;
 	
 	public static DisplayMatchesTeleOpFragment newInstance(Uri teamMatchesUri) {
-		if (DEBUG) Log.v(TAG, "newInstance()");
+//		if (DEBUG) Log.v(TAG, "newInstance()");
         DisplayMatchesTeleOpFragment f = new  DisplayMatchesTeleOpFragment();
 
         Bundle args = new Bundle();
@@ -53,14 +52,14 @@ public class DisplayMatchesTeleOpFragment extends SherlockListFragment implement
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
+//		if (DEBUG) Log.v(TAG, "++ ON CREATE VIEW ++");		
 		return inflater.inflate(R.layout.display_team_matches_teleop_layout, container, false);
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
+//		if (DEBUG) Log.v(TAG, "+ ON ACTIVITY CREATED +");
 		
 		mArgs = getArguments();
 		//mTeamId = Integer.valueOf(Uri.parse(args.getString(TEAM_MATCHES_URI_STORAGE_KEY)).getLastPathSegment());
@@ -130,8 +129,8 @@ public class DisplayMatchesTeleOpFragment extends SherlockListFragment implement
 	
 	private static class AutoAdapter extends CursorAdapter {
 		
-		private static final String TAG = "AutoAdapter";
-		private static final boolean DEBUG = false;
+//		private static final String TAG = "AutoAdapter";
+//		private static final boolean DEBUG = false;
 
 		private static final int[] ROW_COLOR_IDS = new int[] { 
 			R.color.listview_gray, 
@@ -153,7 +152,7 @@ public class DisplayMatchesTeleOpFragment extends SherlockListFragment implement
 		
 		@Override
 		public void bindView(View view, Context ctx, Cursor cur) {
-			if (DEBUG) Log.v(TAG, "bindView()");			
+//			if (DEBUG) Log.v(TAG, "bindView()");			
 			
 			// alternate row colors
 			final int colorIdPos = cur.getPosition() % ROW_COLOR_IDS.length;

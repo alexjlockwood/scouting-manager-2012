@@ -22,7 +22,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -53,8 +52,8 @@ import com.cmu.scout.provider.ScoutContract.Teams;
 
 public class DashboardActivity extends SherlockActivity implements Runnable {
 
-	private static final String TAG = "DashboardActivity";
-	private static final boolean DEBUG = true;
+//	private static final String TAG = "DashboardActivity";
+//	private static final boolean DEBUG = true;
 
 	// intent passed to team grid
 	public static final String INTENT_CALL_FROM_TEAM = "call_from_team";
@@ -142,7 +141,7 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (DEBUG) Log.v(TAG, "onOptionsItemSelected");
+//		if (DEBUG) Log.v(TAG, "onOptionsItemSelected");
 		switch (item.getItemId()) {
 		case R.id.share_database:
 			shareCall = true;
@@ -595,13 +594,6 @@ public class DashboardActivity extends SherlockActivity implements Runnable {
 
 					int matchId = checkMatchBox(matchNum);
 					int teamId = checkTeamBox(teamNum);
-
-					if (DEBUG) {
-						Log.v(TAG, "matchNum = " + matchNum);
-						Log.v(TAG, "teamNum = " + teamNum);
-						Log.v(TAG, "matchId = " + matchId);
-						Log.v(TAG, "teamId = " + teamId);
-					}
 
 					final Uri queryUri = Matches.buildMatchIdTeamIdUri("" + matchId, "" + teamId);
 					final Cursor cur = getContentResolver().query(queryUri, new String[] { TeamMatches.TEAM_ID, TeamMatches.MATCH_ID }, null, null, null);

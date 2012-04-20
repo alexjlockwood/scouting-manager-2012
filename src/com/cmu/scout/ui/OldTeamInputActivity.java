@@ -18,7 +18,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
@@ -38,8 +37,8 @@ import com.cmu.scout.provider.ScoutContract.Teams;
 
 public class OldTeamInputActivity extends BaseCameraActivity {
 
-	private static final String TAG = "TeamInputActivity";
-	private static final boolean DEBUG = true;
+	//private static final String TAG = "TeamInputActivity";
+	//private static final boolean DEBUG = true;
 	
 	private static final int ACTION_TAKE_PHOTO_CODE = 1;
 	
@@ -216,19 +215,19 @@ public class OldTeamInputActivity extends BaseCameraActivity {
 		int bridge = (mToggleBridge.isChecked()) ? 1:0;
 		
 		String rank_s = mRank.getText().toString();
-		int rank = (rank_s == null || rank_s.length() == 0) ? -1 : new Integer(rank_s);
+		int rank = (rank_s == null || rank_s.length() == 0) ? -1 : Integer.valueOf(rank_s);
 		
 		String position = "";
 		if (mCheckLeft.isChecked()) position += "1";
 		if (mCheckMiddle.isChecked()) position += "2";
 		if (mCheckRight.isChecked()) position += "3";
-		int p_n = (position == null || position.length() == 0) ? 0 : new Integer(position);
+		int p_n = (position == null || position.length() == 0) ? 0 : Integer.valueOf(position);
 		
 		String shoot = "";
 		if (mCheckFender.isChecked()) shoot += "1";
 		if (mCheckKey.isChecked()) shoot += "2";
 		if (mCheckAnywhere.isChecked()) shoot += "3";
-		int s_n = (shoot == null || shoot.length() == 0) ? 0 : new Integer(shoot);
+		int s_n = (shoot == null || shoot.length() == 0) ? 0 : Integer.valueOf(shoot);
 		
 		
 		final Uri uri = Teams.buildTeamIdUri(""+mTeamId);
@@ -300,7 +299,8 @@ public class OldTeamInputActivity extends BaseCameraActivity {
     
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {   
-    	Log.v(TAG, "onMenuItemClick()");
+//    	if (DEBUG) Log.v(TAG, "onMenuItemClick()");
+    	
     	switch (item.getItemId()) {
     	case R.id.team_take_photo:
 			mCurrentPhotoPath = null;
@@ -321,7 +321,7 @@ public class OldTeamInputActivity extends BaseCameraActivity {
     }
     
 	private void dispatchTakePictureIntent(int actionCode, int teamId) {
-		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
+//		if (DEBUG) Log.v(TAG, "dispatchTakePictureIntent()");
 
 		final Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -351,7 +351,7 @@ public class OldTeamInputActivity extends BaseCameraActivity {
 	}
 	
 	private File createImageFile() throws IOException {
-		if (DEBUG) Log.v(TAG, "createImageFile()");
+//		if (DEBUG) Log.v(TAG, "createImageFile()");
 
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
@@ -365,7 +365,7 @@ public class OldTeamInputActivity extends BaseCameraActivity {
 	}
 	
 	private void handleBigCameraPhoto() {
-		if (DEBUG) Log.v(TAG, "handleBigCameraPhoto()");
+//		if (DEBUG) Log.v(TAG, "handleBigCameraPhoto()");
 
 		if (mCurrentPhotoPath != null) {
 			scaleBitmap();
@@ -373,7 +373,7 @@ public class OldTeamInputActivity extends BaseCameraActivity {
 	}
 
 	private void galleryAddPic() {
-		if (DEBUG) Log.v(TAG, "galleryAddPic()");
+//		if (DEBUG) Log.v(TAG, "galleryAddPic()");
 
 		if (isIntentAvailable(this,
 				"android.intent.action.MEDIA_SCANNER_SCAN_FILE")) {
@@ -453,7 +453,7 @@ public class OldTeamInputActivity extends BaseCameraActivity {
     }
 
     private void loadContactPicture() {
-    	Log.v(TAG, "loadContactPicture()");
+//    	if (DEBUG) Log.v(TAG, "loadContactPicture()");
     	
     	final Uri teamUri = Teams.buildTeamIdUri("" + mTeamId);
     	final String[] proj = { Teams.TEAM_PHOTO };
