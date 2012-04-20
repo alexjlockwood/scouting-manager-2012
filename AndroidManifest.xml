@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cmu.scout"
-    android:versionCode="6"
-    android:versionName="1.1" xmlns:tools="http://schemas.android.com/tools" tools:ignore="HardcodedDebugMode">
+    android:versionCode="7"
+    android:versionName="1.2" 
+    xmlns:tools="http://schemas.android.com/tools" 
+    tools:ignore="HardcodedDebugMode" >
 
     <uses-sdk android:minSdkVersion="7" 
         android:targetSdkVersion="15" />
